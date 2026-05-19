@@ -33,7 +33,16 @@
 - Health Check Path: `/api/health`
 - Node.js Version: `20.x` or newer
 
-Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `UPLOAD_BASE_URL`, `JWT_SECRET`, and the SMTP/contact variables if contact emails should be sent.
+Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `UPLOAD_BASE_URL`, `JWT_SECRET`, and the SMTP/contact variables if contact or admission emails should be sent.
+
+For admission emails, set:
+
+```env
+ADMISSION_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com
+CONTACT_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com
+```
+
+SMTP is required for real email delivery. For Gmail, use an app password in `SMTP_PASS`.
 
 ## Website Deployment
 

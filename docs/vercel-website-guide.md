@@ -50,6 +50,7 @@ VITE_API_BASE_URL=https://your-api-domain.com/api
 ```
 
 Use the deployed backend URL from Render, Railway, or your VPS. Do not leave this as a placeholder for production.
+If this variable is missing or points to the Vercel website instead of the backend API, admission form submissions will fail because Vercel returns an HTML `NOT_FOUND` page instead of API JSON.
 
 Vercel environment variable behavior is documented here:
 
