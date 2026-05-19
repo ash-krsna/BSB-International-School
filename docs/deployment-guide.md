@@ -33,21 +33,14 @@
 - Health Check Path: `/api/health`
 - Node.js Version: `20.x` or newer
 
-Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `UPLOAD_BASE_URL`, `JWT_SECRET`, and the SMTP/contact variables if contact or admission emails should be sent.
+Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `UPLOAD_BASE_URL`, `JWT_SECRET`, and the SMTP/contact variables if contact emails should be sent.
 
-For admission emails, set:
-
-```env
-ADMISSION_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com
-CONTACT_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com
-```
-
-SMTP is required for real email delivery. For Gmail, use an app password in `SMTP_PASS`.
+Admissions are sent directly from the website through FormSubmit to `akash.gita.bhagwat@gmail.com`. Submit the form once after deployment and confirm the activation email from FormSubmit.
 
 ## Website Deployment
 
 1. Deploy `apps/web` to Vercel, or deploy from the repository root using the root [vercel.json](D:\BSB\BSB International School WEB\vercel.json)
-2. Set `VITE_API_BASE_URL` to the deployed backend URL
+2. Set `VITE_API_BASE_URL` to the deployed backend URL for gallery, notices, results, portal, and contact features
 3. Redeploy after environment setup
 4. See [vercel-website-guide.md](D:\BSB\BSB International School WEB\docs\vercel-website-guide.md)
 5. Staff can use the hidden route `/campus-connect`, but do not place that route in public navigation or marketing copy

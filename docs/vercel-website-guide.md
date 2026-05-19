@@ -50,7 +50,17 @@ VITE_API_BASE_URL=https://your-api-domain.com/api
 ```
 
 Use the deployed backend URL from Render, Railway, or your VPS. Do not leave this as a placeholder for production.
-If this variable is missing or points to the Vercel website instead of the backend API, admission form submissions will fail because Vercel returns an HTML `NOT_FOUND` page instead of API JSON.
+Admissions use FormSubmit directly, but the deployed API URL is still needed for gallery, notices, results, portal, and contact features.
+
+## Admission FormSubmit Setup
+
+Admission submissions are posted to:
+
+```text
+https://formsubmit.co/ajax/akash.gita.bhagwat@gmail.com
+```
+
+After the first live submission, open the activation email from FormSubmit and confirm the address. File uploads are sent as FormSubmit attachments, subject to FormSubmit's file-size limits.
 
 Vercel environment variable behavior is documented here:
 

@@ -30,8 +30,6 @@ services:
         sync: false
       - key: CONTACT_RECEIVER_EMAIL
         sync: false
-      - key: ADMISSION_RECEIVER_EMAIL
-        value: "akash.gita.bhagwat@gmail.com"
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
