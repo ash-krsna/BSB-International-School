@@ -15,13 +15,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function buildUploadedFileLinks(files = []) {
-  return files.map((file) => ({
-    name: file.originalname,
-    url: toPublicFileUrl(file)
-  }));
-}
-
 const health = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "BSB ERP API is live." });
 });
@@ -47,7 +40,6 @@ const submitAdmission = asyncHandler(async (req, res) => {
   req.uploadFolder = "admissions";
 
   const photoUrl = req.files?.photo?.[0] ? toPublicFileUrl(req.files.photo[0]) : null;
-  const documentLinks = buildUploadedFileLinks(req.files?.documents || []);
 
   const admissionId = await transaction(async (connection) => {
     const [result] = await connection.execute(
@@ -91,55 +83,6 @@ const submitAdmission = asyncHandler(async (req, res) => {
         <p>Dear Parent,</p>
         <p>Your admission application for <strong>${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</strong> has been received successfully.</p>
         <p>Thank you,<br/>BSB International School</p>
-      `
-    });
-  }
-
-  if (env.admissionReceiverEmail) {
-    const safeStudentName = escapeHtml(`${studentFirstName} ${studentLastName}`);
-    const safeParentName = escapeHtml(parentName);
-    const safeParentPhone = escapeHtml(parentPhone);
-    const safeParentEmail = escapeHtml(parentEmail || "Not provided");
-    const safeAddress = escapeHtml(address || "Not provided");
-    const safeDob = escapeHtml(studentDob);
-    const safeGender = escapeHtml(studentGender);
-    const safeClassId = escapeHtml(applyingClassId);
-    const safeApplicationId = escapeHtml(admissionId);
-    const safePhotoLink = photoUrl ? `<p><strong>Student Photo:</strong> <a href="${escapeHtml(photoUrl)}">Open photo</a></p>` : "";
-    const safeDocumentList = documentLinks.length
-      ? `<ul>${documentLinks.map((document) => `<li><a href="${escapeHtml(document.url)}">${escapeHtml(document.name)}</a></li>`).join("")}</ul>`
-      : "<p>No documents uploaded.</p>";
-
-    await sendEmail({
-      to: env.admissionReceiverEmail,
-      subject: `New admission application: ${studentFirstName} ${studentLastName}`,
-      text: [
-        `Application ID: ${admissionId}`,
-        `Student: ${studentFirstName} ${studentLastName}`,
-        `Applying Class ID: ${applyingClassId}`,
-        `Gender: ${studentGender}`,
-        `Date of Birth: ${studentDob}`,
-        `Parent: ${parentName}`,
-        `Parent Phone: ${parentPhone}`,
-        `Parent Email: ${parentEmail || "Not provided"}`,
-        `Address: ${address || "Not provided"}`,
-        `Student Photo: ${photoUrl || "Not uploaded"}`,
-        `Documents: ${documentLinks.map((document) => `${document.name}: ${document.url}`).join(", ") || "Not uploaded"}`
-      ].join("\n"),
-      html: `
-        <h2>New admission application</h2>
-        <p><strong>Application ID:</strong> ${safeApplicationId}</p>
-        <p><strong>Student:</strong> ${safeStudentName}</p>
-        <p><strong>Applying Class ID:</strong> ${safeClassId}</p>
-        <p><strong>Gender:</strong> ${safeGender}</p>
-        <p><strong>Date of Birth:</strong> ${safeDob}</p>
-        <p><strong>Parent:</strong> ${safeParentName}</p>
-        <p><strong>Parent Phone:</strong> ${safeParentPhone}</p>
-        <p><strong>Parent Email:</strong> ${safeParentEmail}</p>
-        <p><strong>Address:</strong><br/>${safeAddress}</p>
-        ${safePhotoLink}
-        <h3>Uploaded Documents</h3>
-        ${safeDocumentList}
       `
     });
   }
