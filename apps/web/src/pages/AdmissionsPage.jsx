@@ -3,6 +3,20 @@ import Shell from "../components/Shell";
 import { admissionsSteps } from "../content/schoolData";
 import { API_BASE_URL } from "../lib/api";
 
+async function readAdmissionResponse(response) {
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  const text = await response.text();
+  throw new Error(
+    text.includes("NOT_FOUND") || text.includes("The page")
+      ? "Admission API is not connected. Set VITE_API_BASE_URL to your deployed backend URL, then redeploy."
+      : "Admission API returned an invalid response. Please check the backend deployment."
+  );
+}
+
 export default function AdmissionsPage() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -19,7 +33,7 @@ export default function AdmissionsPage() {
         method: "POST",
         body: formData
       });
-      const data = await response.json();
+      const data = await readAdmissionResponse(response);
       if (!response.ok) {
         throw new Error(data.message || "Unable to submit admission.");
       }

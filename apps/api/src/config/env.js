@@ -28,6 +28,7 @@ const env = {
   twilioWhatsappFrom: process.env.TWILIO_WHATSAPP_FROM || "",
   adminNotificationWhatsapp: process.env.ADMIN_NOTIFICATION_WHATSAPP || "",
   contactReceiverEmail: process.env.CONTACT_RECEIVER_EMAIL || "",
+  admissionReceiverEmail: process.env.ADMISSION_RECEIVER_EMAIL || process.env.CONTACT_RECEIVER_EMAIL || "",
   smtpHost: process.env.SMTP_HOST || "",
   smtpPort: Number(process.env.SMTP_PORT || 587),
   smtpSecure: process.env.SMTP_SECURE === "true",
