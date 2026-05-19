@@ -22,7 +22,7 @@
 4. Configure upload storage and notification credentials
 5. For website enquiries, set `CONTACT_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com`
 6. Configure SMTP values so the contact form can email the school office inbox
-7. Add your Vercel domain to `APP_ORIGINS`
+7. Add your Vercel domain to `APP_ORIGINS`, for example `https://bsb-international-school.vercel.app`
 8. Import [schema.sql](D:\BSB\BSB International School WEB\database\schema.sql) for fresh installs or run [2026-05-19-erp-upgrade.sql](D:\BSB\BSB International School WEB\database\migrations\2026-05-19-erp-upgrade.sql) for upgrades
 
 ### Render Settings
@@ -37,7 +37,7 @@ Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`
 
 ## Website Deployment
 
-1. Deploy `apps/web` to Vercel
+1. Deploy `apps/web` to Vercel, or deploy from the repository root using the root [vercel.json](D:\BSB\BSB International School WEB\vercel.json)
 2. Set `VITE_API_BASE_URL` to the deployed backend URL
 3. Redeploy after environment setup
 4. See [vercel-website-guide.md](D:\BSB\BSB International School WEB\docs\vercel-website-guide.md)

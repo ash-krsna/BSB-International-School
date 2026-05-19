@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "npm install",
+  "buildCommand": "npm --workspace apps/web run build",
+  "outputDirectory": "apps/web/dist",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/((?!api/|assets/|favicon.ico|robots.txt|sitemap.xml).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

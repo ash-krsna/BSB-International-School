@@ -9,6 +9,8 @@
     "apps/desktop"
   ],
   "scripts": {
+    "build": "npm --workspace apps/web run build",
+    "dev": "npm --workspace apps/web run dev",
     "dev:api": "npm --workspace apps/api run dev",
     "dev:web": "npm --workspace apps/web run dev",
     "dev:desktop": "npm --workspace apps/desktop run dev",

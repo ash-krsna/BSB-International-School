@@ -16,17 +16,28 @@ This ERP backend should **not** be treated as a Vercel serverless backend becaus
 
 ## Vercel Project Setup
 
-Official Vercel docs say monorepos can be imported as separate projects per directory, so create a Vercel project for `apps/web` as the website app:
+Official Vercel docs say monorepos can be imported as separate projects per directory, so create a Vercel project for `apps/web` as the website app. This repository also includes a root [vercel.json](D:\BSB\BSB International School WEB\vercel.json), so deploying from the repository root will still build and publish `apps/web/dist`.
 
 - Vercel monorepos: [Using Monorepos](https://vercel.com/docs/monorepos)
 - Vercel project config: [Project settings](https://vercel.com/docs/project-configuration/project-settings)
 
 ### Import Settings
 
+Preferred settings:
+
 - Root Directory: `apps/web`
 - Framework Preset: `Vite`
 - Build Command: `npm run build`
 - Output Directory: `dist`
+- Install Command: `npm install`
+- Node.js Version: `20.x` or newer
+
+If the Vercel project is already connected at the repository root, use:
+
+- Root Directory: leave blank
+- Framework Preset: `Vite`
+- Build Command: `npm --workspace apps/web run build`
+- Output Directory: `apps/web/dist`
 - Install Command: `npm install`
 - Node.js Version: `20.x` or newer
 
@@ -63,6 +74,28 @@ The API backend now supports:
 - optional Vercel preview origins via `ALLOW_VERCEL_PREVIEWS=true`
 
 For production APIs, add the main Vercel domain to `APP_ORIGINS`.
+
+For this site, include:
+
+```env
+APP_ORIGINS=https://bsb-international-school.vercel.app
+```
+
+You can add local origins too when needed:
+
+```env
+APP_ORIGINS=https://bsb-international-school.vercel.app,http://localhost:5173,http://localhost:5174
+```
+
+## Fixing Vercel NOT_FOUND
+
+If `https://bsb-international-school.vercel.app/` shows Vercel `404: NOT_FOUND`, check these first:
+
+1. Confirm the Vercel project is connected to the latest Git repository.
+2. If Root Directory is blank, confirm the root [vercel.json](D:\BSB\BSB International School WEB\vercel.json) is committed and redeployed.
+3. If Root Directory is `apps/web`, confirm [apps/web/vercel.json](D:\BSB\BSB International School WEB\apps\web\vercel.json) is committed and redeployed.
+4. Confirm the deployed domain `bsb-international-school.vercel.app` is assigned to the correct Vercel project.
+5. Trigger a fresh production redeploy after setting `VITE_API_BASE_URL`.
 
 ## Pre-Deploy Check
 
