@@ -1,5 +1,6 @@
 import Shell from "../components/Shell";
 import {
+  activityCards,
   campusMoments,
   featureCards,
   learningPillars,
@@ -42,17 +43,26 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <div className="hero-panel school-scene">
+          <div className="hero-panel school-scene mascot-stage">
             <div className="scene-badge">Creating The Leaders</div>
-            <img className="scene-logo" src="/showcase/logo-transparent.png" alt="BSB International School logo" />
-            <img className="scene-campus" src={campusMoments[0].src} alt={campusMoments[0].title} />
+            <div className="cartoon-kid hero-kid">
+              <span className="hair" />
+              <span className="face" />
+              <span className="body" />
+              <span className="arm left" />
+              <span className="arm right" />
+            </div>
+            <div className="floating-card card-a">ABC</div>
+            <div className="floating-card card-b">1 2 3</div>
+            <div className="floating-card card-c">A+</div>
+            <img className="scene-logo mascot-logo" src="/showcase/logo-transparent.png" alt="BSB International School logo" />
             <div className="scene-card">
-              <strong>Admissions Open</strong>
-              <p>Online applications, parent details, and document upload in one simple flow.</p>
+              <strong>Playful Learning</strong>
+              <p>Bright, simple activities built for children and easy access for parents.</p>
             </div>
             <div className="scene-card offset">
-              <strong>Safe, Growing Campus</strong>
-              <p>Step-by-step school development with a strong focus on learning foundations.</p>
+              <strong>Admissions Open</strong>
+              <p>Apply online, check results, view events, and message the school office.</p>
             </div>
           </div>
         </div>
@@ -84,6 +94,24 @@ export default function HomePage() {
             </div>
             <strong>ABC + 123</strong>
             <p>Learning mode active</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section activity-section">
+        <div className="container">
+          <div className="section-heading centered-heading">
+            <span className="eyebrow">Kids Learning World</span>
+            <h2>Play, explore, watch, and read with BSB.</h2>
+          </div>
+          <div className="activity-grid">
+            {activityCards.map((activity) => (
+              <a className={`activity-card ${activity.color}`} href={activity.mode === "Watch" ? "/gallery" : "/learn"} key={activity.title}>
+                <span>{activity.mode}</span>
+                <h3>{activity.title}</h3>
+                <p>{activity.description}</p>
+              </a>
+            ))}
           </div>
         </div>
       </section>

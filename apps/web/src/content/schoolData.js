@@ -62,6 +62,33 @@ export const learningChallenges = [
   }
 ];
 
+export const activityCards = [
+  {
+    mode: "Play",
+    title: "Quiz Quest",
+    description: "Short questions help children practice good habits, safety, and teamwork.",
+    color: "pink"
+  },
+  {
+    mode: "Explore",
+    title: "Growth Map",
+    description: "Students and parents can see school growth and result progress year by year.",
+    color: "blue"
+  },
+  {
+    mode: "Watch",
+    title: "Event Stories",
+    description: "Annual functions, celebrations, and campus videos are organized for easy viewing.",
+    color: "yellow"
+  },
+  {
+    mode: "Read",
+    title: "Learning Habits",
+    description: "Simple routines encourage reading, discipline, confidence, and curiosity.",
+    color: "green"
+  }
+];
+
 export const learningPillars = [
   {
     title: "Foundational Learning",

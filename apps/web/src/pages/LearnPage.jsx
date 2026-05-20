@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Shell from "../components/Shell";
-import { growthData, learningChallenges } from "../content/schoolData";
+import { activityCards, growthData, learningChallenges } from "../content/schoolData";
 
 export default function LearnPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -30,9 +30,31 @@ export default function LearnPage() {
             <div className="orbit-card cube-one">ABC</div>
             <div className="orbit-card cube-two">123</div>
             <div className="orbit-card cube-three">A+</div>
-            <div className="kid-avatar">
-              <span />
+            <div className="cartoon-kid orbit-kid">
+              <span className="hair" />
+              <span className="face" />
+              <span className="body" />
+              <span className="arm left" />
+              <span className="arm right" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section activity-section">
+        <div className="container">
+          <div className="section-heading centered-heading">
+            <span className="eyebrow">Learning Modes</span>
+            <h2>Choose a bright way to learn today.</h2>
+          </div>
+          <div className="activity-grid">
+            {activityCards.map((activity) => (
+              <article className={`activity-card ${activity.color}`} key={activity.title}>
+                <span>{activity.mode}</span>
+                <h3>{activity.title}</h3>
+                <p>{activity.description}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
