@@ -10,3 +10,5 @@ npm-debug.log*
 apps/api/uploads/
 apps/api/backups/
 *.sqlite
+
+.vercel
