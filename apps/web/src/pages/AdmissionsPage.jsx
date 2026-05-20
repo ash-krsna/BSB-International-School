@@ -1,57 +1,11 @@
-import { useState } from "react";
 import Shell from "../components/Shell";
 import { admissionsSteps } from "../content/schoolData";
 
-const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/akash.gita.bhagwat@gmail.com";
-
-async function readFormSubmitResponse(response) {
-  const contentType = response.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-
-  const text = await response.text();
-  throw new Error(
-    text.includes("Unable to submit")
-      ? "FormSubmit could not send this admission. Please confirm the activation email from FormSubmit."
-      : "Unable to submit admission right now. Please try again."
-  );
-}
+const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/akash.gita.bhagwat@gmail.com";
+const FORMSUBMIT_NEXT = "https://bsb-international-school.vercel.app/admissions?submitted=1";
 
 export default function AdmissionsPage() {
-  const [message, setMessage] = useState("");
-  const [busy, setBusy] = useState(false);
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setBusy(true);
-    setMessage("");
-
-    const formData = new FormData(event.currentTarget);
-    formData.append("_subject", "New admission application - BSB International School");
-    formData.append("_template", "table");
-    formData.append("_captcha", "false");
-
-    try {
-      const response = await fetch(FORMSUBMIT_ENDPOINT, {
-        method: "POST",
-        headers: {
-          Accept: "application/json"
-        },
-        body: formData
-      });
-      const data = await readFormSubmitResponse(response);
-      if (!response.ok) {
-        throw new Error(data.message || "Unable to submit admission.");
-      }
-      setMessage("Admission submitted successfully. The details have been sent to the school email.");
-      event.currentTarget.reset();
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setBusy(false);
-    }
-  }
+  const submitted = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("submitted") === "1";
 
   return (
     <Shell>
@@ -72,8 +26,12 @@ export default function AdmissionsPage() {
               </ol>
             </div>
           </div>
-          <form className="card form-grid" encType="multipart/form-data" onSubmit={handleSubmit}>
+          <form action={FORMSUBMIT_ENDPOINT} className="card form-grid" encType="multipart/form-data" method="POST">
             <input type="hidden" name="School" value="BSB International School" />
+            <input type="hidden" name="_subject" value="New admission application - BSB International School" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_next" value={FORMSUBMIT_NEXT} />
             <div>
               <label htmlFor="applyingClassId">Applying Class</label>
               <select id="applyingClassId" name="Applying Class" defaultValue="Class 1">
@@ -114,7 +72,7 @@ export default function AdmissionsPage() {
             </div>
             <div>
               <label htmlFor="parentEmail">Parent Email</label>
-              <input id="parentEmail" type="email" name="Parent Email" />
+              <input id="parentEmail" type="email" name="email" />
             </div>
             <div className="full-span">
               <label htmlFor="address">Address</label>
@@ -129,10 +87,10 @@ export default function AdmissionsPage() {
               <input id="documents" type="file" name="Documents" multiple />
             </div>
             <div className="full-span">
-              <button className="button primary" disabled={busy} type="submit">
-                {busy ? "Submitting..." : "Submit Admission"}
-              </button>
-              {message ? <p className="status-text">{message}</p> : null}
+              <button className="button primary" type="submit">Submit Admission</button>
+              {submitted ? (
+                <p className="status-text">Admission submitted successfully. Please check the school email inbox.</p>
+              ) : null}
             </div>
           </form>
         </div>
