@@ -7,6 +7,7 @@ const navItems = [
   { to: "/about", label: "About School" },
   { to: "/admissions", label: "Admissions Open" },
   { to: "/gallery", label: "Gallery" },
+  { to: "/feedback", label: "Feedback" },
   { to: "/notices", label: "Notices" },
   { to: "/contact", label: "Contact" },
   { to: "/results", label: "Result Portal" },
@@ -22,7 +23,7 @@ export default function Shell({ children }) {
         <div className="container topbar-inner">
           <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
             <span className="brand-mark">
-              <img src="/showcase/logo.jpeg" alt="BSB International School logo" />
+              <img src="/showcase/logo-transparent.png" alt="BSB International School logo" />
             </span>
             <span>
               <strong>BSB International School</strong>

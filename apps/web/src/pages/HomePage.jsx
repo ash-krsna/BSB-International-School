@@ -43,7 +43,7 @@ export default function HomePage() {
           </div>
           <div className="hero-panel school-scene">
             <div className="scene-badge">Creating The Leaders</div>
-            <img className="scene-logo" src="/showcase/logo.jpeg" alt="BSB International School logo" />
+            <img className="scene-logo" src="/showcase/logo-transparent.png" alt="BSB International School logo" />
             <img className="scene-campus" src={campusMoments[0].src} alt={campusMoments[0].title} />
             <div className="scene-card">
               <strong>Admissions Open</strong>

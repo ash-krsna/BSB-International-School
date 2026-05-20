@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import Shell from "../components/Shell";
 import { apiRequest } from "../lib/api";
-import { showcaseItems } from "../content/schoolData";
+import { galleryCollections, showcaseItems } from "../content/schoolData";
+
+function dedupeItems(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = item.src?.toLowerCase();
+    if (!key || seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+}
 
 export default function GalleryPage() {
   const [items, setItems] = useState(showcaseItems);
@@ -15,25 +27,47 @@ export default function GalleryPage() {
           id: `published-${item.id}`,
           type: "image",
           category: item.category || "Updates",
-          title: item.title,
+          title: item.category || "School Update",
           description: item.description || "Photo update from the school gallery.",
           src: item.imageUrl
         }));
-        setItems([...publishedItems, ...showcaseItems]);
+        setItems(dedupeItems([...publishedItems, ...showcaseItems]));
       })
       .catch(() => setItems(showcaseItems));
   }, []);
 
-  const categories = ["All", ...new Set(items.map((item) => item.category))];
+  const categories = ["All", ...galleryCollections.map((collection) => collection.name)];
   const visibleItems = activeCategory === "All" ? items : items.filter((item) => item.category === activeCategory);
+  const activeCollection = galleryCollections.find((collection) => collection.name === activeCategory);
+  const featuredCollections = galleryCollections
+    .map((collection) => ({
+      ...collection,
+      count: items.filter((item) => item.category === collection.name).length,
+      cover: items.find((item) => item.category === collection.name && item.type === "image")?.src
+    }))
+    .filter((collection) => collection.count > 0);
 
   return (
     <Shell>
       <section className="page-section">
         <div className="container">
           <span className="eyebrow">Gallery</span>
-          <h1>Weekly school showcase</h1>
-          <p className="lede">A warm collection of classroom moments, celebrations, campus life, and student activities.</p>
+          <h1>Functions, events, and school memories</h1>
+          <p className="lede">Organized collections for parents and visitors to watch school life without repeated photos or file-name labels.</p>
+          <div className="collection-grid">
+            {featuredCollections.map((collection) => (
+              <button
+                className={`collection-card${activeCategory === collection.name ? " active" : ""}`}
+                key={collection.name}
+                onClick={() => setActiveCategory(collection.name)}
+                type="button"
+              >
+                {collection.cover ? <img src={collection.cover} alt="" /> : null}
+                <span>{collection.name}</span>
+                <small>{collection.count} moments</small>
+              </button>
+            ))}
+          </div>
           <div className="filter-row">
             {categories.map((category) => (
               <button
@@ -46,7 +80,8 @@ export default function GalleryPage() {
               </button>
             ))}
           </div>
-          <div className="gallery-grid-web">
+          {activeCollection ? <p className="collection-note">{activeCollection.note}</p> : null}
+          <div className="gallery-grid-web event-gallery-grid">
             {visibleItems.length
               ? visibleItems.map((item) => (
                   <article className="card media-card" key={item.id}>
@@ -59,8 +94,6 @@ export default function GalleryPage() {
                     )}
                     <div>
                       <span className="chip">{item.category}</span>
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
                     </div>
                   </article>
                 ))
@@ -75,8 +108,6 @@ export default function GalleryPage() {
             <img src={selectedItem.src} alt={selectedItem.title} />
             <div className="lightbox-copy">
               <span className="chip">{selectedItem.category}</span>
-              <h3>{selectedItem.title}</h3>
-              <p>{selectedItem.description}</p>
             </div>
           </div>
         </div>

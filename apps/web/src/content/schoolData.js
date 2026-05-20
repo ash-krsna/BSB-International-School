@@ -93,7 +93,7 @@ export const campusMoments = [
   }
 ];
 
-const categoryCycle = ["Activities", "Classroom", "Events", "Achievements", "Campus"];
+const categoryCycle = ["Annual Function", "Celebrations", "Classroom Activities", "Campus Life", "Student Achievements"];
 
 const rawShowcaseFiles = [
   "1750094538543.jpg.jpeg",
@@ -195,7 +195,7 @@ const rawShowcaseFiles = [
 
 const showcaseOverrides = {
   "School.jpeg": {
-    category: "Campus",
+    category: "Campus Life",
     title: "School Community Gathering",
     description: "Students and staff together on campus, reflecting the growing BSB school family."
   },
@@ -210,42 +210,57 @@ const showcaseOverrides = {
     description: "A real portrait of the principal used across the public school website."
   },
   "20250616_234449.jpg.jpeg": {
-    category: "Classroom",
+    category: "Classroom Activities",
     title: "Young Learners In Uniform",
     description: "Real school-day moments that show the warmth and confidence of BSB students."
   },
   "annual function.mp4": {
-    category: "Events",
+    category: "Annual Function",
     title: "Annual Function Glimpse",
     description: "A moving snapshot from a school celebration shared through the website gallery."
   },
   "VID-20250706-WA0030.mp4": {
-    category: "Events",
+    category: "Celebrations",
     title: "Campus Event Video",
     description: "A real school event video from the BSB campus collection."
   }
 };
 
-function prettifyFileName(fileName) {
-  return fileName
-    .replace(/\.(jpg|jpeg|png|mp4|mov|webm)$/gi, "")
-    .replace(/WhatsApp Image \d{4}-\d{2}-\d{2} at /, "School Moment ")
-    .replace(/[_-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+function normalizeGalleryFile(fileName) {
+  return fileName.toLowerCase().replace(/\s\(\d+\)(?=\.)/g, "");
+}
+
+function inferGalleryCategory(fileName, index) {
+  if (/annual/i.test(fileName)) {
+    return "Annual Function";
+  }
+  if (/vid|mp4|function|9\.10/i.test(fileName)) {
+    return "Celebrations";
+  }
+  if (/20250616|class|2344/i.test(fileName)) {
+    return "Classroom Activities";
+  }
+  if (/school|campus|175/i.test(fileName)) {
+    return "Campus Life";
+  }
+  return categoryCycle[index % categoryCycle.length];
 }
 
 function buildGenericMeta(fileName, index) {
-  const category = categoryCycle[index % categoryCycle.length];
-  const title = prettifyFileName(fileName).slice(0, 60) || `School Moment ${index + 1}`;
+  const category = inferGalleryCategory(fileName, index);
   return {
     category,
-    title,
-    description: "A real photograph from BSB International School showing campus life, activities, and student growth."
+    title: category,
+    description: "A school moment from BSB International School."
   };
 }
 
-export const showcaseItems = rawShowcaseFiles.map((fileName, index) => {
+const uniqueShowcaseFiles = rawShowcaseFiles.filter((fileName, index, files) => {
+  const normalized = normalizeGalleryFile(fileName);
+  return files.findIndex((candidate) => normalizeGalleryFile(candidate) === normalized) === index;
+});
+
+export const showcaseItems = uniqueShowcaseFiles.map((fileName, index) => {
   const override = showcaseOverrides[fileName] || buildGenericMeta(fileName, index);
   const type = /\.(mp4|mov|webm)$/i.test(fileName) ? "video" : "image";
 
@@ -258,6 +273,33 @@ export const showcaseItems = rawShowcaseFiles.map((fileName, index) => {
     src: `/showcase/${fileName}`
   };
 });
+
+export const galleryCollections = [
+  {
+    name: "Annual Function",
+    note: "Stage performances, celebrations, and cultural memories for parents to revisit."
+  },
+  {
+    name: "Celebrations",
+    note: "Special days, school functions, cheerful gatherings, and event videos."
+  },
+  {
+    name: "Classroom Activities",
+    note: "Learning moments, student participation, and day-to-day classroom confidence."
+  },
+  {
+    name: "Campus Life",
+    note: "Assembly, uniforms, school spaces, and growing-campus memories."
+  },
+  {
+    name: "Leadership",
+    note: "Principal and school guidance moments."
+  },
+  {
+    name: "Student Achievements",
+    note: "Proud student moments from school activities and programs."
+  }
+];
 
 export const contactInfo = {
   officeLabel: "School office message desk",
