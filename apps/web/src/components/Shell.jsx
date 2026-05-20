@@ -4,14 +4,15 @@ import { contactInfo } from "../content/schoolData";
 
 const navItems = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About School" },
-  { to: "/admissions", label: "Admissions Open" },
+  { to: "/about", label: "About" },
+  { to: "/admissions", label: "Admissions" },
   { to: "/gallery", label: "Gallery" },
+  { to: "/learn", label: "Play" },
   { to: "/feedback", label: "Feedback" },
   { to: "/notices", label: "Notices" },
   { to: "/contact", label: "Contact" },
-  { to: "/results", label: "Result Portal" },
-  { to: "/portal", label: "Parent Login" }
+  { to: "/results", label: "Results" },
+  { to: "/portal", label: "Portal" }
 ];
 
 export default function Shell({ children }) {

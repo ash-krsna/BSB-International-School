@@ -512,6 +512,105 @@ li {
   background: linear-gradient(90deg, rgba(17, 120, 111, 0.08), rgba(243, 185, 63, 0.12));
 }
 
+.future-band,
+.play-hero,
+.game-section {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(240, 90, 163, 0.16), transparent 30%),
+    radial-gradient(circle at 86% 20%, rgba(51, 163, 211, 0.2), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(238, 253, 247, 0.96));
+}
+
+.future-grid,
+.play-grid,
+.growth-grid,
+.quiz-grid {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.future-grid,
+.play-grid,
+.growth-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+}
+
+.future-console {
+  min-height: 19rem;
+  border: 1px solid rgba(51, 163, 211, 0.26);
+  border-radius: 8px;
+  padding: 1.3rem;
+  background:
+    linear-gradient(180deg, rgba(18, 94, 88, 0.94), rgba(13, 70, 63, 0.96)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 34px);
+  color: #fff;
+  box-shadow: 0 24px 50px rgba(13, 70, 63, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+
+.screen-dot {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.35rem;
+}
+
+.screen-dot.pink {
+  background: var(--accent);
+}
+
+.screen-dot.yellow {
+  background: var(--gold);
+}
+
+.screen-dot.green {
+  background: var(--leaf);
+}
+
+.console-graph {
+  height: 8.5rem;
+  margin: 2.1rem 0 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: end;
+  gap: 0.8rem;
+}
+
+.console-graph span {
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, var(--gold), var(--coral));
+  min-height: 38%;
+}
+
+.console-graph span:nth-child(2) {
+  min-height: 58%;
+  background: linear-gradient(180deg, var(--sky), var(--violet));
+}
+
+.console-graph span:nth-child(3) {
+  min-height: 76%;
+  background: linear-gradient(180deg, var(--accent), var(--gold));
+}
+
+.console-graph span:nth-child(4) {
+  min-height: 96%;
+  background: linear-gradient(180deg, var(--leaf), var(--sky));
+}
+
+.future-console strong {
+  font-family: "Baloo 2", cursive;
+  font-size: 2.2rem;
+}
+
+.future-console p {
+  margin: 0.3rem 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 800;
+}
+
 .learning-grid {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
@@ -844,6 +943,135 @@ textarea:focus {
     linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(255, 250, 240, 0.98));
 }
 
+.learning-orbit {
+  min-height: 24rem;
+  position: relative;
+  perspective: 900px;
+}
+
+.learning-orbit::before {
+  content: "";
+  position: absolute;
+  inset: 2.4rem;
+  border: 2px dashed rgba(17, 120, 111, 0.22);
+  border-radius: 50%;
+  transform: rotateX(62deg) rotateZ(-8deg);
+}
+
+.orbit-card {
+  position: absolute;
+  width: 7.8rem;
+  height: 7.8rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  color: #fff;
+  font-family: "Baloo 2", cursive;
+  font-size: 2rem;
+  font-weight: 800;
+  box-shadow: 0 22px 42px rgba(32, 70, 64, 0.18);
+  transform: rotate(-5deg) translateZ(40px);
+}
+
+.cube-one {
+  top: 1rem;
+  left: 13%;
+  background: linear-gradient(135deg, var(--coral), var(--gold));
+}
+
+.cube-two {
+  top: 6.4rem;
+  right: 5%;
+  background: linear-gradient(135deg, var(--sky), var(--violet));
+}
+
+.cube-three {
+  bottom: 1.7rem;
+  left: 18%;
+  background: linear-gradient(135deg, var(--leaf), var(--primary));
+}
+
+.kid-avatar {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 9.8rem;
+  height: 9.8rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle at 50% 36%, #ffd59d 0 28%, transparent 29%),
+    radial-gradient(circle at 36% 32%, #533425 0 6%, transparent 7%),
+    radial-gradient(circle at 64% 32%, #533425 0 6%, transparent 7%),
+    linear-gradient(180deg, var(--accent-soft), #fff);
+  border: 0.65rem solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 25px 48px rgba(32, 70, 64, 0.18);
+}
+
+.kid-avatar span {
+  position: absolute;
+  left: 50%;
+  bottom: 2.05rem;
+  width: 3.8rem;
+  height: 1.25rem;
+  border-bottom: 6px solid var(--coral);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.chart-card h3,
+.quiz-card h3 {
+  margin-bottom: 1rem;
+}
+
+.chart-card {
+  min-height: 23rem;
+}
+
+.quiz-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: stretch;
+}
+
+.quiz-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: auto;
+}
+
+.choice-button {
+  border: 1px solid rgba(17, 120, 111, 0.14);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-deep);
+  cursor: pointer;
+  font-weight: 800;
+  text-align: left;
+}
+
+.choice-button:hover,
+.choice-button.selected {
+  border-color: rgba(51, 163, 211, 0.5);
+  background: rgba(51, 163, 211, 0.12);
+}
+
+.choice-button.correct-choice {
+  border-color: rgba(93, 175, 70, 0.55);
+  background: rgba(93, 175, 70, 0.14);
+}
+
+.score-card {
+  margin-top: 1.2rem;
+  background: linear-gradient(135deg, rgba(255, 224, 240, 0.82), rgba(255, 255, 255, 0.96));
+}
+
 .footer-links {
   display: grid;
   gap: 0.35rem;
@@ -884,7 +1112,10 @@ textarea:focus {
   .portal-grid,
   .footer-grid,
   .form-grid,
-    .principal-grid {
+  .principal-grid,
+  .future-grid,
+  .play-grid,
+  .growth-grid {
     grid-template-columns: 1fr;
   }
 

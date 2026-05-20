@@ -37,6 +37,31 @@ export const schoolStats = [
   { value: "4", label: "digital parent services connected" }
 ];
 
+export const growthData = [
+  { year: "2023", students: 48, result: 72 },
+  { year: "2024", students: 67, result: 78 },
+  { year: "2025", students: 86, result: 83 },
+  { year: "2026", students: 112, result: 88 }
+];
+
+export const learningChallenges = [
+  {
+    question: "Which habit helps students learn every day?",
+    choices: ["Reading practice", "Skipping homework", "Forgetting books"],
+    answer: "Reading practice"
+  },
+  {
+    question: "What should we do before crossing a road?",
+    choices: ["Look both ways", "Run fast", "Close eyes"],
+    answer: "Look both ways"
+  },
+  {
+    question: "Which word means working together?",
+    choices: ["Teamwork", "Silence", "Delay"],
+    answer: "Teamwork"
+  }
+];
+
 export const learningPillars = [
   {
     title: "Foundational Learning",

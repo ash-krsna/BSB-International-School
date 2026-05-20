@@ -26,6 +26,7 @@ export default function HomePage() {
             <div className="button-row">
               <a href="/admissions" className="button primary">Apply for Admission</a>
               <a href="/results" className="button secondary">Check Results</a>
+              <a href="/learn" className="button secondary">Play & Learn</a>
             </div>
             <div className="hero-points">
               <span>Principal-led guidance</span>
@@ -53,6 +54,36 @@ export default function HomePage() {
               <strong>Safe, Growing Campus</strong>
               <p>Step-by-step school development with a strong focus on learning foundations.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section future-band">
+        <div className="container future-grid">
+          <div>
+            <span className="eyebrow">New Student Zone</span>
+            <h2>Interactive learning, growth graphs, and a mini quiz in one bright space.</h2>
+            <p className="lede">
+              The new Play & Learn area gives children a friendly place to explore progress, answer quick questions, and
+              see the school growing year by year.
+            </p>
+            <div className="button-row">
+              <a href="/learn" className="button primary">Open Play & Learn</a>
+              <a href="/gallery" className="button secondary">Watch Events</a>
+            </div>
+          </div>
+          <div className="future-console" aria-hidden="true">
+            <span className="screen-dot pink" />
+            <span className="screen-dot yellow" />
+            <span className="screen-dot green" />
+            <div className="console-graph">
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <strong>ABC + 123</strong>
+            <p>Learning mode active</p>
           </div>
         </div>
       </section>

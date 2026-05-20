@@ -5,6 +5,7 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const AdmissionsPage = lazy(() => import("./pages/AdmissionsPage"));
 const GalleryPage = lazy(() => import("./pages/GalleryPage"));
+const LearnPage = lazy(() => import("./pages/LearnPage"));
 const FeedbackPage = lazy(() => import("./pages/FeedbackPage"));
 const NoticesPage = lazy(() => import("./pages/NoticesPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/admissions" element={<AdmissionsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/learn" element={<LearnPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/notices" element={<NoticesPage />} />
         <Route path="/contact" element={<ContactPage />} />
