@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Shell from "../components/Shell";
-import { activityCards, growthData, learningChallenges } from "../content/schoolData";
+import { activityCards, growthData, learningChallenges, showcaseItems } from "../content/schoolData";
 
 export default function LearnPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const learningVideos = showcaseItems.filter((item) => item.type === "video").slice(0, 2);
 
   const score = learningChallenges.reduce(
     (total, challenge, index) => total + (selectedAnswers[index] === challenge.answer ? 1 : 0),
@@ -58,6 +59,30 @@ export default function LearnPage() {
           </div>
         </div>
       </section>
+
+      {learningVideos.length > 0 ? (
+        <section className="section watch-section">
+          <div className="container watch-grid">
+            <div>
+              <span className="eyebrow">Watch</span>
+              <h2>School events children can enjoy again.</h2>
+              <p className="lede">
+                Event videos help students remember celebrations, stage moments, and the joy of learning together.
+              </p>
+              <a className="button secondary" href="/gallery">Open Full Gallery</a>
+            </div>
+            <div className="video-strip">
+              {learningVideos.map((video) => (
+                <article className="video-card" key={video.id}>
+                  <video controls preload="metadata" src={video.src} />
+                  <h3>{video.title}</h3>
+                  <p>{video.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section" id="growth-graphs">
         <div className="container">

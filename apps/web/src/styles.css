@@ -737,6 +737,51 @@ li {
   background: linear-gradient(145deg, #99e86d, #e4ffd6);
 }
 
+.watch-section {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 228, 109, 0.26), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(220, 247, 255, 0.82));
+}
+
+.watch-grid {
+  display: grid;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 1.4rem;
+  align-items: center;
+}
+
+.video-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.video-card {
+  border: 1px solid rgba(17, 120, 111, 0.12);
+  border-radius: 8px;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.video-card video {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #123d39;
+}
+
+.video-card h3 {
+  margin-top: 0.9rem;
+}
+
+.video-card p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .future-grid,
 .play-grid,
 .growth-grid,
@@ -1311,7 +1356,8 @@ textarea:focus {
   .principal-grid,
   .future-grid,
   .play-grid,
-  .growth-grid {
+  .growth-grid,
+  .watch-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1391,6 +1437,10 @@ textarea:focus {
   }
 
   .activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .video-strip {
     grid-template-columns: 1fr;
   }
 
