@@ -31,12 +31,9 @@ export default function LearnPage() {
             <div className="orbit-card cube-one">ABC</div>
             <div className="orbit-card cube-two">123</div>
             <div className="orbit-card cube-three">A+</div>
-            <div className="cartoon-kid orbit-kid">
-              <span className="hair" />
-              <span className="face" />
-              <span className="body" />
-              <span className="arm left" />
-              <span className="arm right" />
+            <div className="orbit-core">
+              <img src="/showcase/logo-transparent.png" alt="" />
+              <span>Learn</span>
             </div>
           </div>
         </div>

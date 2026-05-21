@@ -439,7 +439,7 @@ li {
     linear-gradient(145deg, #ffe879 0%, #ffb9d9 45%, #aee9ff 100%);
 }
 
-.mascot-stage {
+.media-stage {
   isolation: isolate;
 }
 
@@ -462,7 +462,7 @@ li {
   box-shadow: none;
 }
 
-.mascot-logo {
+.stage-logo {
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -477,6 +477,12 @@ li {
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
+}
+
+.hero-campus {
+  height: 17rem;
+  margin-top: 1rem;
+  box-shadow: 0 22px 44px rgba(32, 70, 64, 0.16);
 }
 
 .scene-card {
@@ -498,115 +504,40 @@ li {
   margin: 1rem 0 0 auto;
 }
 
-.cartoon-kid {
+.learning-stack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: -2.7rem auto 1.2rem;
+  width: min(24rem, 92%);
   position: relative;
-  width: 12rem;
-  height: 15rem;
-}
-
-.hero-kid {
-  margin: 2.6rem auto 1rem;
-  transform: rotate(-2deg);
-  z-index: 2;
-}
-
-.cartoon-kid .hair,
-.cartoon-kid .face,
-.cartoon-kid .body,
-.cartoon-kid .arm {
-  position: absolute;
-  display: block;
-}
-
-.cartoon-kid .hair {
-  left: 2.7rem;
-  top: 0.35rem;
-  width: 6.5rem;
-  height: 4rem;
-  border-radius: 50% 50% 42% 42%;
-  background: #503024;
   z-index: 3;
 }
 
-.cartoon-kid .face {
-  left: 3rem;
-  top: 2rem;
-  width: 6rem;
-  height: 6.2rem;
-  border-radius: 48% 48% 46% 46%;
-  background:
-    radial-gradient(circle at 35% 42%, #533425 0 0.26rem, transparent 0.28rem),
-    radial-gradient(circle at 65% 42%, #533425 0 0.26rem, transparent 0.28rem),
-    radial-gradient(ellipse at 50% 70%, transparent 0 1rem, #e9556d 1.03rem 1.22rem, transparent 1.25rem),
-    #ffd59d;
-  z-index: 4;
-}
-
-.cartoon-kid .body {
-  left: 2.25rem;
-  bottom: 0.6rem;
-  width: 7.5rem;
-  height: 7.2rem;
-  border-radius: 42% 42% 8px 8px;
-  background:
-    linear-gradient(90deg, transparent 47%, rgba(255, 255, 255, 0.55) 48% 52%, transparent 53%),
-    linear-gradient(180deg, var(--sky), var(--violet));
-  z-index: 2;
-}
-
-.cartoon-kid .arm {
-  top: 8.5rem;
-  width: 5.5rem;
-  height: 1.2rem;
-  border-radius: 999px;
-  background: #ffd59d;
-  z-index: 1;
-}
-
-.cartoon-kid .arm.left {
-  left: -0.4rem;
-  transform: rotate(28deg);
-}
-
-.cartoon-kid .arm.right {
-  right: -0.3rem;
-  transform: rotate(-34deg);
-}
-
-.floating-card {
-  position: absolute;
-  min-width: 5.4rem;
-  padding: 0.8rem 1rem;
+.stack-block {
+  min-height: 5.6rem;
+  display: grid;
+  place-items: center;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--primary-deep);
+  color: #fff;
   font-family: "Baloo 2", cursive;
-  font-size: 1.45rem;
+  font-size: 1.7rem;
   font-weight: 800;
-  text-align: center;
-  box-shadow: 0 18px 30px rgba(32, 70, 64, 0.16);
-  z-index: 3;
+  box-shadow: 0 18px 30px rgba(32, 70, 64, 0.18);
+  transform: rotateX(10deg) rotateZ(-2deg);
 }
 
-.card-a {
-  left: 1.5rem;
-  top: 6.2rem;
-  transform: rotate(-10deg);
-  background: #fff1a6;
+.block-a {
+  background: linear-gradient(135deg, var(--coral), var(--gold));
 }
 
-.card-b {
-  right: 2rem;
-  top: 10.4rem;
-  transform: rotate(8deg);
-  background: #ccefff;
+.block-b {
+  background: linear-gradient(135deg, var(--sky), var(--violet));
+  transform: translateY(-0.6rem) rotateX(10deg) rotateZ(2deg);
 }
 
-.card-c {
-  left: 3rem;
-  bottom: 4.2rem;
-  transform: rotate(7deg);
-  background: #ffd1e6;
+.block-c {
+  background: linear-gradient(135deg, var(--leaf), var(--primary));
 }
 
 .section-heading {
@@ -1253,12 +1184,33 @@ textarea:focus {
   background: linear-gradient(135deg, var(--leaf), var(--primary));
 }
 
-.orbit-kid {
+.orbit-core {
   position: absolute;
   left: 50%;
   top: 52%;
-  transform: translate(-50%, -50%) scale(0.82);
-  filter: drop-shadow(0 25px 36px rgba(32, 70, 64, 0.17));
+  width: 11rem;
+  height: 11rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.9), transparent 28%),
+    linear-gradient(135deg, #fff, #dcf7ff);
+  border: 0.6rem solid rgba(255, 255, 255, 0.84);
+  box-shadow: 0 25px 42px rgba(32, 70, 64, 0.18);
+}
+
+.orbit-core img {
+  width: 6.6rem;
+}
+
+.orbit-core span {
+  position: absolute;
+  bottom: 1.2rem;
+  color: var(--primary-deep);
+  font-family: "Baloo 2", cursive;
+  font-weight: 800;
 }
 
 .chart-card h3,
@@ -1444,7 +1396,8 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 
-  .floating-card {
-    font-size: 1.1rem;
+  .learning-stack {
+    grid-template-columns: 1fr;
+    margin-top: 0.8rem;
   }
 }

@@ -43,22 +43,18 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <div className="hero-panel school-scene mascot-stage">
+          <div className="hero-panel school-scene media-stage">
             <div className="scene-badge">Creating The Leaders</div>
-            <div className="cartoon-kid hero-kid">
-              <span className="hair" />
-              <span className="face" />
-              <span className="body" />
-              <span className="arm left" />
-              <span className="arm right" />
+            <img className="scene-campus hero-campus" src={campusMoments[0].src} alt={campusMoments[0].title} />
+            <div className="learning-stack" aria-hidden="true">
+              <span className="stack-block block-a">ABC</span>
+              <span className="stack-block block-b">123</span>
+              <span className="stack-block block-c">A+</span>
             </div>
-            <div className="floating-card card-a">ABC</div>
-            <div className="floating-card card-b">1 2 3</div>
-            <div className="floating-card card-c">A+</div>
-            <img className="scene-logo mascot-logo" src="/showcase/logo-transparent.png" alt="BSB International School logo" />
+            <img className="scene-logo stage-logo" src="/showcase/logo-transparent.png" alt="BSB International School logo" />
             <div className="scene-card">
-              <strong>Playful Learning</strong>
-              <p>Bright, simple activities built for children and easy access for parents.</p>
+              <strong>Modern Learning</strong>
+              <p>Bright activities, real school moments, and simple access for parents.</p>
             </div>
             <div className="scene-card offset">
               <strong>Admissions Open</strong>
@@ -101,7 +97,7 @@ export default function HomePage() {
       <section className="section activity-section">
         <div className="container">
           <div className="section-heading centered-heading">
-            <span className="eyebrow">Kids Learning World</span>
+            <span className="eyebrow">Student Learning Zone</span>
             <h2>Play, explore, watch, and read with BSB.</h2>
           </div>
           <div className="activity-grid">
