@@ -6,7 +6,8 @@
   "workspaces": [
     "apps/api",
     "apps/web",
-    "apps/desktop"
+    "apps/desktop",
+    "apps/mobile"
   ],
   "scripts": {
     "build": "npm --workspace apps/web run build",
@@ -14,9 +15,11 @@
     "dev:api": "npm --workspace apps/api run dev",
     "dev:web": "npm --workspace apps/web run dev",
     "dev:desktop": "npm --workspace apps/desktop run dev",
+    "dev:mobile": "npm --workspace apps/mobile run start",
     "build:api": "npm --workspace apps/api run build",
     "build:web": "npm --workspace apps/web run build",
     "build:desktop": "npm --workspace apps/desktop run build",
+    "build:mobile": "npm --workspace apps/mobile run build",
     "lint": "npm --workspace apps/api run lint && npm --workspace apps/web run lint && npm --workspace apps/desktop run lint"
   }
 }

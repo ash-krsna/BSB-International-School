@@ -9,6 +9,7 @@ apps/
   api/       Node.js + Express + MySQL backend
   web/       React website for parents, students, and public visitors
   desktop/   Electron + React desktop ERP for office staff
+  mobile/    React Native / Expo Android app shell
 database/
   schema.sql
   seed.sql
@@ -27,6 +28,8 @@ docs/
 - Student profile management and previous history
 - Advanced student profile dashboard, permanent timeline, promotions, notes, achievements, and printable ID cards
 - Fees, receipts, discounts, fines, and installment tracking
+- Automatic fee reminder job queue and daily reminder scheduler
+- School bus routes, driver pickup list, bus payments, and school commission tracking
 - Attendance, results, marksheets, homework, notices, and gallery
 - Messaging campaigns for SMS, WhatsApp, and email alerts
 - Reports for collection, pending fees, attendance, admission, and performance
@@ -47,6 +50,7 @@ docs/
 - Vercel website: [docs/vercel-website-guide.md](D:\BSB\BSB International School WEB\docs\vercel-website-guide.md)
 - Backend host: [docs/deployment-guide.md](D:\BSB\BSB International School WEB\docs\deployment-guide.md)
 - API reference: [docs/api-reference.md](D:\BSB\BSB International School WEB\docs\api-reference.md)
+- Android app: [docs/android-play-store-guide.md](D:\BSB\BSB International School WEB\docs\android-play-store-guide.md)
 - Local office stack: [docker-compose.local.yml](D:\BSB\BSB International School WEB\docker-compose.local.yml)
 - Render backend blueprint: [render.yaml](D:\BSB\BSB International School WEB\render.yaml)
 

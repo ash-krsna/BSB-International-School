@@ -8,7 +8,7 @@ Base URL:
 ## Public APIs
 
 - `POST /public/admissions`
-  Online admission with student photo and documents.
+  Online admission with student photo, Aadhaar, previous school, scholarship details, bus-service request, and documents.
 - `POST /public/enquiries`
   Saves enquiry, emails school office, and can notify via WhatsApp.
 - `GET /public/gallery`
@@ -72,6 +72,25 @@ Base URL:
   Assign fee structure and installments to a student.
 - `POST /fees/payments`
   Record payment and generate receipt reference.
+- `POST /fees/reminders/run`
+  Manually process due-fee reminder jobs. The API also schedules this automatically every day at 9 AM.
+
+## Transport
+
+- `GET /transport/routes`
+  Route list with assigned driver, active student count, and monthly fee.
+- `POST /transport/drivers`
+  Create a bus driver record.
+- `POST /transport/routes`
+  Create a bus route and optionally assign a driver.
+- `POST /transport/assignments`
+  Assign a student to school bus service and notify parent/driver.
+- `GET /transport/drivers/:driverId/pickups`
+  Driver pickup list with parent contact, pickup address, route, and payment status.
+- `POST /transport/pickups`
+  Driver/admin pickup marking.
+- `GET /transport/collections`
+  Route-wise bus payment and school commission report.
 
 ## Results
 

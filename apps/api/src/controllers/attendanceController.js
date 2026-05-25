@@ -1,6 +1,7 @@
 const { query, transaction } = require("../config/db");
 const asyncHandler = require("../utils/asyncHandler");
 const HttpError = require("../utils/httpError");
+const { sendSms, sendWhatsApp } = require("../services/notificationService");
 
 const markAttendance = asyncHandler(async (req, res) => {
   const { academicYearId, classId, sectionId, attendanceDate, records } = req.body;
@@ -39,6 +40,27 @@ const markAttendance = asyncHandler(async (req, res) => {
 
     return sessionIdLocal;
   });
+
+  const absentIds = records.filter((record) => record.status === "absent").map((record) => record.studentId);
+  if (absentIds.length) {
+    const absentRows = await query(
+      `
+        SELECT
+          CONCAT_WS(' ', s.first_name, s.middle_name, s.last_name) AS studentName,
+          p.phone_primary AS parentPhone
+        FROM students s
+        JOIN parents p ON p.id = s.parent_id
+        WHERE s.id IN (${absentIds.map(() => "?").join(",")})
+      `,
+      absentIds
+    );
+
+    for (const item of absentRows) {
+      const message = `BSB attendance alert: ${item.studentName} is marked absent on ${attendanceDate}. Contact school office if this is incorrect.`;
+      await sendSms({ phone: item.parentPhone, message });
+      await sendWhatsApp({ to: `whatsapp:+91${item.parentPhone.replace(/\D/g, "").slice(-10)}`, message });
+    }
+  }
 
   res.json({ success: true, message: "Attendance saved successfully.", sessionId });
 });

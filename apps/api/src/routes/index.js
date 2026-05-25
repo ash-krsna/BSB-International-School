@@ -11,8 +11,10 @@ const attendanceController = require("../controllers/attendanceController");
 const contentController = require("../controllers/contentController");
 const reportsController = require("../controllers/reportsController");
 const communicationsController = require("../controllers/communicationsController");
+const transportController = require("../controllers/transportController");
 const { upload } = require("../services/uploadService");
 const { runBackup } = require("../services/backupService");
+const { runFeeReminderCycle } = require("../services/feeReminderService");
 const { createRateLimiter } = require("../middleware/rateLimiter");
 
 const router = express.Router();
@@ -22,7 +24,18 @@ router.get("/health", publicController.health);
 router.post("/auth/login", authController.login);
 router.get("/auth/me", authenticate, authController.me);
 
-router.post("/public/admissions", upload.fields([{ name: "photo", maxCount: 1 }, { name: "documents", maxCount: 10 }]), publicController.submitAdmission);
+router.post(
+  "/public/admissions",
+  upload.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "documents", maxCount: 10 },
+    { name: "passportPhoto", maxCount: 1 },
+    { name: "birthCertificate", maxCount: 1 },
+    { name: "previousMarksheet", maxCount: 1 },
+    { name: "transferCertificate", maxCount: 1 }
+  ]),
+  publicController.submitAdmission
+);
 router.post("/public/enquiries", publicFormLimiter, publicController.submitEnquiry);
 router.get("/public/gallery", publicController.listGallery);
 router.get("/public/notices", publicController.listNotices);
@@ -90,6 +103,22 @@ router.get("/fees/ledger", authenticate, authorize("super_admin", "admin_staff",
 router.get("/fees/student/:studentId", authenticate, authorize("super_admin", "admin_staff", "accountant", "principal", "parent", "student"), feesController.getStudentFeeLedger);
 router.post("/fees/assignments", authenticate, authorize("super_admin", "admin_staff", "accountant"), feesController.assignFeeStructure);
 router.post("/fees/payments", authenticate, authorize("super_admin", "admin_staff", "accountant"), feesController.createFeePayment);
+router.post("/fees/reminders/run", authenticate, authorize("super_admin", "admin_staff", "accountant", "principal"), async (req, res, next) => {
+  try {
+    const result = await runFeeReminderCycle();
+    res.json({ success: true, message: "Fee reminders processed.", data: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/transport/routes", authenticate, authorize("super_admin", "admin_staff", "principal", "driver"), transportController.listRoutes);
+router.post("/transport/drivers", authenticate, authorize("super_admin", "admin_staff", "principal"), transportController.createDriver);
+router.post("/transport/routes", authenticate, authorize("super_admin", "admin_staff", "principal"), transportController.createRoute);
+router.post("/transport/assignments", authenticate, authorize("super_admin", "admin_staff", "principal"), transportController.assignStudentTransport);
+router.get("/transport/drivers/:driverId/pickups", authenticate, authorize("super_admin", "admin_staff", "principal", "driver"), transportController.driverPickupList);
+router.post("/transport/pickups", authenticate, authorize("super_admin", "admin_staff", "principal", "driver"), transportController.markPickup);
+router.get("/transport/collections", authenticate, authorize("super_admin", "admin_staff", "accountant", "principal"), transportController.collectionReport);
 
 router.post("/results/exams", authenticate, authorize("super_admin", "principal", "teacher"), resultsController.publishExam);
 router.post("/results/upload", authenticate, authorize("super_admin", "principal", "teacher"), resultsController.uploadResults);

@@ -1,0 +1,12 @@
+{
+  "name": "@bsb/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BSB International School Android app shell for parents, teachers, and bus drivers",
+  "scripts": {
+    "start": "npx expo start",
+    "android": "npx expo run:android",
+    "build": "node -e \"console.log('Use EAS Build: npx eas build -p android --profile production')\"",
+    "lint": "node -e \"console.log('Add React Native linting when native project is generated')\""
+  }
+}

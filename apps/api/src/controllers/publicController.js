@@ -27,10 +27,16 @@ const submitAdmission = asyncHandler(async (req, res) => {
     studentLastName,
     studentGender,
     studentDob,
+    aadhaarNo,
     parentName,
     parentPhone,
     parentEmail,
-    address
+    address,
+    previousSchool,
+    scholarshipDetails,
+    wantsBusService,
+    pickupAddress,
+    preferredRoute
   } = req.body;
 
   if (!academicYearId || !applyingClassId || !studentFirstName || !studentLastName || !studentGender || !studentDob || !parentName || !parentPhone) {
@@ -45,24 +51,52 @@ const submitAdmission = asyncHandler(async (req, res) => {
     const [result] = await connection.execute(
       `
         INSERT INTO admission_applications
-          (academic_year_id, applying_class_id, student_first_name, student_last_name, student_gender, student_dob, parent_name, parent_phone, parent_email, address, photo_url)
+          (academic_year_id, applying_class_id, student_first_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, photo_url)
         VALUES
-          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
-      [academicYearId, applyingClassId, studentFirstName, studentLastName, studentGender, studentDob, parentName, parentPhone, parentEmail || null, address || null, photoUrl]
+      [
+        academicYearId,
+        applyingClassId,
+        studentFirstName,
+        studentLastName,
+        studentGender,
+        studentDob,
+        aadhaarNo || null,
+        parentName,
+        parentPhone,
+        parentEmail || null,
+        address || null,
+        previousSchool || null,
+        scholarshipDetails || null,
+        wantsBusService === "true" || wantsBusService === true,
+        pickupAddress || null,
+        preferredRoute || null,
+        photoUrl
+      ]
     );
 
     const applicationId = result.insertId;
 
-    const documents = req.files?.documents || [];
-    for (const document of documents) {
-      await connection.execute(
-        `
-          INSERT INTO student_documents (admission_application_id, document_type, file_name, file_url)
-          VALUES (?, ?, ?, ?)
-        `,
-        [applicationId, "admission_upload", document.originalname, toPublicFileUrl(document)]
-      );
+    const documentGroups = [
+      ["documents", "admission_upload"],
+      ["passportPhoto", "passport_photo"],
+      ["birthCertificate", "birth_certificate"],
+      ["previousMarksheet", "previous_marksheet"],
+      ["transferCertificate", "transfer_certificate"]
+    ];
+
+    for (const [fieldName, documentType] of documentGroups) {
+      const documents = req.files?.[fieldName] || [];
+      for (const document of documents) {
+        await connection.execute(
+          `
+            INSERT INTO student_documents (admission_application_id, document_type, file_name, file_url)
+            VALUES (?, ?, ?, ?)
+          `,
+          [applicationId, documentType, document.originalname, toPublicFileUrl(document)]
+        );
+      }
     }
 
     return applicationId;

@@ -3,6 +3,7 @@ export const modules = [
   { id: "students", label: "Students" },
   { id: "admissions", label: "Admissions" },
   { id: "fees", label: "Fees" },
+  { id: "transport", label: "Transport" },
   { id: "attendance", label: "Attendance" },
   { id: "results", label: "Results" },
   { id: "communications", label: "Messages" },

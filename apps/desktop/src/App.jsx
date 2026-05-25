@@ -2,7 +2,7 @@ import { Suspense, lazy, useMemo, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import { apiRequest, getStoredSession, storeSession } from "./lib/api";
 
-const staffRoles = ["super_admin", "admin_staff", "principal", "teacher", "accountant"];
+const staffRoles = ["super_admin", "admin_staff", "principal", "teacher", "accountant", "driver"];
 const DashboardView = lazy(() => import("./views/DashboardView"));
 const StudentsView = lazy(() => import("./views/StudentsView"));
 const FeesView = lazy(() => import("./views/FeesView"));
@@ -11,6 +11,7 @@ const ResultsView = lazy(() => import("./views/ResultsView"));
 const ReportsView = lazy(() => import("./views/ReportsView"));
 const SettingsView = lazy(() => import("./views/SettingsView"));
 const CommunicationsView = lazy(() => import("./views/CommunicationsView"));
+const TransportView = lazy(() => import("./views/TransportView"));
 
 export default function App() {
   const [activeModule, setActiveModule] = useState("dashboard");
@@ -33,6 +34,9 @@ export default function App() {
       }
       if (module === "fees") {
         allowed.add("fees");
+      }
+      if (module === "transport") {
+        allowed.add("transport");
       }
       if (module === "attendance") {
         allowed.add("attendance");
@@ -89,6 +93,8 @@ export default function App() {
         return <StudentsView token={session?.token} mode={activeModule} />;
       case "fees":
         return <FeesView token={session?.token} />;
+      case "transport":
+        return <TransportView token={session?.token} />;
       case "attendance":
         return <AttendanceView token={session?.token} />;
       case "results":

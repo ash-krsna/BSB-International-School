@@ -4,6 +4,7 @@ INSERT INTO roles (code, name) VALUES
 ('principal', 'Principal'),
 ('teacher', 'Teacher'),
 ('accountant', 'Accountant'),
+('driver', 'Bus Driver'),
 ('parent', 'Parent'),
 ('student', 'Student');
 

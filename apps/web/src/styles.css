@@ -1135,6 +1135,49 @@ textarea:focus {
     linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(255, 250, 240, 0.98));
 }
 
+.app-download-hero {
+  background:
+    radial-gradient(circle at 80% 18%, rgba(51, 163, 211, 0.22), transparent 28%),
+    linear-gradient(135deg, rgba(255, 248, 225, 0.9), rgba(238, 253, 247, 0.96));
+}
+
+.phone-preview {
+  width: min(22rem, 100%);
+  margin-inline: auto;
+  border: 10px solid #123d39;
+  border-radius: 36px;
+  padding: 1.1rem;
+  background: linear-gradient(180deg, #fff, #eefdf7);
+  box-shadow: 0 30px 60px rgba(32, 70, 64, 0.2);
+}
+
+.phone-bar {
+  width: 5.6rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(18, 61, 57, 0.22);
+  margin: 0 auto 1.2rem;
+}
+
+.phone-card {
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(17, 120, 111, 0.08);
+  color: var(--primary-deep);
+  font-weight: 900;
+  margin-bottom: 0.8rem;
+}
+
+.phone-card.active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--sky));
+}
+
+.app-role-card {
+  min-height: 12rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 247, 223, 0.92));
+}
+
 .learning-orbit {
   min-height: 24rem;
   position: relative;

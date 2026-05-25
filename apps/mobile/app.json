@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "BSB International School",
+    "slug": "bsb-international-school",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "com.bsb.internationalschool",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "extra": {
+      "apiBaseUrl": "https://bsb-erp-api.onrender.com/api"
+    }
+  }
+}

@@ -2,6 +2,7 @@ const app = require("./app");
 const env = require("./config/env");
 const { pool } = require("./config/db");
 const { scheduleDailyBackup } = require("./services/backupService");
+const { scheduleFeeReminders } = require("./services/feeReminderService");
 
 async function start() {
   await pool.query("SELECT 1");
@@ -9,6 +10,7 @@ async function start() {
     console.log(`BSB ERP API listening on http://localhost:${env.port}`);
   });
   scheduleDailyBackup();
+  scheduleFeeReminders();
 }
 
 start().catch((error) => {
