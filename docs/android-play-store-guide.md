@@ -23,7 +23,13 @@ npm --workspace apps/mobile run android
 5. Run:
 
 ```bash
-npx eas build -p android --profile production
+npm --workspace apps/mobile run build:android
+```
+
+For a direct testing APK before Play Store:
+
+```bash
+npm --workspace apps/mobile run preview:android
 ```
 
 ## Play Store Checklist

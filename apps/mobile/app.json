@@ -5,6 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
+    "scheme": "bsbschool",
+    "splash": {
+      "backgroundColor": "#0d5c56",
+      "resizeMode": "contain"
+    },
     "android": {
       "package": "com.bsb.internationalschool",
       "versionCode": 1,
@@ -14,7 +19,10 @@
       ]
     },
     "extra": {
-      "apiBaseUrl": "https://bsb-erp-api.onrender.com/api"
+      "apiBaseUrl": "https://bsb-erp-api.onrender.com/api",
+      "eas": {
+        "projectId": "replace-after-eas-init"
+      }
     }
   }
 }
