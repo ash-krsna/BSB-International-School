@@ -21,8 +21,9 @@
     "extra": {
       "apiBaseUrl": "https://bsb-erp-api.onrender.com/api",
       "eas": {
-        "projectId": "replace-after-eas-init"
+        "projectId": "d25f2727-f898-44d7-926f-502a2116bcef"
       }
-    }
+    },
+    "owner": "akash_bhagwat"
   }
 }

@@ -2,6 +2,7 @@
   "name": "@bsb/mobile",
   "version": "1.0.0",
   "private": true,
+  "main": "index.js",
   "description": "BSB International School Android app shell for parents, teachers, and bus drivers",
   "scripts": {
     "start": "expo start",
@@ -12,13 +13,13 @@
     "build": "node -e \"console.log('Use npm --workspace apps/mobile run build:android for Play Store AAB')\""
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.4",
+    "@expo/vector-icons": "~14.0.4",
     "expo": "^52.0.0",
-    "expo-constants": "^17.0.3",
-    "expo-linear-gradient": "^14.0.2",
-    "expo-status-bar": "^2.0.0",
+    "expo-constants": "~17.0.8",
+    "expo-linear-gradient": "~14.0.2",
+    "expo-status-bar": "~2.0.1",
     "react": "18.3.1",
-    "react-native": "0.76.5"
+    "react-native": "0.76.9"
   },
   "devDependencies": {
     "eas-cli": "^13.4.2"
