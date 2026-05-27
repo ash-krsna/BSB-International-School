@@ -7,7 +7,8 @@ import {
   principalMessage,
   quickHighlights,
   schoolStats,
-  showcaseItems
+  showcaseItems,
+  websiteServices
 } from "../content/schoolData";
 
 export default function HomePage() {
@@ -32,7 +33,7 @@ export default function HomePage() {
             <div className="hero-points">
               <span>Principal-led guidance</span>
               <span>Photo-rich school updates</span>
-              <span>Parent and student portal</span>
+              <span>Website-first parent services</span>
             </div>
             <div className="stat-strip" aria-label="School highlights">
               {schoolStats.map((stat) => (
@@ -60,6 +61,28 @@ export default function HomePage() {
               <strong>Admissions Open</strong>
               <p>Apply online, check results, view events, and message the school office.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section command-section">
+        <div className="container">
+          <div className="section-heading">
+            <span className="eyebrow">Website Control Center</span>
+            <h2>All important school work is now available from the website.</h2>
+            <p className="lede">
+              Until future channels are hosted later, the website works as the main digital desk for parents, students,
+              staff, and the school office.
+            </p>
+          </div>
+          <div className="service-grid">
+            {websiteServices.map((service) => (
+              <a className="service-card" href={service.path} key={service.title}>
+                <span>{service.metric}</span>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </a>
+            ))}
           </div>
         </div>
       </section>

@@ -26,7 +26,7 @@ export default function AboutPage() {
             <h3>School Direction</h3>
             <p>
               The school is growing one level at a time, with careful attention to classroom quality, routine, and child
-              development. The website, parent portal, and office software are designed to support that growth in a simple way.
+              development. The website, parent portal, and office dashboard are designed to support that growth in a simple way.
             </p>
             <img className="emphasis-photo" src={campusMoments[0].src} alt={campusMoments[0].title} />
           </aside>

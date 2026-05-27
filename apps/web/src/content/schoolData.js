@@ -130,6 +130,45 @@ export const featureCards = [
   }
 ];
 
+export const websiteServices = [
+  {
+    title: "Admissions Desk",
+    path: "/admissions",
+    metric: "Online form",
+    description: "Parents can submit student details, scholarship notes, photos, and documents for office review."
+  },
+  {
+    title: "Result Portal",
+    path: "/results",
+    metric: "Student ID ready",
+    description: "Families can check marks, progress charts, and downloadable result information from the website."
+  },
+  {
+    title: "Notices & Updates",
+    path: "/notices",
+    metric: "Public board",
+    description: "Holiday notices, announcements, admission updates, and school messages stay easy to find."
+  },
+  {
+    title: "Event Gallery",
+    path: "/gallery",
+    metric: "Organized media",
+    description: "Annual function photos, celebrations, classroom activities, and videos are grouped for parents."
+  },
+  {
+    title: "Feedback Desk",
+    path: "/feedback",
+    metric: "Private email",
+    description: "Suggestions and concerns go directly to the school inbox without showing the email publicly."
+  },
+  {
+    title: "School Office Login",
+    path: "/campus-connect",
+    metric: "Staff access",
+    description: "Staff can access admissions, transport, result, and communication workflows from the web dashboard."
+  }
+];
+
 export const campusMoments = [
   {
     title: "School Campus Gathering",

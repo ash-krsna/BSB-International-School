@@ -12,7 +12,6 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const ResultsPage = lazy(() => import("./pages/ResultsPage"));
 const PortalPage = lazy(() => import("./pages/PortalPage"));
 const StaffEntryPage = lazy(() => import("./pages/StaffEntryPage"));
-const AppDownloadPage = lazy(() => import("./pages/AppDownloadPage"));
 
 export default function App() {
   return (
@@ -28,7 +27,6 @@ export default function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/portal" element={<PortalPage />} />
-        <Route path="/app" element={<AppDownloadPage />} />
         <Route path="/campus-connect" element={<StaffEntryPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

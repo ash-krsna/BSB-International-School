@@ -12,8 +12,7 @@ const navItems = [
   { to: "/notices", label: "Notices" },
   { to: "/contact", label: "Contact" },
   { to: "/results", label: "Results" },
-  { to: "/portal", label: "Portal" },
-  { to: "/app", label: "App" }
+  { to: "/portal", label: "Portal" }
 ];
 
 export default function Shell({ children }) {

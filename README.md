@@ -9,7 +9,6 @@ apps/
   api/       Node.js + Express + MySQL backend
   web/       React website for parents, students, and public visitors
   desktop/   Electron + React desktop ERP for office staff
-  mobile/    React Native / Expo Android app shell
 database/
   schema.sql
   seed.sql
@@ -50,7 +49,6 @@ docs/
 - Vercel website: [docs/vercel-website-guide.md](D:\BSB\BSB International School WEB\docs\vercel-website-guide.md)
 - Backend host: [docs/deployment-guide.md](D:\BSB\BSB International School WEB\docs\deployment-guide.md)
 - API reference: [docs/api-reference.md](D:\BSB\BSB International School WEB\docs\api-reference.md)
-- Android app: [docs/android-play-store-guide.md](D:\BSB\BSB International School WEB\docs\android-play-store-guide.md)
 - Local office stack: [docker-compose.local.yml](D:\BSB\BSB International School WEB\docker-compose.local.yml)
 - Render backend blueprint: [render.yaml](D:\BSB\BSB International School WEB\render.yaml)
 
