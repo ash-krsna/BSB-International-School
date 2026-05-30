@@ -1123,6 +1123,47 @@ li {
   font-weight: 800;
 }
 
+.print-head-tools {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.class-sort-badge {
+  width: 6.2rem;
+  min-height: 8rem;
+  display: grid;
+  place-items: center;
+  gap: 0.08rem;
+  padding: 0.65rem;
+  border: 2px solid rgba(17, 120, 111, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(238, 253, 247, 0.96));
+  color: var(--primary-deep);
+  text-align: center;
+}
+
+.class-sort-badge small,
+.class-sort-badge em {
+  font-style: normal;
+  font-weight: 900;
+  color: var(--muted);
+}
+
+.class-sort-badge strong {
+  width: 3.2rem;
+  height: 3.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary-deep);
+  color: #fff;
+  font-family: "Baloo 2", cursive;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
 .photo-print-box {
   width: 7rem;
   height: 8rem;
@@ -1133,6 +1174,21 @@ li {
   color: var(--muted);
   text-align: center;
   font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.form-section-title {
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(17, 120, 111, 0.12);
+}
+
+.form-section-title span {
+  display: inline-flex;
+  padding: 0.38rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(17, 120, 111, 0.1);
+  color: var(--primary-deep);
   font-weight: 900;
 }
 
@@ -1791,11 +1847,51 @@ textarea:focus {
   .print-form-head {
     margin-bottom: 5mm;
     border-bottom: 2px solid #111 !important;
+    grid-template-columns: 20mm 1fr 58mm;
+    gap: 5mm;
+    align-items: start;
   }
 
   .print-form-head img {
-    width: 22mm;
-    height: 22mm;
+    width: 18mm;
+    height: 18mm;
+    margin-top: 2mm;
+  }
+
+  .print-form-head h2 {
+    font-size: 24px;
+    line-height: 1.02;
+    margin-bottom: 2mm;
+  }
+
+  .print-head-tools {
+    justify-content: flex-end;
+    gap: 3mm;
+  }
+
+  .class-sort-badge {
+    width: 24mm;
+    min-height: 34mm;
+    padding: 2mm;
+    border: 2px solid #111 !important;
+    background: #fff !important;
+    color: #111 !important;
+    break-inside: avoid;
+  }
+
+  .class-sort-badge small,
+  .class-sort-badge em {
+    color: #111 !important;
+    font-size: 9px;
+  }
+
+  .class-sort-badge strong {
+    width: 15mm;
+    height: 15mm;
+    border: 1px solid #111;
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 18px;
   }
 
   .print-form-head h2,
@@ -1810,6 +1906,22 @@ textarea:focus {
     height: 34mm;
     border: 1px solid #111;
     color: #111;
+  }
+
+  .form-section-title {
+    margin-top: 2mm;
+    padding-top: 2mm;
+    border-top: 1px solid #111;
+    break-after: avoid;
+  }
+
+  .form-section-title span {
+    padding: 1mm 2mm;
+    border: 1px solid #111;
+    border-radius: 0;
+    background: #f2f2f2 !important;
+    color: #111 !important;
+    font-size: 11px;
   }
 
   label {

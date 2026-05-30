@@ -1,11 +1,20 @@
+import { useState } from "react";
 import Shell from "../components/Shell";
 import { admissionsSteps } from "../content/schoolData";
 
 const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/akash.gita.bhagwat@gmail.com";
 const FORMSUBMIT_NEXT = "https://bsb-international-school.vercel.app/admissions?submitted=1";
+const CLASS_SORT_MARKS = {
+  "Class 1": "I",
+  "Class 2": "II",
+  "Class 3": "III",
+  "Class 4": "IV",
+  "Class 5": "V"
+};
 
 export default function AdmissionsPage() {
   const submitted = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("submitted") === "1";
+  const [applyingClass, setApplyingClass] = useState("Class 1");
   const today = new Date().toLocaleDateString("en-IN");
 
   function handlePrint() {
@@ -44,11 +53,26 @@ export default function AdmissionsPage() {
                 <p>Admission Application Form</p>
                 <small>Application Date: {today}</small>
               </div>
-              <span className="photo-print-box">Student Photo</span>
+              <div className="print-head-tools">
+                <span className="class-sort-badge" aria-label={`Sort admission form for ${applyingClass}`}>
+                  <small>Sort</small>
+                  <strong>{CLASS_SORT_MARKS[applyingClass]}</strong>
+                  <em>{applyingClass}</em>
+                </span>
+                <span className="photo-print-box">Student Photo</span>
+              </div>
+            </div>
+            <div className="form-section-title full-span">
+              <span>Student Details</span>
             </div>
             <div>
               <label htmlFor="applyingClassId">Applying Class</label>
-              <select id="applyingClassId" name="Applying Class" defaultValue="Class 1">
+              <select
+                id="applyingClassId"
+                name="Applying Class"
+                onChange={(event) => setApplyingClass(event.target.value)}
+                value={applyingClass}
+              >
                 <option value="Class 1">Class 1</option>
                 <option value="Class 2">Class 2</option>
                 <option value="Class 3">Class 3</option>
@@ -80,6 +104,9 @@ export default function AdmissionsPage() {
               <label htmlFor="aadhaarNo">Aadhaar Number</label>
               <input id="aadhaarNo" name="Aadhaar Number" inputMode="numeric" />
             </div>
+            <div className="form-section-title full-span">
+              <span>Parent & Contact Details</span>
+            </div>
             <div>
               <label htmlFor="parentName">Parent Name</label>
               <input id="parentName" name="Parent Name" required />
@@ -95,6 +122,9 @@ export default function AdmissionsPage() {
             <div className="full-span">
               <label htmlFor="address">Address</label>
               <textarea id="address" name="Address" rows="4" />
+            </div>
+            <div className="form-section-title full-span">
+              <span>School & Transport Details</span>
             </div>
             <div>
               <label htmlFor="previousSchool">Previous School</label>
@@ -115,6 +145,9 @@ export default function AdmissionsPage() {
               <label htmlFor="pickupAddress">Pickup Address</label>
               <input id="pickupAddress" name="Pickup Address" />
             </div>
+            <div className="form-section-title full-span">
+              <span>Documents & Signatures</span>
+            </div>
             <div>
               <label htmlFor="photo">Student Photo</label>
               <input id="photo" type="file" name="Student Photo" accept="image/*" />
@@ -130,8 +163,8 @@ export default function AdmissionsPage() {
             </div>
             <div className="full-span">
               <div className="button-row admission-actions">
-                <button className="button primary icon-admission" type="submit">Submit Admission</button>
-                <button className="button secondary icon-print" onClick={handlePrint} type="button">Print Admission Form</button>
+                <button className="button primary" type="submit">Submit Admission</button>
+                <button className="button secondary" onClick={handlePrint} type="button">Print Admission Form</button>
               </div>
               {submitted ? (
                 <p className="status-text">Admission submitted successfully. Please check the school email inbox.</p>
