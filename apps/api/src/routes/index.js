@@ -9,6 +9,7 @@ const feesController = require("../controllers/feesController");
 const resultsController = require("../controllers/resultsController");
 const attendanceController = require("../controllers/attendanceController");
 const contentController = require("../controllers/contentController");
+const studentMediaController = require("../controllers/studentMediaController");
 const reportsController = require("../controllers/reportsController");
 const communicationsController = require("../controllers/communicationsController");
 const transportController = require("../controllers/transportController");
@@ -95,6 +96,18 @@ router.post("/students/:id/notes", authenticate, authorize("super_admin", "admin
 router.post("/students/:id/achievements", authenticate, authorize("super_admin", "admin_staff", "principal", "teacher"), studentsController.addStudentAchievement);
 router.post("/students/promotions", authenticate, authorize("super_admin", "admin_staff", "principal"), studentsController.promoteStudents);
 router.get("/students/:id/id-card", authenticate, authorize("super_admin", "admin_staff", "principal", "teacher", "parent", "student"), studentsController.downloadStudentIdCard);
+router.get("/student-media/search", authenticate, authorize("super_admin", "admin_staff", "principal", "teacher", "parent", "student"), studentMediaController.searchStudentMedia);
+router.post(
+  "/student-media",
+  authenticate,
+  authorize("super_admin", "admin_staff", "principal", "teacher"),
+  (req, res, next) => {
+    req.uploadFolder = "student-media";
+    next();
+  },
+  upload.array("media", 20),
+  studentMediaController.uploadStudentMedia
+);
 
 router.get("/admissions", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.listAdmissions);
 router.patch("/admissions/:id/review", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.reviewAdmission);

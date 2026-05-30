@@ -80,6 +80,11 @@ export default function StaffEntryPage() {
               </div>
               <div className="feature-grid">
                 <article className="card">
+                  <h3>Student Media Sorting</h3>
+                  <p>Upload photos or videos and tag them by Student ID so parents and teachers can search media quickly.</p>
+                  <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
+                </article>
+                <article className="card">
                   <h3>Hidden Login Route</h3>
                   <p>
                     This staff entry remains outside the public menu. Share the direct URL only with principal, office staff,

@@ -51,6 +51,9 @@ export default function PortalPage() {
               <span className="eyebrow">Parent / Student Login</span>
               <h1>Secure portal access</h1>
               <p className="lede">Parents and students can sign in to view school updates, summaries, and connected modules.</p>
+              <div className="button-row">
+                <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
+              </div>
               <form className="card form-grid" onSubmit={handleLogin}>
                 <div className="full-span">
                   <label htmlFor="portalIdentifier">Email / Phone / Username</label>
@@ -83,6 +86,9 @@ export default function PortalPage() {
                 <PortalSummary label="Attendance" value="94%" tone="success" />
                 <PortalSummary label="Pending Fees" value="Rs 5,000" tone="warning" />
                 <PortalSummary label="Homework" value="4 Open Tasks" tone="default" />
+              </div>
+              <div className="button-row portal-action-row">
+                <a className="button secondary icon-gallery" href="/student-media">Search Student Photos & Videos</a>
               </div>
 
               <div className="portal-grid">

@@ -12,34 +12,35 @@
 2. Import [seed.sql](D:\BSB\BSB International School WEB\database\seed.sql)
 3. If you are upgrading an older local database, run [2026-05-19-erp-upgrade.sql](D:\BSB\BSB International School WEB\database\migrations\2026-05-19-erp-upgrade.sql)
 4. For transport, driver portal, and fee reminder features, run [2026-05-25-transport-web.sql](D:\BSB\BSB International School WEB\database\migrations\2026-05-25-transport-web.sql)
-5. Copy `apps/api/.env.example` to `apps/api/.env`
-6. Copy `apps/web/.env.development.example` to `apps/web/.env.local`
-7. Copy `apps/desktop/.env.local.example` to `apps/desktop/.env.local`
-8. In `apps/api/.env`, set:
+5. For Student ID based photo/video sorting, run [2026-05-30-student-media.sql](D:\BSB\BSB International School WEB\database\migrations\2026-05-30-student-media.sql)
+6. Copy `apps/api/.env.example` to `apps/api/.env`
+7. Copy `apps/web/.env.development.example` to `apps/web/.env.local`
+8. Copy `apps/desktop/.env.local.example` to `apps/desktop/.env.local`
+9. In `apps/api/.env`, set:
 
 - `CONTACT_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com`
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
 - For Gmail, use an App Password instead of your normal Gmail password
 
-9. Install dependencies from the root:
+10. Install dependencies from the root:
 
 ```bash
 npm install
 ```
 
-10. Start the backend:
+11. Start the backend:
 
 ```bash
 npm run dev:api
 ```
 
-11. Start the website:
+12. Start the website:
 
 ```bash
 npm run dev:web
 ```
 
-12. Start the desktop software:
+13. Start the desktop software:
 
 ```bash
 npm run dev:desktop

@@ -1638,6 +1638,21 @@ textarea:focus {
   background: linear-gradient(135deg, rgba(255, 224, 240, 0.82), rgba(255, 255, 255, 0.96));
 }
 
+.student-media-page .form-grid,
+.student-media-upload {
+  align-content: start;
+}
+
+.student-media-note {
+  min-height: 16rem;
+  display: grid;
+  align-content: center;
+}
+
+.portal-action-row {
+  margin: 1.2rem 0;
+}
+
 .footer-links {
   display: grid;
   gap: 0.35rem;
