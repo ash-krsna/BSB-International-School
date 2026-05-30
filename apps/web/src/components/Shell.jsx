@@ -26,7 +26,7 @@ export default function Shell({ children }) {
     <div className="web-shell">
       <header className="topbar">
         <div className="container topbar-inner">
-          <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
+          <Link to="/" className="brand" aria-label="Go to BSB International School home page" onClick={() => setMenuOpen(false)} title="Home">
             <span className="brand-mark">
               <img src="/showcase/logo-transparent.png" alt="BSB International School logo" />
             </span>
@@ -60,7 +60,7 @@ export default function Shell({ children }) {
         <div className="footer-pattern" aria-hidden="true" />
         <div className="container footer-wrap">
           <div className="footer-brand-card">
-            <Link to="/" className="footer-brand" onClick={() => setMenuOpen(false)}>
+            <Link to="/" className="footer-brand" aria-label="Go to BSB International School home page" onClick={() => setMenuOpen(false)} title="Home">
               <span className="footer-logo">
                 <img src="/showcase/logo-transparent.png" alt="BSB International School logo" />
               </span>
