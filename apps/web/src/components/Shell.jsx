@@ -71,8 +71,8 @@ export default function Shell({ children }) {
             </Link>
             <p>A growing primary school focused on quality education, discipline, modern learning, and simple parent communication.</p>
             <div className="footer-cta-row">
-              <Link to="/admissions" className="footer-cta primary">Apply Now</Link>
-              <Link to="/gallery" className="footer-cta">View Events</Link>
+              <Link to="/admissions" className="footer-cta primary icon-admission">Apply Now</Link>
+              <Link to="/gallery" className="footer-cta icon-gallery">View Events</Link>
             </div>
           </div>
 

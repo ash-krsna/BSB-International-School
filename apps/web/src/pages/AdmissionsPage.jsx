@@ -87,7 +87,7 @@ export default function AdmissionsPage() {
               <input id="documents" type="file" name="Documents" multiple />
             </div>
             <div className="full-span">
-              <button className="button primary" type="submit">Submit Admission</button>
+              <button className="button primary icon-admission" type="submit">Submit Admission</button>
               {submitted ? (
                 <p className="status-text">Admission submitted successfully. Please check the school email inbox.</p>
               ) : null}

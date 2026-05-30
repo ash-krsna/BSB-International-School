@@ -54,7 +54,7 @@ export default function FeedbackPage() {
               <textarea id="feedbackMessage" name="Message" rows="6" required />
             </div>
             <div className="full-span">
-              <button className="button primary" type="submit">Send Feedback</button>
+              <button className="button primary icon-feedback" type="submit">Send Feedback</button>
               {submitted ? <p className="status-text">Feedback submitted successfully. Thank you for sharing it.</p> : null}
             </div>
           </form>

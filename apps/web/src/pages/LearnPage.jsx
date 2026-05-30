@@ -23,8 +23,8 @@ export default function LearnPage() {
               A student-friendly corner with simple games, school growth graphs, result progress, and playful learning visuals.
             </p>
             <div className="button-row">
-              <a className="button primary" href="#learning-game">Play Quiz</a>
-              <a className="button secondary" href="#growth-graphs">View Growth</a>
+              <a className="button primary icon-play" href="#learning-game">Play Quiz</a>
+              <a className="button secondary icon-growth" href="#growth-graphs">View Growth</a>
             </div>
           </div>
           <div className="learning-orbit" aria-hidden="true">
@@ -66,7 +66,7 @@ export default function LearnPage() {
               <p className="lede">
                 Event videos help students remember celebrations, stage moments, and the joy of learning together.
               </p>
-              <a className="button secondary" href="/gallery">Open Full Gallery</a>
+              <a className="button secondary icon-gallery" href="/gallery">Open Full Gallery</a>
             </div>
             <div className="video-strip">
               {learningVideos.map((video) => (

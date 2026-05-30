@@ -49,7 +49,7 @@ export default function ContactPage() {
               <textarea id="message" name="Message" rows="5" required />
             </div>
             <div className="full-span">
-              <button className="button primary" type="submit">Send Enquiry</button>
+              <button className="button primary icon-send" type="submit">Send Enquiry</button>
               {submitted ? <p className="status-text">Message sent successfully. The school office will review it.</p> : null}
             </div>
           </form>

@@ -43,7 +43,7 @@ export default function ResultsPage() {
               <input id="dob" name="dob" type="date" required />
             </div>
             <div className="full-span">
-              <button className="button primary" disabled={busy} type="submit">
+              <button className="button primary icon-result" disabled={busy} type="submit">
                 {busy ? "Checking..." : "Check Result"}
               </button>
             </div>

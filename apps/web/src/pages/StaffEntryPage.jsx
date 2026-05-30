@@ -61,7 +61,7 @@ export default function StaffEntryPage() {
                   <input id="staffPassword" name="password" type="password" required />
                 </div>
                 <div className="full-span">
-                  <button className="button primary" disabled={busy} type="submit">
+                  <button className="button primary icon-login" disabled={busy} type="submit">
                     {busy ? "Checking access..." : "Enter Staff Area"}
                   </button>
                   {message ? <p className="status-text">{message}</p> : null}
@@ -76,7 +76,7 @@ export default function StaffEntryPage() {
                   <h1>{session.user.fullName}</h1>
                   <p className="lede">Roles: {session.user.roles.join(", ")}</p>
                 </div>
-                <button className="button secondary" onClick={logout} type="button">Logout</button>
+                <button className="button secondary icon-logout" onClick={logout} type="button">Logout</button>
               </div>
               <div className="feature-grid">
                 <article className="card">

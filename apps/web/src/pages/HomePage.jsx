@@ -26,9 +26,9 @@ export default function HomePage() {
               The school blends values, modern teaching, and a warm environment where children can learn with confidence.
             </p>
             <div className="button-row">
-              <a href="/admissions" className="button primary">Apply for Admission</a>
-              <a href="/results" className="button secondary">Check Results</a>
-              <a href="/learn" className="button secondary">Play & Learn</a>
+              <a href="/admissions" className="button primary icon-admission">Apply for Admission</a>
+              <a href="/results" className="button secondary icon-result">Check Results</a>
+              <a href="/learn" className="button secondary icon-play">Play & Learn</a>
             </div>
             <div className="hero-points">
               <span>Principal-led guidance</span>
@@ -97,8 +97,8 @@ export default function HomePage() {
               see the school growing year by year.
             </p>
             <div className="button-row">
-              <a href="/learn" className="button primary">Open Play & Learn</a>
-              <a href="/gallery" className="button secondary">Watch Events</a>
+              <a href="/learn" className="button primary icon-play">Open Play & Learn</a>
+              <a href="/gallery" className="button secondary icon-gallery">Watch Events</a>
             </div>
           </div>
           <div className="future-console" aria-hidden="true">
