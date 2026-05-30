@@ -3,20 +3,14 @@ import { Link, NavLink } from "react-router-dom";
 import { contactInfo } from "../content/schoolData";
 
 const navItems = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
   { to: "/admissions", label: "Admissions" },
   { to: "/gallery", label: "Gallery" },
-  { to: "/learn", label: "Play" },
-  { to: "/feedback", label: "Feedback" },
-  { to: "/notices", label: "Notices" },
   { to: "/contact", label: "Contact" },
-  { to: "/results", label: "Results" },
   { to: "/portal", label: "Portal" }
 ];
 
 const quickFooterLinks = navItems.filter((item) =>
-  ["/admissions", "/gallery", "/learn", "/feedback", "/notices", "/results"].includes(item.to)
+  ["/admissions", "/gallery", "/contact", "/portal"].includes(item.to)
 );
 
 const serviceLinks = [
