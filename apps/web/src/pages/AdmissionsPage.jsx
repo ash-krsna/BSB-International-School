@@ -6,6 +6,11 @@ const FORMSUBMIT_NEXT = "https://bsb-international-school.vercel.app/admissions?
 
 export default function AdmissionsPage() {
   const submitted = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("submitted") === "1";
+  const today = new Date().toLocaleDateString("en-IN");
+
+  function handlePrint() {
+    window.print();
+  }
 
   return (
     <Shell>
@@ -26,12 +31,21 @@ export default function AdmissionsPage() {
               </ol>
             </div>
           </div>
-          <form action={FORMSUBMIT_ENDPOINT} className="card form-grid" encType="multipart/form-data" method="POST">
+          <form action={FORMSUBMIT_ENDPOINT} className="card form-grid printable-admission-form" encType="multipart/form-data" method="POST">
             <input type="hidden" name="School" value="BSB International School" />
             <input type="hidden" name="_subject" value="New admission application - BSB International School" />
             <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_next" value={FORMSUBMIT_NEXT} />
+            <div className="print-form-head full-span">
+              <img src="/showcase/logo-transparent.png" alt="BSB International School logo" />
+              <div>
+                <h2>BSB International School</h2>
+                <p>Admission Application Form</p>
+                <small>Application Date: {today}</small>
+              </div>
+              <span className="photo-print-box">Student Photo</span>
+            </div>
             <div>
               <label htmlFor="applyingClassId">Applying Class</label>
               <select id="applyingClassId" name="Applying Class" defaultValue="Class 1">
@@ -63,6 +77,10 @@ export default function AdmissionsPage() {
               <input id="studentDob" type="date" name="Date of Birth" required />
             </div>
             <div>
+              <label htmlFor="aadhaarNo">Aadhaar Number</label>
+              <input id="aadhaarNo" name="Aadhaar Number" inputMode="numeric" />
+            </div>
+            <div>
               <label htmlFor="parentName">Parent Name</label>
               <input id="parentName" name="Parent Name" required />
             </div>
@@ -79,6 +97,25 @@ export default function AdmissionsPage() {
               <textarea id="address" name="Address" rows="4" />
             </div>
             <div>
+              <label htmlFor="previousSchool">Previous School</label>
+              <input id="previousSchool" name="Previous School" />
+            </div>
+            <div>
+              <label htmlFor="scholarshipDetails">Scholarship Details</label>
+              <input id="scholarshipDetails" name="Scholarship Details" />
+            </div>
+            <div>
+              <label htmlFor="busService">School Bus Service</label>
+              <select id="busService" name="School Bus Service" defaultValue="No">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="pickupAddress">Pickup Address</label>
+              <input id="pickupAddress" name="Pickup Address" />
+            </div>
+            <div>
               <label htmlFor="photo">Student Photo</label>
               <input id="photo" type="file" name="Student Photo" accept="image/*" />
             </div>
@@ -86,8 +123,16 @@ export default function AdmissionsPage() {
               <label htmlFor="documents">Documents</label>
               <input id="documents" type="file" name="Documents" multiple />
             </div>
+            <div className="full-span print-signature-grid" aria-hidden="true">
+              <span>Parent / Guardian Signature</span>
+              <span>Admission Officer Signature</span>
+              <span>Principal Signature</span>
+            </div>
             <div className="full-span">
-              <button className="button primary icon-admission" type="submit">Submit Admission</button>
+              <div className="button-row admission-actions">
+                <button className="button primary icon-admission" type="submit">Submit Admission</button>
+                <button className="button secondary icon-print" onClick={handlePrint} type="button">Print Admission Form</button>
+              </div>
               {submitted ? (
                 <p className="status-text">Admission submitted successfully. Please check the school email inbox.</p>
               ) : null}
