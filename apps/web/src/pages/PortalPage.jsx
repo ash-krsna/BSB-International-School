@@ -23,7 +23,7 @@ const portalOptions = [
   },
   {
     title: "Admin Portal",
-    text: "School admins can access admissions, fees, student records, documents, reports, and all connected office modules.",
+    text: "School admins can access admission enquiries, confirmations, fees, student records, documents, reports, and all connected office modules.",
     action: "Open Admin Portal",
     href: "/admin",
     icon: "icon-admission"

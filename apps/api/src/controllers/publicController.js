@@ -31,11 +31,6 @@ function normalizeYesNo(value) {
   return ["true", "yes", "1", "on"].includes(String(value || "").trim().toLowerCase());
 }
 
-function toMoney(value) {
-  const amount = Number(value);
-  return Number.isFinite(amount) && amount > 0 ? amount : 0;
-}
-
 async function runOptionalNotification(work) {
   try {
     await work();
@@ -64,10 +59,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
     scholarshipDetails,
     wantsBusService,
     pickupAddress,
-    preferredRoute,
-    totalFee,
-    paidFee,
-    feeNotes
+    preferredRoute
   } = req.body;
 
   const resolvedGender = normalizeGender(studentGender);
@@ -94,21 +86,8 @@ const submitAdmission = asyncHandler(async (req, res) => {
 
   const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
   const photoUrl = photoFile ? toPublicFileUrl(photoFile) : null;
-  const totalFeeAmount = toMoney(totalFee);
-  const paidFeeAmount = Math.min(toMoney(paidFee), totalFeeAmount || toMoney(paidFee));
-  const remainingFeeAmount = Math.max(totalFeeAmount - paidFeeAmount, 0);
 
   const admissionId = await transaction(async (connection) => {
-    const [classRows] = await connection.execute("SELECT name, display_order FROM classes WHERE id = ? LIMIT 1", [resolvedClassId]);
-    const classInfo = classRows[0] || {};
-    const classNumber = String(classInfo.name || applyingClassName || "CLS").replace(/\D/g, "") || String(classInfo.display_order || resolvedClassId);
-    const [counterRows] = await connection.execute(
-      "SELECT COUNT(*) AS count FROM admission_applications WHERE academic_year_id = ? AND applying_class_id = ?",
-      [resolvedAcademicYearId, resolvedClassId]
-    );
-    const nextClassSerial = Number(counterRows[0]?.count || 0) + 1;
-    const assignedStudentId = `BSB-${new Date().getFullYear()}-C${classNumber}-${String(nextClassSerial).padStart(4, "0")}`;
-
     const [result] = await connection.execute(
       `
         INSERT INTO admission_applications
@@ -119,7 +98,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
       [
         resolvedAcademicYearId,
         resolvedClassId,
-        assignedStudentId,
+        null,
         studentFirstName,
         studentMiddleName || null,
         studentLastName,
@@ -136,10 +115,10 @@ const submitAdmission = asyncHandler(async (req, res) => {
         normalizeYesNo(wantsBusService),
         pickupAddress || null,
         preferredRoute || null,
-        totalFeeAmount,
-        paidFeeAmount,
-        remainingFeeAmount,
-        feeNotes || null,
+        0,
+        0,
+        0,
+        "Pending confirmation",
         photoUrl
       ]
     );
@@ -168,7 +147,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
       }
     }
 
-    return { applicationId, assignedStudentId };
+    return { applicationId };
   });
   const admissionCode = `BSB-ADM-${new Date().getFullYear()}-${String(admissionId.applicationId).padStart(4, "0")}`;
 
@@ -204,11 +183,10 @@ const submitAdmission = asyncHandler(async (req, res) => {
       await sendEmail({
         to: env.contactReceiverEmail,
         subject: `New admission saved: ${studentFirstName} ${studentLastName}`,
-        text: `New admission saved in the database.\n\nAdmission ID: ${admissionCode}\nStudent ID: ${admissionId.assignedStudentId}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
+        text: `New admission enquiry saved in the database.\n\nEnquiry ID: ${admissionCode}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
         html: `
-          <h2>New admission saved</h2>
-          <p><strong>Admission ID:</strong> ${admissionCode}</p>
-          <p><strong>Student ID:</strong> ${escapeHtml(admissionId.assignedStudentId)}</p>
+          <h2>New admission enquiry saved</h2>
+          <p><strong>Enquiry ID:</strong> ${admissionCode}</p>
           <p><strong>Student:</strong> ${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</p>
           <p><strong>Class:</strong> ${escapeHtml(applyingClassName || String(resolvedClassId))}</p>
           <p><strong>Parent:</strong> ${escapeHtml(parentName)}</p>
@@ -220,10 +198,9 @@ const submitAdmission = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: "Admission submitted successfully.",
+    message: "Admission enquiry submitted successfully.",
     admissionId: admissionId.applicationId,
-    admissionCode,
-    studentId: admissionId.assignedStudentId
+    admissionCode
   });
 });
 

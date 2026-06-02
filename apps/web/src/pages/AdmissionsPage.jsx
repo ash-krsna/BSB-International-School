@@ -15,9 +15,7 @@ export default function AdmissionsPage() {
   const [applyingClass, setApplyingClass] = useState("Class 1");
   const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
   const [admissionCode, setAdmissionCode] = useState("");
-  const [assignedStudentId, setAssignedStudentId] = useState("");
   const [studentPhotoPreview, setStudentPhotoPreview] = useState("");
-  const [feeDraft, setFeeDraft] = useState({ totalFee: "", paidFee: "" });
   const today = new Date().toLocaleDateString("en-IN");
 
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function AdmissionsPage() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setSubmitState({ status: "loading", message: "Saving admission in school database..." });
+    setSubmitState({ status: "loading", message: "Saving admission enquiry for school office..." });
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -63,15 +61,14 @@ export default function AdmissionsPage() {
       });
 
       setAdmissionCode(result.admissionCode || `BSB-ADM-${String(result.admissionId).padStart(4, "0")}`);
-      setAssignedStudentId(result.studentId || "");
       setSubmitState({
         status: "success",
-        message: `Admission saved successfully. Student ID: ${result.studentId || "Generated"}`
+        message: `Admission enquiry saved successfully. Enquiry ID: ${result.admissionCode || result.admissionId}. School office will contact the parent for confirmation.`
       });
     } catch (error) {
       setSubmitState({
         status: "error",
-        message: error.message || "Admission could not be saved. Please try again."
+        message: error.message || "Admission enquiry could not be saved. Please try again."
       });
     }
   }
@@ -81,10 +78,10 @@ export default function AdmissionsPage() {
       <section className="page-section">
         <div className="container two-column admission-layout">
           <div>
-            <span className="eyebrow">Admissions Open</span>
-            <h1>Online admission form</h1>
+            <span className="eyebrow">Admissions Enquiry</span>
+            <h1>Admission enquiry desk</h1>
             <p className="lede">
-              Parents can apply online, share student details, and upload available documents directly for office review.
+              Parents can share student details with the school office. The admission team will contact the family, confirm details, and then create the official admission record.
             </p>
             <div className="card process-card">
               <h3>How admission works</h3>
@@ -100,10 +97,9 @@ export default function AdmissionsPage() {
               <img src="/showcase/logo-transparent.png" alt="BSB International School logo" />
               <div>
                 <h2>BSB International School</h2>
-                <p>Admission Application Form</p>
+                <p>Admission Enquiry Form</p>
                 <small>Application Date: {today}</small>
-                <small className="admission-reference">Admission ID: {admissionCode || "Generated after save"}</small>
-                <small className="admission-reference">Student ID: {assignedStudentId || "Generated after save"}</small>
+                <small className="admission-reference">Enquiry ID: {admissionCode || "Generated after save"}</small>
               </div>
               <div className="print-head-tools">
                 <span className="class-admission-badge" aria-label={`Admission form class badge for ${applyingClass}`}>
@@ -207,42 +203,7 @@ export default function AdmissionsPage() {
               <input id="pickupAddress" name="pickupAddress" />
             </div>
             <div className="form-section-title full-span">
-              <span>Fees Details</span>
-            </div>
-            <div>
-              <label htmlFor="totalFee">Total Fee</label>
-              <input
-                id="totalFee"
-                inputMode="decimal"
-                name="totalFee"
-                onChange={(event) => setFeeDraft((current) => ({ ...current, totalFee: event.target.value }))}
-                value={feeDraft.totalFee}
-              />
-            </div>
-            <div>
-              <label htmlFor="paidFee">Paid Fee</label>
-              <input
-                id="paidFee"
-                inputMode="decimal"
-                name="paidFee"
-                onChange={(event) => setFeeDraft((current) => ({ ...current, paidFee: event.target.value }))}
-                value={feeDraft.paidFee}
-              />
-            </div>
-            <div>
-              <label htmlFor="remainingFeeDisplay">Remaining Fee</label>
-              <input
-                id="remainingFeeDisplay"
-                readOnly
-                value={Math.max((Number(feeDraft.totalFee) || 0) - (Number(feeDraft.paidFee) || 0), 0)}
-              />
-            </div>
-            <div>
-              <label htmlFor="feeNotes">Fee Notes</label>
-              <input id="feeNotes" name="feeNotes" placeholder="Installment, discount, or receipt note" />
-            </div>
-            <div className="form-section-title full-span">
-              <span>Documents & Signatures</span>
+              <span>Photo & Documents For Enquiry</span>
             </div>
             <div className="print-file-field">
               <label htmlFor="photo">Student Photo</label>
@@ -280,9 +241,9 @@ export default function AdmissionsPage() {
             <div className="full-span">
               <div className="button-row admission-actions">
                 <button className="button primary" disabled={submitState.status === "loading"} type="submit">
-                  {submitState.status === "loading" ? "Saving..." : "Submit Admission"}
+                  {submitState.status === "loading" ? "Saving..." : "Submit Enquiry"}
                 </button>
-                <button className="button secondary" onClick={handlePrint} type="button">Print Admission Form</button>
+                <button className="button secondary" onClick={handlePrint} type="button">Print Enquiry Form</button>
               </div>
               {submitState.message ? (
                 <p className={`status-text ${submitState.status === "error" ? "error-text" : ""}`}>{submitState.message}</p>

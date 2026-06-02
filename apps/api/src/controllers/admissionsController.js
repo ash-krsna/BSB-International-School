@@ -46,8 +46,8 @@ const exportAdmissionRegister = asyncHandler(async (req, res) => {
   const rows = await query(
     `
       SELECT
-        CONCAT('BSB-ADM-', YEAR(aa.created_at), '-', LPAD(aa.id, 4, '0')) AS admission_id,
-        aa.assigned_student_id AS student_id,
+        CONCAT('BSB-ADM-', YEAR(aa.created_at), '-', LPAD(aa.id, 4, '0')) AS enquiry_id,
+        aa.assigned_student_id AS assigned_student_id_after_confirmation,
         c.name AS class,
         aa.student_first_name AS first_name,
         aa.student_middle_name AS middle_name,

@@ -152,13 +152,13 @@ export default function StaffEntryPage() {
                   <a className="button secondary icon-login" href="/portal#student-login">Open Student Portal</a>
                 </article>
                 <article className="card">
-                  <h3>Admission Entry</h3>
-                  <p>Open the admission form, capture photo/documents, save the student in the online register, then print the office form.</p>
-                  <a className="button primary icon-admission" href="/admissions">Open Admission Form</a>
+                  <h3>Admission Enquiry Desk</h3>
+                  <p>Open the enquiry form, capture parent/student details, and keep the lead ready for follow-up confirmation.</p>
+                  <a className="button primary icon-admission" href="/admissions">Open Enquiry Form</a>
                 </article>
                 <article className="card">
-                  <h3>Admission Register</h3>
-                  <p>Download the latest Excel sheet with student ID, class, documents, contact details, and fees.</p>
+                  <h3>Admission Enquiry Register</h3>
+                  <p>Download the latest Excel sheet with enquiry ID, class, documents, contact details, and confirmation status.</p>
                   <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Download Excel</button>
                 </article>
                 <article className="card">
@@ -178,8 +178,8 @@ export default function StaffEntryPage() {
               <article className="card admission-register-card">
                 <div className="portal-head compact-head">
                   <div>
-                    <h3>Live Admission Register</h3>
-                    <p className="status-text">Newest admission entries saved in the online database.</p>
+                    <h3>Live Admission Enquiry Register</h3>
+                    <p className="status-text">Newest enquiry entries saved in the online database for office follow-up.</p>
                   </div>
                   <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Excel</button>
                 </div>
@@ -187,7 +187,7 @@ export default function StaffEntryPage() {
                   <table className="data-table">
                     <thead>
                       <tr>
-                        <th>Student ID</th>
+                        <th>Enquiry ID</th>
                         <th>Name</th>
                         <th>Class</th>
                         <th>Mother</th>
