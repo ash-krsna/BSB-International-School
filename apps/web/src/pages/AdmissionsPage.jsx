@@ -5,11 +5,11 @@ import { admissionsSteps } from "../content/schoolData";
 const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/akash.gita.bhagwat@gmail.com";
 const FORMSUBMIT_NEXT = "https://bsb-international-school.vercel.app/admissions?submitted=1";
 const CLASS_SORT_MARKS = {
-  "Class 1": "I",
-  "Class 2": "II",
-  "Class 3": "III",
-  "Class 4": "IV",
-  "Class 5": "V"
+  "Class 1": "1",
+  "Class 2": "2",
+  "Class 3": "3",
+  "Class 4": "4",
+  "Class 5": "5"
 };
 
 export default function AdmissionsPage() {
@@ -54,8 +54,7 @@ export default function AdmissionsPage() {
                 <small>Application Date: {today}</small>
               </div>
               <div className="print-head-tools">
-                <span className="class-sort-badge" aria-label={`Sort admission form for ${applyingClass}`}>
-                  <small>Sort</small>
+                <span className="class-sort-badge" aria-label={`Admission form class marker for ${applyingClass}`}>
                   <strong>{CLASS_SORT_MARKS[applyingClass]}</strong>
                   <em>{applyingClass}</em>
                 </span>
@@ -148,13 +147,33 @@ export default function AdmissionsPage() {
             <div className="form-section-title full-span">
               <span>Documents & Signatures</span>
             </div>
-            <div>
+            <div className="print-file-field">
               <label htmlFor="photo">Student Photo</label>
-              <input id="photo" type="file" name="Student Photo" accept="image/*" />
+              <div className="file-choice-grid">
+                <label className="file-choice" htmlFor="photo">
+                  <span>Upload from device</span>
+                  <input id="photo" type="file" name="Student Photo Upload" accept="image/*" />
+                </label>
+                <label className="file-choice" htmlFor="photoCamera">
+                  <span>Click photo from camera</span>
+                  <input id="photoCamera" type="file" name="Student Photo Camera" accept="image/*" capture="environment" />
+                </label>
+              </div>
+              <span className="print-file-line">Photo received</span>
             </div>
-            <div>
+            <div className="print-file-field">
               <label htmlFor="documents">Documents</label>
-              <input id="documents" type="file" name="Documents" multiple />
+              <div className="file-choice-grid">
+                <label className="file-choice" htmlFor="documents">
+                  <span>Upload from device</span>
+                  <input id="documents" type="file" name="Documents Upload" multiple />
+                </label>
+                <label className="file-choice" htmlFor="documentCamera">
+                  <span>Click photo from camera</span>
+                  <input id="documentCamera" type="file" name="Document Camera Photo" accept="image/*" capture="environment" />
+                </label>
+              </div>
+              <span className="print-file-line">Documents received</span>
             </div>
             <div className="full-span print-signature-grid" aria-hidden="true">
               <span>Parent / Guardian Signature</span>
