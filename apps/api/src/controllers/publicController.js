@@ -31,6 +31,11 @@ function normalizeYesNo(value) {
   return ["true", "yes", "1", "on"].includes(String(value || "").trim().toLowerCase());
 }
 
+function toMoney(value) {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? amount : 0;
+}
+
 async function runOptionalNotification(work) {
   try {
     await work();
@@ -45,11 +50,13 @@ const submitAdmission = asyncHandler(async (req, res) => {
     applyingClassId,
     applyingClassName,
     studentFirstName,
+    studentMiddleName,
     studentLastName,
     studentGender,
     studentDob,
     aadhaarNo,
     parentName,
+    motherName,
     parentPhone,
     parentEmail,
     address,
@@ -57,7 +64,10 @@ const submitAdmission = asyncHandler(async (req, res) => {
     scholarshipDetails,
     wantsBusService,
     pickupAddress,
-    preferredRoute
+    preferredRoute,
+    totalFee,
+    paidFee,
+    feeNotes
   } = req.body;
 
   const resolvedGender = normalizeGender(studentGender);
@@ -84,24 +94,40 @@ const submitAdmission = asyncHandler(async (req, res) => {
 
   const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
   const photoUrl = photoFile ? toPublicFileUrl(photoFile) : null;
+  const totalFeeAmount = toMoney(totalFee);
+  const paidFeeAmount = Math.min(toMoney(paidFee), totalFeeAmount || toMoney(paidFee));
+  const remainingFeeAmount = Math.max(totalFeeAmount - paidFeeAmount, 0);
 
   const admissionId = await transaction(async (connection) => {
+    const [classRows] = await connection.execute("SELECT name, display_order FROM classes WHERE id = ? LIMIT 1", [resolvedClassId]);
+    const classInfo = classRows[0] || {};
+    const classNumber = String(classInfo.name || applyingClassName || "CLS").replace(/\D/g, "") || String(classInfo.display_order || resolvedClassId);
+    const [counterRows] = await connection.execute(
+      "SELECT COUNT(*) AS count FROM admission_applications WHERE academic_year_id = ? AND applying_class_id = ?",
+      [resolvedAcademicYearId, resolvedClassId]
+    );
+    const nextClassSerial = Number(counterRows[0]?.count || 0) + 1;
+    const assignedStudentId = `BSB-${new Date().getFullYear()}-C${classNumber}-${String(nextClassSerial).padStart(4, "0")}`;
+
     const [result] = await connection.execute(
       `
         INSERT INTO admission_applications
-          (academic_year_id, applying_class_id, student_first_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, photo_url)
+          (academic_year_id, applying_class_id, assigned_student_id, student_first_name, student_middle_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, mother_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, total_fee, paid_fee, remaining_fee, fee_notes, photo_url)
         VALUES
-          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         resolvedAcademicYearId,
         resolvedClassId,
+        assignedStudentId,
         studentFirstName,
+        studentMiddleName || null,
         studentLastName,
         resolvedGender,
         studentDob,
         aadhaarNo || null,
         parentName,
+        motherName || null,
         parentPhone,
         parentEmail || null,
         address || null,
@@ -110,6 +136,10 @@ const submitAdmission = asyncHandler(async (req, res) => {
         normalizeYesNo(wantsBusService),
         pickupAddress || null,
         preferredRoute || null,
+        totalFeeAmount,
+        paidFeeAmount,
+        remainingFeeAmount,
+        feeNotes || null,
         photoUrl
       ]
     );
@@ -138,9 +168,9 @@ const submitAdmission = asyncHandler(async (req, res) => {
       }
     }
 
-    return applicationId;
+    return { applicationId, assignedStudentId };
   });
-  const admissionCode = `BSB-ADM-${new Date().getFullYear()}-${String(admissionId).padStart(4, "0")}`;
+  const admissionCode = `BSB-ADM-${new Date().getFullYear()}-${String(admissionId.applicationId).padStart(4, "0")}`;
 
   await runOptionalNotification(async () => {
     await sendSms({
@@ -174,10 +204,11 @@ const submitAdmission = asyncHandler(async (req, res) => {
       await sendEmail({
         to: env.contactReceiverEmail,
         subject: `New admission saved: ${studentFirstName} ${studentLastName}`,
-        text: `New admission saved in the database.\n\nAdmission ID: ${admissionCode}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
+        text: `New admission saved in the database.\n\nAdmission ID: ${admissionCode}\nStudent ID: ${admissionId.assignedStudentId}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
         html: `
           <h2>New admission saved</h2>
           <p><strong>Admission ID:</strong> ${admissionCode}</p>
+          <p><strong>Student ID:</strong> ${escapeHtml(admissionId.assignedStudentId)}</p>
           <p><strong>Student:</strong> ${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</p>
           <p><strong>Class:</strong> ${escapeHtml(applyingClassName || String(resolvedClassId))}</p>
           <p><strong>Parent:</strong> ${escapeHtml(parentName)}</p>
@@ -190,8 +221,9 @@ const submitAdmission = asyncHandler(async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Admission submitted successfully.",
-    admissionId,
-    admissionCode
+    admissionId: admissionId.applicationId,
+    admissionCode,
+    studentId: admissionId.assignedStudentId
   });
 });
 

@@ -116,6 +116,7 @@ router.post(
 );
 
 router.get("/admissions", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.listAdmissions);
+router.get("/admissions/export", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.exportAdmissionRegister);
 router.patch("/admissions/:id/review", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.reviewAdmission);
 
 router.get("/fees/ledger", authenticate, authorize("super_admin", "admin_staff", "accountant", "principal"), feesController.listFeeLedger);

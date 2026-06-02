@@ -20,3 +20,17 @@ INSERT INTO classes (name, display_order) VALUES
 ('Class 3', 6),
 ('Class 4', 7),
 ('Class 5', 8);
+
+INSERT INTO users (full_name, email, phone, username, password_hash, status)
+VALUES ('Akash Bhagwat', NULL, NULL, 'Akash_', '$2a$10$NDYx9AIs5zDKbvjLBwcguOmxZTyq3chDK.SCgUlsZjlBurf0.tQVS', 'active')
+ON DUPLICATE KEY UPDATE
+  full_name = VALUES(full_name),
+  password_hash = VALUES(password_hash),
+  status = 'active';
+
+INSERT INTO user_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM users u
+JOIN roles r ON r.code = 'super_admin'
+WHERE u.username = 'Akash_'
+ON DUPLICATE KEY UPDATE role_id = role_id;

@@ -1308,6 +1308,47 @@ textarea:focus {
   color: #b42318;
 }
 
+.compact-head {
+  margin-bottom: 1rem;
+}
+
+.admission-register-card {
+  margin-top: 1.2rem;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.data-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.8rem 0.9rem;
+  border-bottom: 1px solid rgba(17, 120, 111, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  background: rgba(17, 120, 111, 0.08);
+  color: var(--primary-deep);
+  font-weight: 900;
+}
+
+.data-table td {
+  color: var(--ink);
+  font-size: 0.94rem;
+}
+
 .notice-head,
 .portal-head {
   display: flex;

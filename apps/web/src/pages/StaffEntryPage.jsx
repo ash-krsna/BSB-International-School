@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Shell from "../components/Shell";
 import { useAuth } from "../state/AuthContext";
+import { API_BASE_URL, apiRequest } from "../lib/api";
 
 const staffRoles = ["super_admin", "admin_staff", "principal", "teacher", "accountant"];
 
@@ -8,11 +9,67 @@ export default function StaffEntryPage() {
   const { session, login, logout } = useAuth();
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [admissions, setAdmissions] = useState([]);
+  const [registerMessage, setRegisterMessage] = useState("");
 
   const isStaff = useMemo(
     () => session?.user?.roles?.some((role) => staffRoles.includes(role)),
     [session]
   );
+
+  useEffect(() => {
+    if (!isStaff || !session?.token) {
+      return;
+    }
+
+    let ignore = false;
+    async function loadAdmissions() {
+      try {
+        const data = await apiRequest("/admissions", {
+          headers: {
+            Authorization: `Bearer ${session.token}`
+          }
+        });
+        if (!ignore) {
+          setAdmissions(data.data || []);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setRegisterMessage(error.message);
+        }
+      }
+    }
+
+    loadAdmissions();
+    return () => {
+      ignore = true;
+    };
+  }, [isStaff, session?.token]);
+
+  async function downloadAdmissionRegister() {
+    setRegisterMessage("");
+    try {
+      const response = await fetch(`${API_BASE_URL}/admissions/export`, {
+        headers: {
+          Authorization: `Bearer ${session.token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Could not download admission register.");
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "bsb-admission-register.xlsx";
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      setRegisterMessage(error.message);
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -80,16 +137,14 @@ export default function StaffEntryPage() {
               </div>
               <div className="feature-grid">
                 <article className="card">
-                  <h3>Student Media Sorting</h3>
-                  <p>Upload photos or videos and tag them by Student ID so parents and teachers can search media quickly.</p>
-                  <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
+                  <h3>Admission Entry</h3>
+                  <p>Open the admission form, capture photo/documents, save the student in the online register, then print the office form.</p>
+                  <a className="button primary icon-admission" href="/admissions">Open Admission Form</a>
                 </article>
                 <article className="card">
-                  <h3>Hidden Login Route</h3>
-                  <p>
-                    This staff entry remains outside the public menu. Share the direct URL only with principal, office staff,
-                    accountants, and teachers who need access.
-                  </p>
+                  <h3>Admission Register</h3>
+                  <p>Download the latest Excel sheet with student ID, class, documents, contact details, and fees.</p>
+                  <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Download Excel</button>
                 </article>
                 <article className="card">
                   <h3>Allowed Modules</h3>
@@ -100,13 +155,54 @@ export default function StaffEntryPage() {
                   </ul>
                 </article>
                 <article className="card">
-                  <h3>How Admin Works</h3>
-                  <p>
-                    The main operational admin work is designed for the connected office ERP software. This hidden page acts as
-                    the secure staff web entry, while the desktop software handles day-to-day records, fees, results, and reports.
-                  </p>
+                  <h3>Student Media Sorting</h3>
+                  <p>Upload photos or videos and tag them by Student ID so parents and teachers can search media quickly.</p>
+                  <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
                 </article>
               </div>
+              <article className="card admission-register-card">
+                <div className="portal-head compact-head">
+                  <div>
+                    <h3>Live Admission Register</h3>
+                    <p className="status-text">Newest admission entries saved in the online database.</p>
+                  </div>
+                  <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Excel</button>
+                </div>
+                <div className="table-scroll">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Mother</th>
+                        <th>Contact</th>
+                        <th>Documents</th>
+                        <th>Total Fee</th>
+                        <th>Paid</th>
+                        <th>Remaining</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {admissions.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.assignedStudentId || item.admissionCode}</td>
+                          <td>{item.studentFullName}</td>
+                          <td>{item.className}</td>
+                          <td>{item.motherName || "-"}</td>
+                          <td>{item.parentPhone}</td>
+                          <td>{item.documents || "Pending"}</td>
+                          <td>{item.totalFee || 0}</td>
+                          <td>{item.paidFee || 0}</td>
+                          <td>{item.remainingFee || 0}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {!admissions.length ? <p className="status-text">No admissions saved yet.</p> : null}
+                {registerMessage ? <p className="status-text error-text">{registerMessage}</p> : null}
+              </article>
             </>
           )}
         </div>

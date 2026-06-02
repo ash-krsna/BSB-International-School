@@ -15,7 +15,9 @@ export default function AdmissionsPage() {
   const [applyingClass, setApplyingClass] = useState("Class 1");
   const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
   const [admissionCode, setAdmissionCode] = useState("");
+  const [assignedStudentId, setAssignedStudentId] = useState("");
   const [studentPhotoPreview, setStudentPhotoPreview] = useState("");
+  const [feeDraft, setFeeDraft] = useState({ totalFee: "", paidFee: "" });
   const today = new Date().toLocaleDateString("en-IN");
 
   useEffect(() => {
@@ -61,9 +63,10 @@ export default function AdmissionsPage() {
       });
 
       setAdmissionCode(result.admissionCode || `BSB-ADM-${String(result.admissionId).padStart(4, "0")}`);
+      setAssignedStudentId(result.studentId || "");
       setSubmitState({
         status: "success",
-        message: `Admission saved successfully. Admission ID: ${result.admissionCode || result.admissionId}`
+        message: `Admission saved successfully. Student ID: ${result.studentId || "Generated"}`
       });
     } catch (error) {
       setSubmitState({
@@ -100,6 +103,7 @@ export default function AdmissionsPage() {
                 <p>Admission Application Form</p>
                 <small>Application Date: {today}</small>
                 <small className="admission-reference">Admission ID: {admissionCode || "Generated after save"}</small>
+                <small className="admission-reference">Student ID: {assignedStudentId || "Generated after save"}</small>
               </div>
               <div className="print-head-tools">
                 <span className="class-admission-badge" aria-label={`Admission form class badge for ${applyingClass}`}>
@@ -134,6 +138,10 @@ export default function AdmissionsPage() {
               <input id="studentFirstName" name="studentFirstName" required />
             </div>
             <div>
+              <label htmlFor="studentMiddleName">Student Middle Name</label>
+              <input id="studentMiddleName" name="studentMiddleName" />
+            </div>
+            <div>
               <label htmlFor="studentLastName">Student Last Name</label>
               <input id="studentLastName" name="studentLastName" required />
             </div>
@@ -159,6 +167,10 @@ export default function AdmissionsPage() {
             <div>
               <label htmlFor="parentName">Parent Name</label>
               <input id="parentName" name="parentName" required />
+            </div>
+            <div>
+              <label htmlFor="motherName">Mother's Name</label>
+              <input id="motherName" name="motherName" required />
             </div>
             <div>
               <label htmlFor="parentPhone">Parent Phone</label>
@@ -193,6 +205,41 @@ export default function AdmissionsPage() {
             <div>
               <label htmlFor="pickupAddress">Pickup Address</label>
               <input id="pickupAddress" name="pickupAddress" />
+            </div>
+            <div className="form-section-title full-span">
+              <span>Fees Details</span>
+            </div>
+            <div>
+              <label htmlFor="totalFee">Total Fee</label>
+              <input
+                id="totalFee"
+                inputMode="decimal"
+                name="totalFee"
+                onChange={(event) => setFeeDraft((current) => ({ ...current, totalFee: event.target.value }))}
+                value={feeDraft.totalFee}
+              />
+            </div>
+            <div>
+              <label htmlFor="paidFee">Paid Fee</label>
+              <input
+                id="paidFee"
+                inputMode="decimal"
+                name="paidFee"
+                onChange={(event) => setFeeDraft((current) => ({ ...current, paidFee: event.target.value }))}
+                value={feeDraft.paidFee}
+              />
+            </div>
+            <div>
+              <label htmlFor="remainingFeeDisplay">Remaining Fee</label>
+              <input
+                id="remainingFeeDisplay"
+                readOnly
+                value={Math.max((Number(feeDraft.totalFee) || 0) - (Number(feeDraft.paidFee) || 0), 0)}
+              />
+            </div>
+            <div>
+              <label htmlFor="feeNotes">Fee Notes</label>
+              <input id="feeNotes" name="feeNotes" placeholder="Installment, discount, or receipt note" />
             </div>
             <div className="form-section-title full-span">
               <span>Documents & Signatures</span>
