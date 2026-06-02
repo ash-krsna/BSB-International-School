@@ -1171,6 +1171,53 @@ li {
   position: relative;
 }
 
+.class-admission-badge.girl-badge strong,
+.class-admission-badge.boy-badge strong {
+  background: #ffd4b2;
+  color: transparent;
+  overflow: hidden;
+}
+
+.class-admission-badge.girl-badge strong::before,
+.class-admission-badge.boy-badge strong::before {
+  content: "";
+  position: absolute;
+  inset: 0.45rem 0.55rem 0.9rem;
+  border-radius: 50%;
+  background: #ffd0ac;
+  box-shadow:
+    0.72rem 1.55rem 0 -0.38rem #f7819d,
+    2.12rem 1.55rem 0 -0.38rem #f7819d,
+    1.42rem 1.95rem 0 -0.52rem #111;
+}
+
+.class-admission-badge.girl-badge strong::after,
+.class-admission-badge.boy-badge strong::after {
+  content: "";
+  position: absolute;
+}
+
+.class-admission-badge.girl-badge strong::after {
+  width: 4.1rem;
+  height: 2.15rem;
+  left: 0;
+  top: 0;
+  border-radius: 2rem 2rem 1rem 1rem;
+  background:
+    radial-gradient(circle at 1rem 0.28rem, #ff86a3 0 0.36rem, transparent 0.38rem),
+    radial-gradient(circle at 3.1rem 0.28rem, #ff86a3 0 0.36rem, transparent 0.38rem),
+    #3d465a;
+}
+
+.class-admission-badge.boy-badge strong::after {
+  width: 4rem;
+  height: 1.65rem;
+  left: 0.05rem;
+  top: 0.05rem;
+  border-radius: 2rem 2rem 0.75rem 0.75rem;
+  background: #c4865e;
+}
+
 .photo-print-box {
   width: 7rem;
   height: 8rem;
@@ -2178,10 +2225,18 @@ textarea:focus {
     gap: 3mm;
   }
 
+  .printable-admission-form {
+    position: relative;
+    padding-bottom: 22mm !important;
+  }
+
   .class-admission-badge {
     display: grid !important;
-    width: 22mm;
-    min-height: auto;
+    position: fixed;
+    right: 11mm;
+    bottom: 9mm;
+    width: 27mm;
+    min-height: 28mm;
     padding: 0;
     border: 0 !important;
     background: transparent !important;
@@ -2210,6 +2265,53 @@ textarea:focus {
     font-size: 20px;
     font-family: "Times New Roman", Times, serif !important;
     font-weight: 700;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .class-admission-badge.girl-badge strong,
+  .class-admission-badge.boy-badge strong {
+    width: 20mm;
+    height: 20mm;
+    background: #ffd0ac !important;
+    color: transparent !important;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .class-admission-badge.girl-badge strong::before,
+  .class-admission-badge.boy-badge strong::before {
+    inset: 2.4mm 2.8mm 4.6mm;
+    background: #ffd0ac !important;
+    box-shadow:
+      3.8mm 7.8mm 0 -2mm #f7819d,
+      10.4mm 7.8mm 0 -2mm #f7819d,
+      7.1mm 10mm 0 -2.7mm #111;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .class-admission-badge.girl-badge strong::after {
+    width: 20mm;
+    height: 10.8mm;
+    left: 0;
+    top: 0;
+    border-radius: 10mm 10mm 5mm 5mm;
+    background:
+      radial-gradient(circle at 5mm 1.4mm, #ff86a3 0 1.8mm, transparent 1.9mm),
+      radial-gradient(circle at 15mm 1.4mm, #ff86a3 0 1.8mm, transparent 1.9mm),
+      #3d465a !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .class-admission-badge.boy-badge strong::after {
+    width: 19.5mm;
+    height: 8.2mm;
+    left: 0.25mm;
+    top: 0.2mm;
+    border-radius: 9.8mm 9.8mm 3.6mm 3.6mm;
+    background: #c4865e !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

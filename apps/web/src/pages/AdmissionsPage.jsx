@@ -4,19 +4,28 @@ import { admissionsSteps } from "../content/schoolData";
 import { apiRequest } from "../lib/api";
 
 const CLASS_BADGE_MARKS = {
-  "Class 5": "1",
-  "Class 4": "2",
+  "Class 1": "1",
+  "Class 2": "2",
   "Class 3": "3",
-  "Class 2": "4",
-  "Class 1": "5"
+  "Class 4": "4",
+  "Class 5": "5"
 };
+
+const PRE_PRIMARY_CLASSES = ["Nursery", "Junior KG", "Senior KG"];
 
 export default function AdmissionsPage() {
   const [applyingClass, setApplyingClass] = useState("Class 1");
+  const [studentGender, setStudentGender] = useState("male");
   const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
   const [admissionCode, setAdmissionCode] = useState("");
   const [studentPhotoPreview, setStudentPhotoPreview] = useState("");
   const today = new Date().toLocaleDateString("en-IN");
+  const isPrePrimaryClass = PRE_PRIMARY_CLASSES.includes(applyingClass);
+  const badgeType = isPrePrimaryClass ? (studentGender === "female" ? "girl" : "boy") : "number";
+  const badgeLabel = isPrePrimaryClass ? "" : CLASS_BADGE_MARKS[applyingClass];
+  const badgeCaption = isPrePrimaryClass
+    ? `${applyingClass} ${studentGender === "female" ? "Girl" : "Boy"}`
+    : applyingClass;
 
   useEffect(() => {
     return () => {
@@ -102,9 +111,9 @@ export default function AdmissionsPage() {
                 <small className="admission-reference">Enquiry ID: {admissionCode || "Generated after save"}</small>
               </div>
               <div className="print-head-tools">
-                <span className="class-admission-badge" aria-label={`Admission form class badge for ${applyingClass}`}>
-                  <strong>{CLASS_BADGE_MARKS[applyingClass]}</strong>
-                  <em>{applyingClass}</em>
+                <span className={`class-admission-badge ${badgeType}-badge`} aria-label={`Admission form class badge for ${badgeCaption}`}>
+                  <strong>{badgeLabel}</strong>
+                  <em>{badgeCaption}</em>
                 </span>
                 <span className={`photo-print-box ${studentPhotoPreview ? "has-photo" : ""}`}>
                   {studentPhotoPreview ? <img src={studentPhotoPreview} alt="Selected student" /> : "Student Photo"}
@@ -122,6 +131,9 @@ export default function AdmissionsPage() {
                 onChange={(event) => setApplyingClass(event.target.value)}
                 value={applyingClass}
               >
+                <option value="Nursery">Nursery</option>
+                <option value="Junior KG">Junior KG</option>
+                <option value="Senior KG">Senior KG</option>
                 <option value="Class 1">Class 1</option>
                 <option value="Class 2">Class 2</option>
                 <option value="Class 3">Class 3</option>
@@ -143,10 +155,14 @@ export default function AdmissionsPage() {
             </div>
             <div>
               <label htmlFor="studentGender">Gender</label>
-              <select id="studentGender" name="studentGender" defaultValue="male">
+              <select
+                id="studentGender"
+                name="studentGender"
+                onChange={(event) => setStudentGender(event.target.value)}
+                value={studentGender}
+              >
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                <option value="other">Other</option>
               </select>
             </div>
             <div>

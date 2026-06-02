@@ -222,6 +222,9 @@ export default function StaffEntryPage() {
                   <div>
                     <label htmlFor="staffApplyingClass">Applying Class</label>
                     <select id="staffApplyingClass" name="applyingClassName" defaultValue="Class 1">
+                      <option value="Nursery">Nursery</option>
+                      <option value="Junior KG">Junior KG</option>
+                      <option value="Senior KG">Senior KG</option>
                       <option value="Class 1">Class 1</option>
                       <option value="Class 2">Class 2</option>
                       <option value="Class 3">Class 3</option>
