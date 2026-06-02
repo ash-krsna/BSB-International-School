@@ -3,7 +3,7 @@ import Shell from "../components/Shell";
 import { admissionsSteps } from "../content/schoolData";
 import { apiRequest } from "../lib/api";
 
-const CLASS_SORT_MARKS = {
+const CLASS_BADGE_MARKS = {
   "Class 1": "1",
   "Class 2": "2",
   "Class 3": "3",
@@ -73,8 +73,8 @@ export default function AdmissionsPage() {
                 <small>Application Date: {today}</small>
               </div>
               <div className="print-head-tools">
-                <span className="class-sort-badge" aria-label={`Admission form class marker for ${applyingClass}`}>
-                  <strong>{CLASS_SORT_MARKS[applyingClass]}</strong>
+                <span className="class-admission-badge" aria-label={`Admission form class badge for ${applyingClass}`}>
+                  <strong>{CLASS_BADGE_MARKS[applyingClass]}</strong>
                   <em>{applyingClass}</em>
                 </span>
                 <span className="photo-print-box">Student Photo</span>

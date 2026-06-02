@@ -1129,36 +1129,35 @@ li {
   align-items: stretch;
 }
 
-.class-sort-badge {
-  width: 6.2rem;
-  min-height: 8rem;
+.class-admission-badge {
+  width: 5rem;
+  min-height: 5.4rem;
   display: none;
   place-items: center;
-  gap: 0.08rem;
-  padding: 0.65rem;
-  border: 2px solid rgba(17, 120, 111, 0.24);
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(238, 253, 247, 0.96));
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border: 0;
+  background: transparent;
   color: var(--primary-deep);
   text-align: center;
 }
 
-.class-sort-badge small,
-.class-sort-badge em {
+.class-admission-badge em {
   font-style: normal;
   font-weight: 900;
   color: var(--muted);
 }
 
-.class-sort-badge strong {
-  width: 3.2rem;
-  height: 3.2rem;
+.class-admission-badge strong {
+  width: 4.1rem;
+  height: 4.1rem;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--primary-deep);
-  color: #fff;
+  background:
+    radial-gradient(circle at center, #ffd26a 0 43%, #ffe082 44% 69%, transparent 70%),
+    conic-gradient(from 20deg, transparent 0 9%, #48b875 10% 16%, transparent 17% 25%, #48b875 26% 32%, transparent 33% 41%, #48b875 42% 49%, transparent 50% 100%);
+  color: #e99328;
   font-family: "Baloo 2", cursive;
   font-size: 1.55rem;
   line-height: 1;
@@ -1852,6 +1851,51 @@ textarea:focus {
     grid-template-columns: 1fr;
     margin-top: 0.8rem;
   }
+
+  .admission-layout {
+    gap: 1rem;
+  }
+
+  .admission-layout .card {
+    padding: 1rem;
+  }
+
+  .print-form-head {
+    grid-template-columns: 52px 1fr;
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  .print-form-head img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .print-form-head h2 {
+    font-size: 1.45rem;
+  }
+
+  .print-head-tools {
+    display: none;
+  }
+
+  .file-choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .file-choice {
+    min-height: 3.6rem;
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 3.25rem;
+  }
+
+  textarea {
+    min-height: 7.5rem;
+  }
 }
 
 @media print {
@@ -1933,7 +1977,7 @@ textarea:focus {
     gap: 3mm;
   }
 
-  .class-sort-badge {
+  .class-admission-badge {
     display: grid !important;
     width: 22mm;
     min-height: auto;
@@ -1946,7 +1990,7 @@ textarea:focus {
     place-items: center;
   }
 
-  .class-sort-badge em {
+  .class-admission-badge em {
     color: #111 !important;
     font-size: 9px;
     font-family: "Times New Roman", Times, serif !important;
@@ -1954,7 +1998,7 @@ textarea:focus {
     font-weight: 700;
   }
 
-  .class-sort-badge strong {
+  .class-admission-badge strong {
     width: 18mm;
     height: 18mm;
     border: 0;
