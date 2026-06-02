@@ -11,39 +11,37 @@ export default function StaffEntryPage() {
   const [busy, setBusy] = useState(false);
   const [admissions, setAdmissions] = useState([]);
   const [registerMessage, setRegisterMessage] = useState("");
+  const [officialMessage, setOfficialMessage] = useState("");
+  const [officialBusy, setOfficialBusy] = useState(false);
+  const [officialFeeDraft, setOfficialFeeDraft] = useState({ totalFee: "", paidFee: "" });
 
   const isStaff = useMemo(
     () => session?.user?.roles?.some((role) => staffRoles.includes(role)),
     [session]
   );
 
+  async function loadAdmissions() {
+    if (!session?.token) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest("/admissions", {
+        headers: {
+          Authorization: `Bearer ${session.token}`
+        }
+      });
+      setAdmissions(data.data || []);
+    } catch (error) {
+      setRegisterMessage(error.message);
+    }
+  }
+
   useEffect(() => {
     if (!isStaff || !session?.token) {
       return;
     }
-
-    let ignore = false;
-    async function loadAdmissions() {
-      try {
-        const data = await apiRequest("/admissions", {
-          headers: {
-            Authorization: `Bearer ${session.token}`
-          }
-        });
-        if (!ignore) {
-          setAdmissions(data.data || []);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setRegisterMessage(error.message);
-        }
-      }
-    }
-
     loadAdmissions();
-    return () => {
-      ignore = true;
-    };
   }, [isStaff, session?.token]);
 
   async function downloadAdmissionRegister() {
@@ -93,6 +91,32 @@ export default function StaffEntryPage() {
       setMessage(error.message);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function handleOfficialAdmissionSubmit(event) {
+    event.preventDefault();
+    setOfficialBusy(true);
+    setOfficialMessage("Saving official admission...");
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      const result = await apiRequest("/admissions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.token}`
+        },
+        body: formData
+      });
+
+      event.currentTarget.reset();
+      setOfficialFeeDraft({ totalFee: "", paidFee: "" });
+      setOfficialMessage(`Official admission saved. Student ID: ${result.studentId}`);
+      await loadAdmissions();
+    } catch (error) {
+      setOfficialMessage(error.message);
+    } finally {
+      setOfficialBusy(false);
     }
   }
 
@@ -175,6 +199,136 @@ export default function StaffEntryPage() {
                   <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
                 </article>
               </div>
+              <article className="card admission-register-card">
+                <div className="portal-head compact-head">
+                  <div>
+                    <span className="eyebrow">Official Admission</span>
+                    <h3>Staff Admission Form</h3>
+                    <p className="status-text">Use this after the parent confirms admission. This creates the assigned Student ID.</p>
+                  </div>
+                </div>
+                <form className="form-grid" encType="multipart/form-data" onSubmit={handleOfficialAdmissionSubmit}>
+                  <div>
+                    <label htmlFor="staffApplyingClass">Applying Class</label>
+                    <select id="staffApplyingClass" name="applyingClassName" defaultValue="Class 1">
+                      <option value="Class 1">Class 1</option>
+                      <option value="Class 2">Class 2</option>
+                      <option value="Class 3">Class 3</option>
+                      <option value="Class 4">Class 4</option>
+                      <option value="Class 5">Class 5</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="staffStudentFirstName">First Name</label>
+                    <input id="staffStudentFirstName" name="studentFirstName" required />
+                  </div>
+                  <div>
+                    <label htmlFor="staffStudentMiddleName">Middle Name</label>
+                    <input id="staffStudentMiddleName" name="studentMiddleName" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffStudentLastName">Last Name</label>
+                    <input id="staffStudentLastName" name="studentLastName" required />
+                  </div>
+                  <div>
+                    <label htmlFor="staffStudentGender">Gender</label>
+                    <select id="staffStudentGender" name="studentGender" defaultValue="male">
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="staffStudentDob">Date of Birth</label>
+                    <input id="staffStudentDob" name="studentDob" type="date" required />
+                  </div>
+                  <div>
+                    <label htmlFor="staffAadhaarNo">Aadhaar Number</label>
+                    <input id="staffAadhaarNo" inputMode="numeric" name="aadhaarNo" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffMotherName">Mother's Name</label>
+                    <input id="staffMotherName" name="motherName" required />
+                  </div>
+                  <div>
+                    <label htmlFor="staffParentName">Parent / Guardian Name</label>
+                    <input id="staffParentName" name="parentName" required />
+                  </div>
+                  <div>
+                    <label htmlFor="staffParentPhone">Contact Number</label>
+                    <input id="staffParentPhone" name="parentPhone" required />
+                  </div>
+                  <div>
+                    <label htmlFor="staffParentEmail">Email</label>
+                    <input id="staffParentEmail" name="parentEmail" type="email" />
+                  </div>
+                  <div className="full-span">
+                    <label htmlFor="staffAddress">Address</label>
+                    <textarea id="staffAddress" name="address" rows="3" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffPreviousSchool">Previous School</label>
+                    <input id="staffPreviousSchool" name="previousSchool" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffScholarshipDetails">Scholarship Details</label>
+                    <input id="staffScholarshipDetails" name="scholarshipDetails" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffBusService">School Bus Service</label>
+                    <select id="staffBusService" name="wantsBusService" defaultValue="false">
+                      <option value="false">No</option>
+                      <option value="true">Yes</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="staffPickupAddress">Pickup Address</label>
+                    <input id="staffPickupAddress" name="pickupAddress" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffTotalFee">Total Fee</label>
+                    <input
+                      id="staffTotalFee"
+                      inputMode="decimal"
+                      name="totalFee"
+                      onChange={(event) => setOfficialFeeDraft((current) => ({ ...current, totalFee: event.target.value }))}
+                      value={officialFeeDraft.totalFee}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="staffPaidFee">Paid Fee</label>
+                    <input
+                      id="staffPaidFee"
+                      inputMode="decimal"
+                      name="paidFee"
+                      onChange={(event) => setOfficialFeeDraft((current) => ({ ...current, paidFee: event.target.value }))}
+                      value={officialFeeDraft.paidFee}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="staffRemainingFee">Remaining Fee</label>
+                    <input id="staffRemainingFee" readOnly value={Math.max((Number(officialFeeDraft.totalFee) || 0) - (Number(officialFeeDraft.paidFee) || 0), 0)} />
+                  </div>
+                  <div>
+                    <label htmlFor="staffFeeNotes">Fee Notes</label>
+                    <input id="staffFeeNotes" name="feeNotes" placeholder="Receipt, discount, installment note" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffPhoto">Student Photo</label>
+                    <input id="staffPhoto" name="photo" type="file" accept="image/*" />
+                  </div>
+                  <div>
+                    <label htmlFor="staffDocuments">Documents</label>
+                    <input id="staffDocuments" name="documents" type="file" multiple />
+                  </div>
+                  <div className="full-span">
+                    <button className="button primary icon-admission" disabled={officialBusy} type="submit">
+                      {officialBusy ? "Saving..." : "Save Official Admission"}
+                    </button>
+                    {officialMessage ? <p className={`status-text ${officialMessage.includes("saved") ? "" : "error-text"}`}>{officialMessage}</p> : null}
+                  </div>
+                </form>
+              </article>
               <article className="card admission-register-card">
                 <div className="portal-head compact-head">
                   <div>

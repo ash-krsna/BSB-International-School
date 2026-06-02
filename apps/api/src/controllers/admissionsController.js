@@ -1,8 +1,47 @@
-const { query } = require("../config/db");
+const { query, transaction } = require("../config/db");
 const asyncHandler = require("../utils/asyncHandler");
+const HttpError = require("../utils/httpError");
 const { sendSms, sendWhatsApp } = require("../services/notificationService");
 const env = require("../config/env");
 const { toExcelBuffer } = require("../services/exportService");
+const { toPublicFileUrl } = require("../services/uploadService");
+
+function normalizeGender(value) {
+  const gender = String(value || "").trim().toLowerCase();
+  if (["male", "female", "other"].includes(gender)) {
+    return gender;
+  }
+  return "";
+}
+
+function normalizeYesNo(value) {
+  return ["true", "yes", "1", "on"].includes(String(value || "").trim().toLowerCase());
+}
+
+function toMoney(value) {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? amount : 0;
+}
+
+async function resolveAdmissionSetup({ academicYearId, applyingClassId, applyingClassName }) {
+  let resolvedAcademicYearId = academicYearId || null;
+  if (!resolvedAcademicYearId) {
+    const years = await query("SELECT id FROM academic_years WHERE is_current = TRUE ORDER BY id DESC LIMIT 1");
+    resolvedAcademicYearId = years[0]?.id;
+  }
+
+  let resolvedClassId = applyingClassId || null;
+  if (!resolvedClassId && applyingClassName) {
+    const classes = await query("SELECT id FROM classes WHERE name = :name LIMIT 1", { name: applyingClassName });
+    resolvedClassId = classes[0]?.id;
+  }
+
+  if (!resolvedAcademicYearId || !resolvedClassId) {
+    throw new HttpError(400, "Admission database is missing current academic year or selected class setup.");
+  }
+
+  return { resolvedAcademicYearId, resolvedClassId };
+}
 
 const listAdmissions = asyncHandler(async (req, res) => {
   const rows = await query(
@@ -40,6 +79,126 @@ const listAdmissions = asyncHandler(async (req, res) => {
   );
 
   res.json({ success: true, data: rows });
+});
+
+const createStaffAdmission = asyncHandler(async (req, res) => {
+  const {
+    academicYearId,
+    applyingClassId,
+    applyingClassName,
+    studentFirstName,
+    studentMiddleName,
+    studentLastName,
+    studentGender,
+    studentDob,
+    aadhaarNo,
+    parentName,
+    motherName,
+    parentPhone,
+    parentEmail,
+    address,
+    previousSchool,
+    scholarshipDetails,
+    wantsBusService,
+    pickupAddress,
+    preferredRoute,
+    totalFee,
+    paidFee,
+    feeNotes
+  } = req.body;
+
+  const resolvedGender = normalizeGender(studentGender);
+  if (!studentFirstName || !studentLastName || !resolvedGender || !studentDob || !parentName || !motherName || !parentPhone) {
+    throw new HttpError(400, "Please complete student name, gender, DOB, parent, mother name, and phone.");
+  }
+
+  const { resolvedAcademicYearId, resolvedClassId } = await resolveAdmissionSetup({ academicYearId, applyingClassId, applyingClassName });
+  const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
+  const photoUrl = photoFile ? toPublicFileUrl(photoFile) : null;
+  const totalFeeAmount = toMoney(totalFee);
+  const paidFeeAmount = Math.min(toMoney(paidFee), totalFeeAmount || toMoney(paidFee));
+  const remainingFeeAmount = Math.max(totalFeeAmount - paidFeeAmount, 0);
+
+  const result = await transaction(async (connection) => {
+    const [classRows] = await connection.execute("SELECT name, display_order FROM classes WHERE id = ? LIMIT 1", [resolvedClassId]);
+    const classInfo = classRows[0] || {};
+    const classNumber = String(classInfo.name || applyingClassName || "CLS").replace(/\D/g, "") || String(classInfo.display_order || resolvedClassId);
+    const [counterRows] = await connection.execute(
+      "SELECT COUNT(*) AS count FROM admission_applications WHERE academic_year_id = ? AND applying_class_id = ? AND assigned_student_id IS NOT NULL",
+      [resolvedAcademicYearId, resolvedClassId]
+    );
+    const nextClassSerial = Number(counterRows[0]?.count || 0) + 1;
+    const assignedStudentId = `BSB-${new Date().getFullYear()}-C${classNumber}-${String(nextClassSerial).padStart(4, "0")}`;
+
+    const [insertResult] = await connection.execute(
+      `
+        INSERT INTO admission_applications
+          (academic_year_id, applying_class_id, assigned_student_id, student_first_name, student_middle_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, mother_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, total_fee, paid_fee, remaining_fee, fee_notes, photo_url, status, reviewed_by, reviewed_at)
+        VALUES
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, NOW())
+      `,
+      [
+        resolvedAcademicYearId,
+        resolvedClassId,
+        assignedStudentId,
+        studentFirstName,
+        studentMiddleName || null,
+        studentLastName,
+        resolvedGender,
+        studentDob,
+        aadhaarNo || null,
+        parentName,
+        motherName,
+        parentPhone,
+        parentEmail || null,
+        address || null,
+        previousSchool || null,
+        scholarshipDetails || null,
+        normalizeYesNo(wantsBusService),
+        pickupAddress || null,
+        preferredRoute || null,
+        totalFeeAmount,
+        paidFeeAmount,
+        remainingFeeAmount,
+        feeNotes || null,
+        photoUrl,
+        req.auth.userId
+      ]
+    );
+
+    const applicationId = insertResult.insertId;
+    const documentGroups = [
+      ["documents", "admission_upload"],
+      ["documentCamera", "admission_camera_photo"],
+      ["passportPhoto", "passport_photo"],
+      ["birthCertificate", "birth_certificate"],
+      ["previousMarksheet", "previous_marksheet"],
+      ["transferCertificate", "transfer_certificate"]
+    ];
+
+    for (const [fieldName, documentType] of documentGroups) {
+      const documents = req.files?.[fieldName] || [];
+      for (const document of documents) {
+        await connection.execute(
+          `
+            INSERT INTO student_documents (admission_application_id, document_type, file_name, file_url, uploaded_by)
+            VALUES (?, ?, ?, ?, ?)
+          `,
+          [applicationId, documentType, document.originalname, toPublicFileUrl(document), req.auth.userId]
+        );
+      }
+    }
+
+    return { applicationId, assignedStudentId };
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Official admission saved.",
+    admissionId: result.applicationId,
+    admissionCode: `BSB-ADM-${new Date().getFullYear()}-${String(result.applicationId).padStart(4, "0")}`,
+    studentId: result.assignedStudentId
+  });
 });
 
 const exportAdmissionRegister = asyncHandler(async (req, res) => {
@@ -120,6 +279,7 @@ const reviewAdmission = asyncHandler(async (req, res) => {
 
 module.exports = {
   listAdmissions,
+  createStaffAdmission,
   exportAdmissionRegister,
   reviewAdmission
 };

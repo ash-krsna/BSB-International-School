@@ -116,6 +116,26 @@ router.post(
 );
 
 router.get("/admissions", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.listAdmissions);
+router.post(
+  "/admissions",
+  authenticate,
+  authorize("super_admin", "admin_staff", "principal"),
+  (req, res, next) => {
+    req.uploadFolder = "admissions";
+    next();
+  },
+  upload.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "photoCamera", maxCount: 1 },
+    { name: "documents", maxCount: 10 },
+    { name: "documentCamera", maxCount: 10 },
+    { name: "passportPhoto", maxCount: 1 },
+    { name: "birthCertificate", maxCount: 1 },
+    { name: "previousMarksheet", maxCount: 1 },
+    { name: "transferCertificate", maxCount: 1 }
+  ]),
+  admissionsController.createStaffAdmission
+);
 router.get("/admissions/export", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.exportAdmissionRegister);
 router.patch("/admissions/:id/review", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.reviewAdmission);
 
