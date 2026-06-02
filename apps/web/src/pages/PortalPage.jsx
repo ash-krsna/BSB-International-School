@@ -13,6 +13,30 @@ const demoGrowth = [
   { year: "2026", percentage: 84 }
 ];
 
+const portalOptions = [
+  {
+    title: "Student Portal",
+    text: "Students and parents will use this area for results, attendance, homework, fees, notices, and student media.",
+    action: "Open Student Login",
+    href: "#student-login",
+    icon: "icon-login"
+  },
+  {
+    title: "Admin Portal",
+    text: "School admins can access admissions, fees, student records, documents, reports, and all connected office modules.",
+    action: "Open Admin Portal",
+    href: "/admin",
+    icon: "icon-admission"
+  },
+  {
+    title: "Teachers Portal",
+    text: "Teachers will track attendance, student performance, tests conducted, activities completed, homework, and class remarks.",
+    action: "Teacher Tools",
+    href: "#teacher-portal",
+    icon: "icon-growth"
+  }
+];
+
 export default function PortalPage() {
   const { session, login, logout } = useAuth();
   const [message, setMessage] = useState("");
@@ -48,13 +72,26 @@ export default function PortalPage() {
         <div className="container narrow">
           {!session ? (
             <>
-              <span className="eyebrow">Parent / Student Login</span>
-              <h1>Secure portal access</h1>
-              <p className="lede">Parents and students can sign in to view school updates, summaries, and connected modules.</p>
-              <div className="button-row">
-                <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
+              <span className="eyebrow">School Portals</span>
+              <h1>Choose your portal</h1>
+              <p className="lede">One secure opening for students, admins, and teachers. Each portal will grow module-by-module as the school workflow expands.</p>
+
+              <div className="portal-option-grid">
+                {portalOptions.map((option) => (
+                  <article className="card portal-option-card" key={option.title}>
+                    <h3>{option.title}</h3>
+                    <p>{option.text}</p>
+                    <a className={`button secondary ${option.icon}`} href={option.href}>{option.action}</a>
+                  </article>
+                ))}
               </div>
-              <form className="card form-grid" onSubmit={handleLogin}>
+
+              <form className="card form-grid portal-login-card" id="student-login" onSubmit={handleLogin}>
+                <div className="full-span">
+                  <span className="eyebrow">Student Portal</span>
+                  <h2>Student / Parent Login</h2>
+                  <p className="status-text">For now, students and parents can sign in here. We will connect result lookup, fees, attendance, and homework next.</p>
+                </div>
                 <div className="full-span">
                   <label htmlFor="portalIdentifier">Email / Phone / Username</label>
                   <input id="portalIdentifier" name="identifier" required />
@@ -70,6 +107,20 @@ export default function PortalPage() {
                   {message ? <p className="status-text">{message}</p> : null}
                 </div>
               </form>
+
+              <article className="card teacher-preview-card" id="teacher-portal">
+                <div>
+                  <span className="eyebrow">Teachers Portal</span>
+                  <h2>Teacher tracking dashboard</h2>
+                  <p className="lede">This portal will show every teacher’s class work and student progress in one place.</p>
+                </div>
+                <div className="mini-stat-grid">
+                  <PortalSummary label="Attendance" value="Daily" tone="success" />
+                  <PortalSummary label="Tests" value="Count" tone="default" />
+                  <PortalSummary label="Activities" value="Tracked" tone="warning" />
+                  <PortalSummary label="Performance" value="Charts" tone="success" />
+                </div>
+              </article>
             </>
           ) : (
             <>

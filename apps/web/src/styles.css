@@ -1758,6 +1758,30 @@ textarea:focus {
   margin: 1.2rem 0;
 }
 
+.portal-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+
+.portal-option-card {
+  display: grid;
+  align-content: space-between;
+  gap: 1rem;
+  min-height: 17rem;
+}
+
+.portal-option-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.portal-login-card,
+.teacher-preview-card {
+  margin-top: 1rem;
+}
+
 .footer-links {
   display: grid;
   gap: 0.35rem;
@@ -1809,6 +1833,7 @@ textarea:focus {
   .hero-grid,
   .two-column,
   .portal-grid,
+  .portal-option-grid,
   .footer-grid,
   .form-grid,
   .principal-grid,
