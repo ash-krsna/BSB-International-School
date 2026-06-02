@@ -1349,6 +1349,83 @@ textarea:focus {
   font-size: 0.94rem;
 }
 
+.staff-access-page .container.narrow {
+  width: min(1280px, calc(100% - 2rem));
+}
+
+.official-admission-card {
+  border-color: rgba(17, 120, 111, 0.22);
+  background:
+    linear-gradient(135deg, rgba(17, 120, 111, 0.06), rgba(255, 255, 255, 0) 34%),
+    rgba(255, 255, 255, 0.95);
+}
+
+.official-admission-strip,
+.fee-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.official-admission-strip span,
+.fee-summary-strip span,
+.fee-summary-strip strong {
+  min-height: 3.2rem;
+  display: grid;
+  place-items: center;
+  padding: 0.7rem;
+  border: 1px solid rgba(17, 120, 111, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--primary-deep);
+  font-weight: 900;
+  text-align: center;
+}
+
+.fee-summary-strip strong {
+  color: #8a3b00;
+  background: rgba(243, 185, 63, 0.2);
+}
+
+.staff-admission-form {
+  gap: 1rem 1.1rem;
+}
+
+.staff-form-section {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.45rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(17, 120, 111, 0.14);
+  border-radius: 8px;
+  background: rgba(237, 252, 247, 0.72);
+}
+
+.staff-form-section span {
+  color: var(--primary-deep);
+  font-weight: 900;
+}
+
+.staff-form-section small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.staff-file-input {
+  padding: 0.9rem !important;
+  border: 1px dashed rgba(17, 120, 111, 0.34) !important;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.official-submit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.6rem;
+}
+
 .notice-head,
 .portal-head {
   display: flex;
@@ -1925,6 +2002,11 @@ textarea:focus {
   }
 
   .activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .official-admission-strip,
+  .fee-summary-strip {
     grid-template-columns: 1fr;
   }
 

@@ -122,7 +122,7 @@ export default function StaffEntryPage() {
 
   return (
     <Shell>
-      <section className="page-section">
+      <section className="page-section staff-access-page">
         <div className="container narrow">
           {!isStaff ? (
             <>
@@ -199,7 +199,7 @@ export default function StaffEntryPage() {
                   <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
                 </article>
               </div>
-              <article className="card admission-register-card">
+              <article className="card admission-register-card official-admission-card">
                 <div className="portal-head compact-head">
                   <div>
                     <span className="eyebrow">Official Admission</span>
@@ -207,7 +207,16 @@ export default function StaffEntryPage() {
                     <p className="status-text">Use this after the parent confirms admission. This creates the assigned Student ID.</p>
                   </div>
                 </div>
-                <form className="form-grid" encType="multipart/form-data" onSubmit={handleOfficialAdmissionSubmit}>
+                <div className="official-admission-strip">
+                  <span>Verified parent call</span>
+                  <span>Student ID generated</span>
+                  <span>Fee register updated</span>
+                </div>
+                <form className="form-grid staff-admission-form" encType="multipart/form-data" onSubmit={handleOfficialAdmissionSubmit}>
+                  <div className="full-span staff-form-section">
+                    <span>Student Identity</span>
+                    <small>Basic student details used for ID card, result login, and class records.</small>
+                  </div>
                   <div>
                     <label htmlFor="staffApplyingClass">Applying Class</label>
                     <select id="staffApplyingClass" name="applyingClassName" defaultValue="Class 1">
@@ -246,6 +255,10 @@ export default function StaffEntryPage() {
                     <label htmlFor="staffAadhaarNo">Aadhaar Number</label>
                     <input id="staffAadhaarNo" inputMode="numeric" name="aadhaarNo" />
                   </div>
+                  <div className="full-span staff-form-section">
+                    <span>Parent & Contact</span>
+                    <small>Mother's name will be used later for student result verification.</small>
+                  </div>
                   <div>
                     <label htmlFor="staffMotherName">Mother's Name</label>
                     <input id="staffMotherName" name="motherName" required />
@@ -266,6 +279,10 @@ export default function StaffEntryPage() {
                     <label htmlFor="staffAddress">Address</label>
                     <textarea id="staffAddress" name="address" rows="3" />
                   </div>
+                  <div className="full-span staff-form-section">
+                    <span>School & Transport</span>
+                    <small>Previous school, scholarship, and bus service details for office follow-up.</small>
+                  </div>
                   <div>
                     <label htmlFor="staffPreviousSchool">Previous School</label>
                     <input id="staffPreviousSchool" name="previousSchool" />
@@ -284,6 +301,10 @@ export default function StaffEntryPage() {
                   <div>
                     <label htmlFor="staffPickupAddress">Pickup Address</label>
                     <input id="staffPickupAddress" name="pickupAddress" />
+                  </div>
+                  <div className="full-span staff-form-section">
+                    <span>Fees</span>
+                    <small>Record the amount decided at admission and the amount received today.</small>
                   </div>
                   <div>
                     <label htmlFor="staffTotalFee">Total Fee</label>
@@ -313,15 +334,24 @@ export default function StaffEntryPage() {
                     <label htmlFor="staffFeeNotes">Fee Notes</label>
                     <input id="staffFeeNotes" name="feeNotes" placeholder="Receipt, discount, installment note" />
                   </div>
+                  <div className="full-span fee-summary-strip">
+                    <span>Total: Rs {Number(officialFeeDraft.totalFee) || 0}</span>
+                    <span>Paid: Rs {Number(officialFeeDraft.paidFee) || 0}</span>
+                    <strong>Remaining: Rs {Math.max((Number(officialFeeDraft.totalFee) || 0) - (Number(officialFeeDraft.paidFee) || 0), 0)}</strong>
+                  </div>
+                  <div className="full-span staff-form-section">
+                    <span>Photo & Documents</span>
+                    <small>Attach student photo and available documents before saving the official admission.</small>
+                  </div>
                   <div>
                     <label htmlFor="staffPhoto">Student Photo</label>
-                    <input id="staffPhoto" name="photo" type="file" accept="image/*" />
+                    <input className="staff-file-input" id="staffPhoto" name="photo" type="file" accept="image/*" />
                   </div>
                   <div>
                     <label htmlFor="staffDocuments">Documents</label>
-                    <input id="staffDocuments" name="documents" type="file" multiple />
+                    <input className="staff-file-input" id="staffDocuments" name="documents" type="file" multiple />
                   </div>
-                  <div className="full-span">
+                  <div className="full-span official-submit-row">
                     <button className="button primary icon-admission" disabled={officialBusy} type="submit">
                       {officialBusy ? "Saving..." : "Save Official Admission"}
                     </button>
