@@ -19,10 +19,31 @@ const health = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "BSB ERP API is live." });
 });
 
+function normalizeGender(value) {
+  const gender = String(value || "").trim().toLowerCase();
+  if (["male", "female", "other"].includes(gender)) {
+    return gender;
+  }
+  return "";
+}
+
+function normalizeYesNo(value) {
+  return ["true", "yes", "1", "on"].includes(String(value || "").trim().toLowerCase());
+}
+
+async function runOptionalNotification(work) {
+  try {
+    await work();
+  } catch (error) {
+    console.warn("Optional admission notification failed:", error.message);
+  }
+}
+
 const submitAdmission = asyncHandler(async (req, res) => {
   const {
     academicYearId,
     applyingClassId,
+    applyingClassName,
     studentFirstName,
     studentLastName,
     studentGender,
@@ -39,13 +60,30 @@ const submitAdmission = asyncHandler(async (req, res) => {
     preferredRoute
   } = req.body;
 
-  if (!academicYearId || !applyingClassId || !studentFirstName || !studentLastName || !studentGender || !studentDob || !parentName || !parentPhone) {
+  const resolvedGender = normalizeGender(studentGender);
+
+  if (!studentFirstName || !studentLastName || !resolvedGender || !studentDob || !parentName || !parentPhone) {
     throw new HttpError(400, "Please complete the required admission fields.");
   }
 
-  req.uploadFolder = "admissions";
+  let resolvedAcademicYearId = academicYearId || null;
+  if (!resolvedAcademicYearId) {
+    const years = await query("SELECT id FROM academic_years WHERE is_current = TRUE ORDER BY id DESC LIMIT 1");
+    resolvedAcademicYearId = years[0]?.id;
+  }
 
-  const photoUrl = req.files?.photo?.[0] ? toPublicFileUrl(req.files.photo[0]) : null;
+  let resolvedClassId = applyingClassId || null;
+  if (!resolvedClassId && applyingClassName) {
+    const classes = await query("SELECT id FROM classes WHERE name = :name LIMIT 1", { name: applyingClassName });
+    resolvedClassId = classes[0]?.id;
+  }
+
+  if (!resolvedAcademicYearId || !resolvedClassId) {
+    throw new HttpError(400, "Admission database is missing current academic year or selected class setup.");
+  }
+
+  const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
+  const photoUrl = photoFile ? toPublicFileUrl(photoFile) : null;
 
   const admissionId = await transaction(async (connection) => {
     const [result] = await connection.execute(
@@ -56,11 +94,11 @@ const submitAdmission = asyncHandler(async (req, res) => {
           (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
-        academicYearId,
-        applyingClassId,
+        resolvedAcademicYearId,
+        resolvedClassId,
         studentFirstName,
         studentLastName,
-        studentGender,
+        resolvedGender,
         studentDob,
         aadhaarNo || null,
         parentName,
@@ -69,7 +107,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
         address || null,
         previousSchool || null,
         scholarshipDetails || null,
-        wantsBusService === "true" || wantsBusService === true,
+        normalizeYesNo(wantsBusService),
         pickupAddress || null,
         preferredRoute || null,
         photoUrl
@@ -80,6 +118,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
 
     const documentGroups = [
       ["documents", "admission_upload"],
+      ["documentCamera", "admission_camera_photo"],
       ["passportPhoto", "passport_photo"],
       ["birthCertificate", "birth_certificate"],
       ["previousMarksheet", "previous_marksheet"],
@@ -102,26 +141,50 @@ const submitAdmission = asyncHandler(async (req, res) => {
     return applicationId;
   });
 
-  await sendSms({
-    phone: parentPhone,
-    message: `Dear Parent, admission application received for ${studentFirstName} ${studentLastName} at BSB International School.`
+  await runOptionalNotification(async () => {
+    await sendSms({
+      phone: parentPhone,
+      message: `Dear Parent, admission application received for ${studentFirstName} ${studentLastName} at BSB International School.`
+    });
   });
 
   if (parentEmail) {
-    await sendEmail({
-      to: parentEmail,
-      subject: "BSB International School admission received",
-      text: `Dear Parent,\n\nYour admission application for ${studentFirstName} ${studentLastName} has been received successfully.\n\nThank you,\nBSB International School`,
-      html: `
-        <h2>Admission application received</h2>
-        <p>Dear Parent,</p>
-        <p>Your admission application for <strong>${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</strong> has been received successfully.</p>
-        <p>Thank you,<br/>BSB International School</p>
-      `
+    await runOptionalNotification(async () => {
+      await sendEmail({
+        to: parentEmail,
+        subject: "BSB International School admission received",
+        text: `Dear Parent,\n\nYour admission application for ${studentFirstName} ${studentLastName} has been received successfully.\n\nThank you,\nBSB International School`,
+        html: `
+          <h2>Admission application received</h2>
+          <p>Dear Parent,</p>
+          <p>Your admission application for <strong>${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</strong> has been received successfully.</p>
+          <p>Thank you,<br/>BSB International School</p>
+        `
+      });
     });
   }
 
-  await notifyAdminEnquiry(`New online admission received for ${studentFirstName} ${studentLastName}. Parent phone: ${parentPhone}`);
+  await runOptionalNotification(async () => {
+    await notifyAdminEnquiry(`New online admission received for ${studentFirstName} ${studentLastName}. Parent phone: ${parentPhone}`);
+  });
+
+  if (env.contactReceiverEmail) {
+    await runOptionalNotification(async () => {
+      await sendEmail({
+        to: env.contactReceiverEmail,
+        subject: `New admission saved: ${studentFirstName} ${studentLastName}`,
+        text: `New admission saved in the database.\n\nApplication ID: ${admissionId}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
+        html: `
+          <h2>New admission saved</h2>
+          <p><strong>Application ID:</strong> ${admissionId}</p>
+          <p><strong>Student:</strong> ${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</p>
+          <p><strong>Class:</strong> ${escapeHtml(applyingClassName || String(resolvedClassId))}</p>
+          <p><strong>Parent:</strong> ${escapeHtml(parentName)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(parentPhone)}</p>
+        `
+      });
+    });
+  }
 
   res.status(201).json({
     success: true,

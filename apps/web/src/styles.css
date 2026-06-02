@@ -1286,6 +1286,10 @@ textarea:focus {
   color: var(--muted);
 }
 
+.error-text {
+  color: #b42318;
+}
+
 .notice-head,
 .portal-head {
   display: flex;

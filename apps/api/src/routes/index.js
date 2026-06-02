@@ -27,9 +27,15 @@ router.get("/auth/me", authenticate, authController.me);
 
 router.post(
   "/public/admissions",
+  (req, res, next) => {
+    req.uploadFolder = "admissions";
+    next();
+  },
   upload.fields([
     { name: "photo", maxCount: 1 },
+    { name: "photoCamera", maxCount: 1 },
     { name: "documents", maxCount: 10 },
+    { name: "documentCamera", maxCount: 10 },
     { name: "passportPhoto", maxCount: 1 },
     { name: "birthCertificate", maxCount: 1 },
     { name: "previousMarksheet", maxCount: 1 },

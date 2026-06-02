@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Shell from "../components/Shell";
 import { admissionsSteps } from "../content/schoolData";
+import { apiRequest } from "../lib/api";
 
-const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/akash.gita.bhagwat@gmail.com";
-const FORMSUBMIT_NEXT = "https://bsb-international-school.vercel.app/admissions?submitted=1";
 const CLASS_SORT_MARKS = {
   "Class 1": "1",
   "Class 2": "2",
@@ -13,12 +12,37 @@ const CLASS_SORT_MARKS = {
 };
 
 export default function AdmissionsPage() {
-  const submitted = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("submitted") === "1";
   const [applyingClass, setApplyingClass] = useState("Class 1");
+  const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
   const today = new Date().toLocaleDateString("en-IN");
 
   function handlePrint() {
     window.print();
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setSubmitState({ status: "loading", message: "Saving admission in school database..." });
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      const result = await apiRequest("/public/admissions", {
+        method: "POST",
+        body: formData
+      });
+
+      event.currentTarget.reset();
+      setApplyingClass("Class 1");
+      setSubmitState({
+        status: "success",
+        message: `Admission saved successfully. Application ID: ${result.admissionId}`
+      });
+    } catch (error) {
+      setSubmitState({
+        status: "error",
+        message: error.message || "Admission could not be saved. Please try again."
+      });
+    }
   }
 
   return (
@@ -40,12 +64,7 @@ export default function AdmissionsPage() {
               </ol>
             </div>
           </div>
-          <form action={FORMSUBMIT_ENDPOINT} className="card form-grid printable-admission-form" encType="multipart/form-data" method="POST">
-            <input type="hidden" name="School" value="BSB International School" />
-            <input type="hidden" name="_subject" value="New admission application - BSB International School" />
-            <input type="hidden" name="_template" value="table" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_next" value={FORMSUBMIT_NEXT} />
+          <form className="card form-grid printable-admission-form" encType="multipart/form-data" method="POST" onSubmit={handleSubmit}>
             <div className="print-form-head full-span">
               <img src="/showcase/logo-transparent.png" alt="BSB International School logo" />
               <div>
@@ -68,7 +87,7 @@ export default function AdmissionsPage() {
               <label htmlFor="applyingClassId">Applying Class</label>
               <select
                 id="applyingClassId"
-                name="Applying Class"
+                name="applyingClassName"
                 onChange={(event) => setApplyingClass(event.target.value)}
                 value={applyingClass}
               >
@@ -81,68 +100,68 @@ export default function AdmissionsPage() {
             </div>
             <div>
               <label htmlFor="studentFirstName">Student First Name</label>
-              <input id="studentFirstName" name="Student First Name" required />
+              <input id="studentFirstName" name="studentFirstName" required />
             </div>
             <div>
               <label htmlFor="studentLastName">Student Last Name</label>
-              <input id="studentLastName" name="Student Last Name" required />
+              <input id="studentLastName" name="studentLastName" required />
             </div>
             <div>
               <label htmlFor="studentGender">Gender</label>
-              <select id="studentGender" name="Gender" defaultValue="Male">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+              <select id="studentGender" name="studentGender" defaultValue="male">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
               </select>
             </div>
             <div>
               <label htmlFor="studentDob">Date of Birth</label>
-              <input id="studentDob" type="date" name="Date of Birth" required />
+              <input id="studentDob" type="date" name="studentDob" required />
             </div>
             <div>
               <label htmlFor="aadhaarNo">Aadhaar Number</label>
-              <input id="aadhaarNo" name="Aadhaar Number" inputMode="numeric" />
+              <input id="aadhaarNo" name="aadhaarNo" inputMode="numeric" />
             </div>
             <div className="form-section-title full-span">
               <span>Parent & Contact Details</span>
             </div>
             <div>
               <label htmlFor="parentName">Parent Name</label>
-              <input id="parentName" name="Parent Name" required />
+              <input id="parentName" name="parentName" required />
             </div>
             <div>
               <label htmlFor="parentPhone">Parent Phone</label>
-              <input id="parentPhone" name="Parent Phone" required />
+              <input id="parentPhone" name="parentPhone" required />
             </div>
             <div>
               <label htmlFor="parentEmail">Parent Email</label>
-              <input id="parentEmail" type="email" name="email" />
+              <input id="parentEmail" type="email" name="parentEmail" />
             </div>
             <div className="full-span">
               <label htmlFor="address">Address</label>
-              <textarea id="address" name="Address" rows="4" />
+              <textarea id="address" name="address" rows="4" />
             </div>
             <div className="form-section-title full-span">
               <span>School & Transport Details</span>
             </div>
             <div>
               <label htmlFor="previousSchool">Previous School</label>
-              <input id="previousSchool" name="Previous School" />
+              <input id="previousSchool" name="previousSchool" />
             </div>
             <div>
               <label htmlFor="scholarshipDetails">Scholarship Details</label>
-              <input id="scholarshipDetails" name="Scholarship Details" />
+              <input id="scholarshipDetails" name="scholarshipDetails" />
             </div>
             <div>
               <label htmlFor="busService">School Bus Service</label>
-              <select id="busService" name="School Bus Service" defaultValue="No">
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
+              <select id="busService" name="wantsBusService" defaultValue="false">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
               </select>
             </div>
             <div>
               <label htmlFor="pickupAddress">Pickup Address</label>
-              <input id="pickupAddress" name="Pickup Address" />
+              <input id="pickupAddress" name="pickupAddress" />
             </div>
             <div className="form-section-title full-span">
               <span>Documents & Signatures</span>
@@ -152,11 +171,11 @@ export default function AdmissionsPage() {
               <div className="file-choice-grid">
                 <label className="file-choice" htmlFor="photo">
                   <span>Upload from device</span>
-                  <input id="photo" type="file" name="Student Photo Upload" accept="image/*" />
+                  <input id="photo" type="file" name="photo" accept="image/*" />
                 </label>
                 <label className="file-choice" htmlFor="photoCamera">
                   <span>Click photo from camera</span>
-                  <input id="photoCamera" type="file" name="Student Photo Camera" accept="image/*" capture="environment" />
+                  <input id="photoCamera" type="file" name="photoCamera" accept="image/*" capture="environment" />
                 </label>
               </div>
               <span className="print-file-line">Photo received</span>
@@ -166,11 +185,11 @@ export default function AdmissionsPage() {
               <div className="file-choice-grid">
                 <label className="file-choice" htmlFor="documents">
                   <span>Upload from device</span>
-                  <input id="documents" type="file" name="Documents Upload" multiple />
+                  <input id="documents" type="file" name="documents" multiple />
                 </label>
                 <label className="file-choice" htmlFor="documentCamera">
                   <span>Click photo from camera</span>
-                  <input id="documentCamera" type="file" name="Document Camera Photo" accept="image/*" capture="environment" />
+                  <input id="documentCamera" type="file" name="documentCamera" accept="image/*" capture="environment" multiple />
                 </label>
               </div>
               <span className="print-file-line">Documents received</span>
@@ -182,11 +201,13 @@ export default function AdmissionsPage() {
             </div>
             <div className="full-span">
               <div className="button-row admission-actions">
-                <button className="button primary" type="submit">Submit Admission</button>
+                <button className="button primary" disabled={submitState.status === "loading"} type="submit">
+                  {submitState.status === "loading" ? "Saving..." : "Submit Admission"}
+                </button>
                 <button className="button secondary" onClick={handlePrint} type="button">Print Admission Form</button>
               </div>
-              {submitted ? (
-                <p className="status-text">Admission submitted successfully. Please check the school email inbox.</p>
+              {submitState.message ? (
+                <p className={`status-text ${submitState.status === "error" ? "error-text" : ""}`}>{submitState.message}</p>
               ) : null}
             </div>
           </form>
