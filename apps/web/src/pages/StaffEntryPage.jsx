@@ -137,6 +137,21 @@ export default function StaffEntryPage() {
               </div>
               <div className="feature-grid">
                 <article className="card">
+                  <h3>Admin Portal</h3>
+                  <p>Access the full school office command area for admissions, fees, student records, documents, reports, and future connected modules.</p>
+                  <a className="button primary icon-admission" href="/admin">Open Admin Portal</a>
+                </article>
+                <article className="card" id="teacher-staff-portal">
+                  <h3>Teachers Portal</h3>
+                  <p>Prepare attendance, performance tracking, tests conducted, classroom activities, homework, and teacher remarks from one staff area.</p>
+                  <a className="button secondary icon-growth" href="/portal#teacher-portal">Open Teachers Portal</a>
+                </article>
+                <article className="card">
+                  <h3>Student Portal</h3>
+                  <p>Open the student and parent portal for future result lookup, attendance, fees, homework, notices, and media access.</p>
+                  <a className="button secondary icon-login" href="/portal#student-login">Open Student Portal</a>
+                </article>
+                <article className="card">
                   <h3>Admission Entry</h3>
                   <p>Open the admission form, capture photo/documents, save the student in the online register, then print the office form.</p>
                   <a className="button primary icon-admission" href="/admissions">Open Admission Form</a>
