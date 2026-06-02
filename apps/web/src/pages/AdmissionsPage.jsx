@@ -1,23 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Shell from "../components/Shell";
 import { admissionsSteps } from "../content/schoolData";
 import { apiRequest } from "../lib/api";
 
 const CLASS_BADGE_MARKS = {
-  "Class 1": "1",
-  "Class 2": "2",
+  "Class 5": "1",
+  "Class 4": "2",
   "Class 3": "3",
-  "Class 4": "4",
-  "Class 5": "5"
+  "Class 2": "4",
+  "Class 1": "5"
 };
 
 export default function AdmissionsPage() {
   const [applyingClass, setApplyingClass] = useState("Class 1");
   const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
+  const [admissionCode, setAdmissionCode] = useState("");
+  const [studentPhotoPreview, setStudentPhotoPreview] = useState("");
   const today = new Date().toLocaleDateString("en-IN");
+
+  useEffect(() => {
+    return () => {
+      if (studentPhotoPreview) {
+        URL.revokeObjectURL(studentPhotoPreview);
+      }
+    };
+  }, [studentPhotoPreview]);
 
   function handlePrint() {
     window.print();
+  }
+
+  function handlePhotoPreview(event) {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const alternateInputId = event.target.id === "photo" ? "photoCamera" : "photo";
+    const alternateInput = document.getElementById(alternateInputId);
+    if (alternateInput) {
+      alternateInput.value = "";
+    }
+
+    if (studentPhotoPreview) {
+      URL.revokeObjectURL(studentPhotoPreview);
+    }
+
+    setStudentPhotoPreview(URL.createObjectURL(file));
   }
 
   async function handleSubmit(event) {
@@ -31,11 +60,10 @@ export default function AdmissionsPage() {
         body: formData
       });
 
-      event.currentTarget.reset();
-      setApplyingClass("Class 1");
+      setAdmissionCode(result.admissionCode || `BSB-ADM-${String(result.admissionId).padStart(4, "0")}`);
       setSubmitState({
         status: "success",
-        message: `Admission saved successfully. Application ID: ${result.admissionId}`
+        message: `Admission saved successfully. Admission ID: ${result.admissionCode || result.admissionId}`
       });
     } catch (error) {
       setSubmitState({
@@ -71,13 +99,16 @@ export default function AdmissionsPage() {
                 <h2>BSB International School</h2>
                 <p>Admission Application Form</p>
                 <small>Application Date: {today}</small>
+                <small className="admission-reference">Admission ID: {admissionCode || "Generated after save"}</small>
               </div>
               <div className="print-head-tools">
                 <span className="class-admission-badge" aria-label={`Admission form class badge for ${applyingClass}`}>
                   <strong>{CLASS_BADGE_MARKS[applyingClass]}</strong>
                   <em>{applyingClass}</em>
                 </span>
-                <span className="photo-print-box">Student Photo</span>
+                <span className={`photo-print-box ${studentPhotoPreview ? "has-photo" : ""}`}>
+                  {studentPhotoPreview ? <img src={studentPhotoPreview} alt="Selected student" /> : "Student Photo"}
+                </span>
               </div>
             </div>
             <div className="form-section-title full-span">
@@ -171,11 +202,11 @@ export default function AdmissionsPage() {
               <div className="file-choice-grid">
                 <label className="file-choice" htmlFor="photo">
                   <span>Upload from device</span>
-                  <input id="photo" type="file" name="photo" accept="image/*" />
+                  <input id="photo" type="file" name="photo" accept="image/*" onChange={handlePhotoPreview} />
                 </label>
                 <label className="file-choice" htmlFor="photoCamera">
                   <span>Click photo from camera</span>
-                  <input id="photoCamera" type="file" name="photoCamera" accept="image/*" capture="environment" />
+                  <input id="photoCamera" type="file" name="photoCamera" accept="image/*" capture="environment" onChange={handlePhotoPreview} />
                 </label>
               </div>
               <span className="print-file-line">Photo received</span>

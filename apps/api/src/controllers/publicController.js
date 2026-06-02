@@ -140,6 +140,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
 
     return applicationId;
   });
+  const admissionCode = `BSB-ADM-${new Date().getFullYear()}-${String(admissionId).padStart(4, "0")}`;
 
   await runOptionalNotification(async () => {
     await sendSms({
@@ -173,10 +174,10 @@ const submitAdmission = asyncHandler(async (req, res) => {
       await sendEmail({
         to: env.contactReceiverEmail,
         subject: `New admission saved: ${studentFirstName} ${studentLastName}`,
-        text: `New admission saved in the database.\n\nApplication ID: ${admissionId}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
+        text: `New admission saved in the database.\n\nAdmission ID: ${admissionCode}\nStudent: ${studentFirstName} ${studentLastName}\nClass: ${applyingClassName || resolvedClassId}\nParent: ${parentName}\nPhone: ${parentPhone}`,
         html: `
           <h2>New admission saved</h2>
-          <p><strong>Application ID:</strong> ${admissionId}</p>
+          <p><strong>Admission ID:</strong> ${admissionCode}</p>
           <p><strong>Student:</strong> ${escapeHtml(studentFirstName)} ${escapeHtml(studentLastName)}</p>
           <p><strong>Class:</strong> ${escapeHtml(applyingClassName || String(resolvedClassId))}</p>
           <p><strong>Parent:</strong> ${escapeHtml(parentName)}</p>
@@ -189,7 +190,8 @@ const submitAdmission = asyncHandler(async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Admission submitted successfully.",
-    admissionId
+    admissionId,
+    admissionCode
   });
 });
 

@@ -1099,7 +1099,7 @@ li {
 
 .print-form-head {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: 1rem;
   align-items: center;
   padding-bottom: 1rem;
@@ -1118,15 +1118,22 @@ li {
 
 .print-form-head p,
 .print-form-head small {
+  display: block;
   margin: 0;
   color: var(--muted);
   font-weight: 800;
 }
 
+.admission-reference {
+  margin-top: 0.18rem !important;
+}
+
 .print-head-tools {
   display: flex;
+  grid-column: 1 / -1;
   gap: 0.75rem;
   align-items: stretch;
+  justify-content: flex-end;
 }
 
 .class-admission-badge {
@@ -1175,6 +1182,18 @@ li {
   text-align: center;
   font-size: 0.85rem;
   font-weight: 900;
+  overflow: hidden;
+}
+
+.photo-print-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-print-box.has-photo {
+  border-style: solid;
+  background: #fff;
 }
 
 .form-section-title {
@@ -1876,7 +1895,13 @@ textarea:focus {
   }
 
   .print-head-tools {
-    display: none;
+    display: flex;
+    justify-content: stretch;
+  }
+
+  .photo-print-box {
+    width: 100%;
+    height: 12.5rem;
   }
 
   .file-choice-grid {
@@ -1953,7 +1978,7 @@ textarea:focus {
   .print-form-head {
     margin-bottom: 5mm;
     border-bottom: 1px solid #111 !important;
-    grid-template-columns: 20mm 1fr 58mm;
+    grid-template-columns: 20mm 1fr;
     gap: 5mm;
     align-items: start;
   }
@@ -1973,6 +1998,7 @@ textarea:focus {
   }
 
   .print-head-tools {
+    grid-column: 1 / -1;
     justify-content: flex-end;
     gap: 3mm;
   }
@@ -2022,15 +2048,18 @@ textarea:focus {
   }
 
   .photo-print-box {
-    width: 28mm;
+    width: 30mm;
     height: 34mm;
-    align-items: end;
-    border: 0 !important;
-    border-bottom: 1px solid #111 !important;
+    align-items: center;
+    border: 1px solid #111 !important;
     border-radius: 0 !important;
     color: #111;
     font-family: "Times New Roman", Times, serif !important;
     font-size: 10px;
+  }
+
+  .photo-print-box img {
+    object-fit: cover;
   }
 
   .form-section-title {
