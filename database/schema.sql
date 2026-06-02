@@ -525,3 +525,27 @@ CREATE TABLE fee_reminder_jobs (
   CONSTRAINT fk_fee_reminder_installment FOREIGN KEY (installment_id) REFERENCES fee_installments(id) ON DELETE CASCADE,
   UNIQUE KEY uq_fee_reminder (installment_id, reminder_type, scheduled_for)
 );
+
+CREATE TABLE quiz_questions (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  class_name VARCHAR(50) NOT NULL,
+  category VARCHAR(80) NOT NULL,
+  question VARCHAR(255) NOT NULL,
+  option_a VARCHAR(120) NOT NULL,
+  option_b VARCHAR(120) NOT NULL,
+  option_c VARCHAR(120) NOT NULL,
+  option_d VARCHAR(120) NOT NULL,
+  correct_option CHAR(1) NOT NULL,
+  sort_order INT DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE quiz_scores (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  student_name VARCHAR(120) NOT NULL,
+  class_name VARCHAR(50) NOT NULL,
+  score INT NOT NULL,
+  total_questions INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

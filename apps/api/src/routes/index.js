@@ -10,6 +10,7 @@ const resultsController = require("../controllers/resultsController");
 const attendanceController = require("../controllers/attendanceController");
 const contentController = require("../controllers/contentController");
 const studentMediaController = require("../controllers/studentMediaController");
+const quizController = require("../controllers/quizController");
 const reportsController = require("../controllers/reportsController");
 const communicationsController = require("../controllers/communicationsController");
 const transportController = require("../controllers/transportController");
@@ -47,6 +48,9 @@ router.post("/public/enquiries", publicFormLimiter, publicController.submitEnqui
 router.get("/public/gallery", publicController.listGallery);
 router.get("/public/notices", publicController.listNotices);
 router.get("/public/results", publicController.resultLookup);
+router.get("/public/quiz/questions", quizController.listQuizQuestions);
+router.post("/public/quiz/scores", publicFormLimiter, quizController.submitQuizScore);
+router.get("/public/quiz/scoreboard", quizController.listScoreboard);
 
 router.get("/dashboard/summary", authenticate, dashboardController.getDashboardSummary);
 router.get("/dashboard/analytics", authenticate, dashboardController.getDashboardAnalytics);

@@ -1787,6 +1787,25 @@ textarea:focus {
   flex-direction: column;
 }
 
+.quiz-control-panel {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  align-items: end;
+}
+
+.quiz-category {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 0.8rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(243, 185, 63, 0.2);
+  color: var(--primary-deep);
+  font-weight: 900;
+}
+
 .choice-grid {
   display: grid;
   gap: 0.7rem;
@@ -1818,6 +1837,10 @@ textarea:focus {
 .score-card {
   margin-top: 1.2rem;
   background: linear-gradient(135deg, rgba(255, 224, 240, 0.82), rgba(255, 255, 255, 0.96));
+}
+
+.scoreboard-card {
+  margin-top: 1.2rem;
 }
 
 .student-media-page .form-grid,
@@ -2007,6 +2030,10 @@ textarea:focus {
 
   .official-admission-strip,
   .fee-summary-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-control-panel {
     grid-template-columns: 1fr;
   }
 

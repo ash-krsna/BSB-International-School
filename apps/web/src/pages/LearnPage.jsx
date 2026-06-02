@@ -1,16 +1,82 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import Shell from "../components/Shell";
-import { activityCards, growthData, learningChallenges, showcaseItems } from "../content/schoolData";
+import { activityCards, growthData, showcaseItems } from "../content/schoolData";
+import { apiRequest } from "../lib/api";
+
+const classOptions = ["Class 1", "Class 2", "Class 3", "Class 4", "Class 5"];
 
 export default function LearnPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [selectedClass, setSelectedClass] = useState("Class 1");
+  const [studentName, setStudentName] = useState("");
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [scoreboard, setScoreboard] = useState([]);
+  const [quizMessage, setQuizMessage] = useState("");
   const learningVideos = showcaseItems.filter((item) => item.type === "video").slice(0, 2);
 
-  const score = learningChallenges.reduce(
-    (total, challenge, index) => total + (selectedAnswers[index] === challenge.answer ? 1 : 0),
+  const score = quizQuestions.reduce(
+    (total, question) => total + (selectedAnswers[question.id] === question.correctOption ? 1 : 0),
     0
   );
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadQuiz() {
+      setQuizMessage("");
+      setSelectedAnswers({});
+      try {
+        const [questions, scores] = await Promise.all([
+          apiRequest(`/public/quiz/questions?className=${encodeURIComponent(selectedClass)}`),
+          apiRequest(`/public/quiz/scoreboard?className=${encodeURIComponent(selectedClass)}`)
+        ]);
+
+        if (!ignore) {
+          setQuizQuestions(questions.data || []);
+          setScoreboard(scores.data || []);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setQuizMessage(error.message);
+        }
+      }
+    }
+
+    loadQuiz();
+    return () => {
+      ignore = true;
+    };
+  }, [selectedClass]);
+
+  async function submitScore() {
+    if (!studentName.trim()) {
+      setQuizMessage("Please enter student name before saving score.");
+      return;
+    }
+
+    if (Object.keys(selectedAnswers).length < quizQuestions.length) {
+      setQuizMessage("Please answer all quiz questions first.");
+      return;
+    }
+
+    try {
+      await apiRequest("/public/quiz/scores", {
+        method: "POST",
+        body: JSON.stringify({
+          studentName,
+          className: selectedClass,
+          score,
+          totalQuestions: quizQuestions.length
+        })
+      });
+      const scores = await apiRequest(`/public/quiz/scoreboard?className=${encodeURIComponent(selectedClass)}`);
+      setScoreboard(scores.data || []);
+      setQuizMessage("Score saved. Check the scoreboard.");
+    } catch (error) {
+      setQuizMessage(error.message);
+    }
+  }
 
   return (
     <Shell>
@@ -120,18 +186,38 @@ export default function LearnPage() {
         <div className="container">
           <div className="section-heading">
             <span className="eyebrow">Mini Game</span>
-            <h2>Quick quiz for bright learners.</h2>
+            <h2>Knowledge and good habits quiz.</h2>
+          </div>
+          <div className="card quiz-control-panel">
+            <div>
+              <label htmlFor="quizStudentName">Student Name</label>
+              <input id="quizStudentName" value={studentName} onChange={(event) => setStudentName(event.target.value)} placeholder="Enter student name" />
+            </div>
+            <div>
+              <label htmlFor="quizClass">Class</label>
+              <select id="quizClass" value={selectedClass} onChange={(event) => setSelectedClass(event.target.value)}>
+                {classOptions.map((className) => (
+                  <option key={className} value={className}>{className}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="quiz-grid">
-            {learningChallenges.map((challenge, index) => (
-              <article className="card quiz-card" key={challenge.question}>
-                <h3>{challenge.question}</h3>
+            {quizQuestions.map((question) => (
+              <article className="card quiz-card" key={question.id}>
+                <span className="quiz-category">{question.category}</span>
+                <h3>{question.question}</h3>
                 <div className="choice-grid">
-                  {challenge.choices.map((choice) => (
+                  {[
+                    ["A", question.optionA],
+                    ["B", question.optionB],
+                    ["C", question.optionC],
+                    ["D", question.optionD]
+                  ].map(([optionKey, choice]) => (
                     <button
-                      className={`choice-button${selectedAnswers[index] === choice ? " selected" : ""}${choice === challenge.answer && selectedAnswers[index] ? " correct-choice" : ""}`}
-                      key={choice}
-                      onClick={() => setSelectedAnswers((answers) => ({ ...answers, [index]: choice }))}
+                      className={`choice-button${selectedAnswers[question.id] === optionKey ? " selected" : ""}${optionKey === question.correctOption && selectedAnswers[question.id] ? " correct-choice" : ""}`}
+                      key={optionKey}
+                      onClick={() => setSelectedAnswers((answers) => ({ ...answers, [question.id]: optionKey }))}
                       type="button"
                     >
                       {choice}
@@ -142,8 +228,35 @@ export default function LearnPage() {
             ))}
           </div>
           <article className="card score-card">
-            <h3>Score: {score} / {learningChallenges.length}</h3>
-            <p>Keep trying until all stars are shining.</p>
+            <h3>Score: {score} / {quizQuestions.length}</h3>
+            <p>Good score puts the student name on the class scoreboard.</p>
+            <button className="button primary icon-growth" onClick={submitScore} type="button">Save Score</button>
+            {quizMessage ? <p className="status-text">{quizMessage}</p> : null}
+          </article>
+          <article className="card scoreboard-card">
+            <h3>{selectedClass} Scoreboard</h3>
+            <div className="table-scroll">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Student</th>
+                    <th>Class</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scoreboard.map((item, index) => (
+                    <tr key={`${item.studentName}-${item.createdAt}`}>
+                      <td>{index + 1}</td>
+                      <td>{item.studentName}</td>
+                      <td>{item.className}</td>
+                      <td>{item.score} / {item.totalQuestions}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </article>
         </div>
       </section>
