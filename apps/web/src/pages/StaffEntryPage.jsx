@@ -101,12 +101,14 @@ export default function StaffEntryPage() {
 
     try {
       const formData = new FormData(event.currentTarget);
+      const usingVercelFallback = API_BASE_URL === "/api";
       const result = await apiRequest("/admissions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${session.token}`
+          Authorization: `Bearer ${session.token}`,
+          ...(usingVercelFallback ? { "Content-Type": "application/json" } : {})
         },
-        body: formData
+        body: usingVercelFallback ? JSON.stringify(Object.fromEntries(formData.entries())) : formData
       });
 
       event.currentTarget.reset();
