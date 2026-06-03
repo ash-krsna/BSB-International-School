@@ -205,37 +205,69 @@ const exportAdmissionRegister = asyncHandler(async (req, res) => {
   const rows = await query(
     `
       SELECT
-        CONCAT('BSB-ADM-', YEAR(aa.created_at), '-', LPAD(aa.id, 4, '0')) AS enquiry_id,
-        aa.assigned_student_id AS assigned_student_id_after_confirmation,
-        c.name AS class,
-        aa.student_first_name AS first_name,
-        aa.student_middle_name AS middle_name,
-        aa.student_last_name AS last_name,
-        CONCAT_WS(' ', aa.student_first_name, aa.student_middle_name, aa.student_last_name) AS full_name,
-        aa.mother_name AS mother_name,
+        CONCAT('BSB-ADM-', YEAR(aa.created_at), '-', LPAD(aa.id, 4, '0')) AS admission_enquiry_id,
+        COALESCE(aa.assigned_student_id, 'Not assigned yet') AS student_id,
+        ay.title AS academic_year,
+        c.name AS applying_class,
+        CONCAT_WS(' ', aa.student_first_name, aa.student_middle_name, aa.student_last_name) AS student_full_name,
+        aa.student_first_name AS student_first_name,
+        aa.student_middle_name AS student_middle_name,
+        aa.student_last_name AS student_last_name,
+        aa.student_gender AS gender,
+        aa.student_dob AS date_of_birth,
+        aa.aadhaar_no AS aadhaar_number,
+        aa.mother_name AS mothers_name,
         aa.parent_name AS parent_guardian_name,
-        aa.parent_phone AS contact_number,
-        aa.parent_email AS email,
+        aa.parent_phone AS parent_contact_number,
+        aa.parent_email AS parent_email,
         aa.address,
+        aa.previous_school,
+        aa.scholarship_details,
+        CASE WHEN aa.wants_bus_service = 1 THEN 'Yes' ELSE 'No' END AS bus_service_required,
+        aa.pickup_address,
+        aa.preferred_route,
         aa.total_fee AS total_fee,
         aa.paid_fee AS paid_fee,
         aa.remaining_fee AS remaining_fee,
         aa.fee_notes AS fee_notes,
-        aa.status,
-        COUNT(sd.id) AS uploaded_document_count,
-        GROUP_CONCAT(DISTINCT sd.document_type ORDER BY sd.document_type SEPARATOR ', ') AS documents,
-        aa.created_at AS submitted_at
+        aa.status AS admission_status,
+        CASE WHEN aa.photo_url IS NULL OR aa.photo_url = '' THEN 'No' ELSE 'Yes' END AS student_photo_given,
+        CASE WHEN COALESCE(d.total_documents, 0) > 0 THEN 'Yes' ELSE 'No' END AS any_document_given,
+        COALESCE(d.total_documents, 0) AS uploaded_document_count,
+        CASE WHEN COALESCE(d.passport_photo_count, 0) > 0 THEN 'Yes' ELSE 'No' END AS passport_photo_given,
+        CASE WHEN COALESCE(d.birth_certificate_count, 0) > 0 THEN 'Yes' ELSE 'No' END AS birth_certificate_given,
+        CASE WHEN COALESCE(d.previous_marksheet_count, 0) > 0 THEN 'Yes' ELSE 'No' END AS previous_marksheet_given,
+        CASE WHEN COALESCE(d.transfer_certificate_count, 0) > 0 THEN 'Yes' ELSE 'No' END AS transfer_certificate_given,
+        CASE WHEN COALESCE(d.admission_upload_count, 0) > 0 THEN 'Yes' ELSE 'No' END AS other_documents_given,
+        CASE WHEN COALESCE(d.camera_document_count, 0) > 0 THEN 'Yes' ELSE 'No' END AS camera_documents_given,
+        COALESCE(d.document_types, '') AS document_types_saved,
+        aa.created_at AS submitted_at,
+        aa.reviewed_at AS confirmed_at
       FROM admission_applications aa
       JOIN classes c ON c.id = aa.applying_class_id
-      LEFT JOIN student_documents sd ON sd.admission_application_id = aa.id
-      GROUP BY aa.id, c.name
+      JOIN academic_years ay ON ay.id = aa.academic_year_id
+      LEFT JOIN (
+        SELECT
+          admission_application_id,
+          COUNT(*) AS total_documents,
+          SUM(document_type = 'passport_photo') AS passport_photo_count,
+          SUM(document_type = 'birth_certificate') AS birth_certificate_count,
+          SUM(document_type = 'previous_marksheet') AS previous_marksheet_count,
+          SUM(document_type = 'transfer_certificate') AS transfer_certificate_count,
+          SUM(document_type = 'admission_upload') AS admission_upload_count,
+          SUM(document_type = 'admission_camera_photo') AS camera_document_count,
+          GROUP_CONCAT(DISTINCT document_type ORDER BY document_type SEPARATOR ', ') AS document_types
+        FROM student_documents
+        WHERE admission_application_id IS NOT NULL
+        GROUP BY admission_application_id
+      ) d ON d.admission_application_id = aa.id
       ORDER BY c.display_order DESC, aa.id ASC
     `
   );
 
-  const buffer = await toExcelBuffer("admission-register", rows);
+  const buffer = await toExcelBuffer("student-admission-register", rows);
   res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-  res.setHeader("Content-Disposition", 'attachment; filename="admission-register.xlsx"');
+  res.setHeader("Content-Disposition", 'attachment; filename="bsb-combined-student-admission-register.xlsx"');
   res.send(buffer);
 });
 

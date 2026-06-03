@@ -61,7 +61,7 @@ export default function StaffEntryPage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "bsb-admission-register.xlsx";
+      link.download = "bsb-combined-student-admission-register.xlsx";
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
@@ -183,8 +183,8 @@ export default function StaffEntryPage() {
                   <a className="button primary icon-admission" href="/admissions">Open Enquiry Form</a>
                 </article>
                 <article className="card">
-                  <h3>Admission Enquiry Register</h3>
-                  <p>Download the latest Excel sheet with enquiry ID, class, documents, contact details, and confirmation status.</p>
+                  <h3>Combined Student Register</h3>
+                  <p>Download one office Excel sheet with student details, contact, fees, photo status, and document given/missing status.</p>
                   <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Download Excel</button>
                 </article>
                 <article className="card">
