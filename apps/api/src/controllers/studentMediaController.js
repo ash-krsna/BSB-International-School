@@ -119,7 +119,7 @@ const uploadStudentMedia = asyncHandler(async (req, res) => {
 
     for (const file of files) {
       const mediaType = getMediaType(file);
-      const fileUrl = toPublicFileUrl(file);
+      const fileUrl = await toPublicFileUrl(file);
       const [assetResult] = await connection.execute(
         `
           INSERT INTO student_media_assets

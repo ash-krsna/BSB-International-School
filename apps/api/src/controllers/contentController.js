@@ -9,7 +9,7 @@ const createHomework = asyncHandler(async (req, res) => {
     throw new HttpError(400, "Homework class, title, and description are required.");
   }
 
-  const attachmentUrl = req.file ? toPublicFileUrl(req.file) : null;
+  const attachmentUrl = req.file ? await toPublicFileUrl(req.file) : null;
 
   const result = await query(
     `
@@ -70,7 +70,7 @@ const createNotice = asyncHandler(async (req, res) => {
 
 const createGalleryItem = asyncHandler(async (req, res) => {
   const { category, title, description, imageUrl } = req.body;
-  const finalImageUrl = req.file ? toPublicFileUrl(req.file) : imageUrl;
+  const finalImageUrl = req.file ? await toPublicFileUrl(req.file) : imageUrl;
 
   if (!category || !title || !finalImageUrl) {
     throw new HttpError(400, "Gallery category, title, and image are required.");

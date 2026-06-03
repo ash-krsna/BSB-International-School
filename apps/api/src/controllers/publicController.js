@@ -85,7 +85,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
   }
 
   const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
-  const photoUrl = photoFile ? toPublicFileUrl(photoFile) : null;
+  const photoUrl = photoFile ? await toPublicFileUrl(photoFile) : null;
 
   const admissionId = await transaction(async (connection) => {
     const [result] = await connection.execute(
@@ -142,7 +142,7 @@ const submitAdmission = asyncHandler(async (req, res) => {
             INSERT INTO student_documents (admission_application_id, document_type, file_name, file_url)
             VALUES (?, ?, ?, ?)
           `,
-          [applicationId, documentType, document.originalname, toPublicFileUrl(document)]
+          [applicationId, documentType, document.originalname, await toPublicFileUrl(document)]
         );
       }
     }

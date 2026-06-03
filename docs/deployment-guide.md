@@ -25,6 +25,20 @@
 7. Add your Vercel domain to `APP_ORIGINS`, for example `https://bsb-international-school.vercel.app`
 8. Import [schema.sql](D:\BSB\BSB International School WEB\database\schema.sql) for fresh installs or run [2026-05-19-erp-upgrade.sql](D:\BSB\BSB International School WEB\database\migrations\2026-05-19-erp-upgrade.sql) for upgrades
 
+### Upload Storage
+
+For production admission photos, documents, gallery images, homework files, and student media, set these Cloudinary variables on the backend host:
+
+```text
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_FOLDER=bsb-international-school
+DELETE_LOCAL_AFTER_CLOUD_UPLOAD=true
+```
+
+If these variables are empty, the API falls back to local `/uploads`, which is useful for localhost but not recommended for Render/Railway production because container storage can be temporary.
+
 ### Render Settings
 
 - Root Directory: `apps/api`
@@ -33,9 +47,9 @@
 - Health Check Path: `/api/health`
 - Node.js Version: `20.x` or newer
 
-Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `UPLOAD_BASE_URL`, `JWT_SECRET`, and the SMTP/contact variables if contact emails should be sent.
+Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `JWT_SECRET`, Cloudinary variables for file uploads, and the SMTP/contact variables if contact emails should be sent.
 
-Admissions are sent directly from the website through FormSubmit to `akash.gita.bhagwat@gmail.com`. Submit the form once after deployment and confirm the activation email from FormSubmit.
+Admission enquiries and staff admissions are saved through the API into MySQL. Contact and enquiry email notifications should use the SMTP/contact variables above.
 
 ## Website Deployment
 

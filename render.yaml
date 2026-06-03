@@ -28,6 +28,16 @@ services:
         sync: false
       - key: UPLOAD_BASE_URL
         sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: "bsb-international-school"
+      - key: DELETE_LOCAL_AFTER_CLOUD_UPLOAD
+        value: "true"
       - key: CONTACT_RECEIVER_EMAIL
         sync: false
       - key: SMTP_HOST

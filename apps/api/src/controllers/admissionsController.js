@@ -114,7 +114,7 @@ const createStaffAdmission = asyncHandler(async (req, res) => {
 
   const { resolvedAcademicYearId, resolvedClassId } = await resolveAdmissionSetup({ academicYearId, applyingClassId, applyingClassName });
   const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
-  const photoUrl = photoFile ? toPublicFileUrl(photoFile) : null;
+  const photoUrl = photoFile ? await toPublicFileUrl(photoFile) : null;
   const totalFeeAmount = toMoney(totalFee);
   const paidFeeAmount = Math.min(toMoney(paidFee), totalFeeAmount || toMoney(paidFee));
   const remainingFeeAmount = Math.max(totalFeeAmount - paidFeeAmount, 0);
@@ -184,7 +184,7 @@ const createStaffAdmission = asyncHandler(async (req, res) => {
             INSERT INTO student_documents (admission_application_id, document_type, file_name, file_url, uploaded_by)
             VALUES (?, ?, ?, ?, ?)
           `,
-          [applicationId, documentType, document.originalname, toPublicFileUrl(document), req.auth.userId]
+          [applicationId, documentType, document.originalname, await toPublicFileUrl(document), req.auth.userId]
         );
       }
     }

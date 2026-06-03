@@ -57,7 +57,7 @@ async function saveStudentDocuments(connection, studentId, files, uploadedBy) {
   for (const [fieldName, documents] of Object.entries(files || {})) {
     for (const document of documents) {
       const documentType = fieldName === "documents" ? documentFieldMap.documents : (documentFieldMap[fieldName] || fieldName);
-      const fileUrl = toPublicFileUrl(document);
+      const fileUrl = await toPublicFileUrl(document);
 
       await connection.execute(
         `
@@ -443,7 +443,7 @@ const createStudent = asyncHandler(async (req, res) => {
   }
 
   req.uploadFolder = "students";
-  const photoUrl = req.files?.photo?.[0] ? toPublicFileUrl(req.files.photo[0]) : null;
+  const photoUrl = req.files?.photo?.[0] ? await toPublicFileUrl(req.files.photo[0]) : null;
 
   const createdStudentId = await transaction(async (connection) => {
     const nextStudentId = studentId || await generateStudentCode(connection);
@@ -570,7 +570,7 @@ const updateStudent = asyncHandler(async (req, res) => {
   } = req.body;
 
   req.uploadFolder = "students";
-  const photoUrl = req.files?.photo?.[0] ? toPublicFileUrl(req.files.photo[0]) : null;
+  const photoUrl = req.files?.photo?.[0] ? await toPublicFileUrl(req.files.photo[0]) : null;
 
   await transaction(async (connection) => {
     const [studentRows] = await connection.execute(`SELECT parent_id AS parentId FROM students WHERE id = ? LIMIT 1`, [id]);

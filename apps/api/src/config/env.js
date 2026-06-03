@@ -34,6 +34,13 @@ const env = {
   smtpUser: process.env.SMTP_USER || "",
   smtpPass: process.env.SMTP_PASS || "",
   mailFrom: process.env.MAIL_FROM || process.env.SMTP_USER || "",
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+    apiKey: process.env.CLOUDINARY_API_KEY || "",
+    apiSecret: process.env.CLOUDINARY_API_SECRET || "",
+    folder: process.env.CLOUDINARY_FOLDER || "bsb-international-school",
+    deleteLocalAfterUpload: process.env.DELETE_LOCAL_AFTER_CLOUD_UPLOAD !== "false"
+  },
   mysqlDumpBin: process.env.MYSQL_DUMP_BIN || "mysqldump"
 };
 
