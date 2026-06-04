@@ -50,17 +50,17 @@ VITE_API_BASE_URL=https://your-api-domain.com/api
 ```
 
 Use the deployed backend URL from Render, Railway, or your VPS. Do not leave this as a placeholder for production.
-Admissions use FormSubmit directly, but the deployed API URL is still needed for gallery, notices, results, portal, and contact features.
+Admissions, staff portal, gallery, notices, quiz, results, and student media use this deployed API URL.
 
-## Admission FormSubmit Setup
+## FormSubmit Email Setup
 
-Admission submissions are posted to:
+Contact and feedback messages are posted to:
 
 ```text
-https://formsubmit.co/ajax/akash.gita.bhagwat@gmail.com
+https://formsubmit.co/akash.gita.bhagwat@gmail.com
 ```
 
-After the first live submission, open the activation email from FormSubmit and confirm the address. File uploads are sent as FormSubmit attachments, subject to FormSubmit's file-size limits.
+After the first live contact or feedback submission, open the activation email from FormSubmit and confirm the address. Admission records should use the backend API and MySQL database, not FormSubmit.
 
 Vercel environment variable behavior is documented here:
 

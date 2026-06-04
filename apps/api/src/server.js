@@ -5,6 +5,7 @@ const { scheduleDailyBackup } = require("./services/backupService");
 const { scheduleFeeReminders } = require("./services/feeReminderService");
 
 async function start() {
+  env.validateProductionConfig();
   await pool.query("SELECT 1");
   app.listen(env.port, () => {
     console.log(`BSB ERP API listening on http://localhost:${env.port}`);

@@ -51,6 +51,20 @@ Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`
 
 Admission enquiries and staff admissions are saved through the API into MySQL. Contact and enquiry email notifications should use the SMTP/contact variables above.
 
+### Temporary Vercel API Fallback
+
+The repository includes lightweight `/api/*` Vercel fallback functions only for emergency website demos before the real backend is connected. For production, prefer `VITE_API_BASE_URL=https://your-backend/api`.
+
+If you intentionally use the fallback, set these Vercel environment variables. Without them, fallback staff login is disabled in production:
+
+```text
+VERCEL_FALLBACK_ADMIN_IDENTIFIER=your_private_staff_username
+VERCEL_FALLBACK_ADMIN_PASSWORD=your_strong_private_password
+VERCEL_FALLBACK_SESSION_TOKEN=generate_a_long_random_token
+```
+
+Do not store real admissions in the fallback because serverless memory is temporary. Real data belongs in MySQL and files belong in Cloudinary.
+
 ## Website Deployment
 
 1. Deploy `apps/web` to Vercel, or deploy from the repository root using the root [vercel.json](D:\BSB\BSB International School WEB\vercel.json)
@@ -69,6 +83,8 @@ Admission enquiries and staff admissions are saved through the API into MySQL. C
 
 - Enforce HTTPS
 - Use strong JWT secret
+- Keep staff credentials in environment variables only
+- Confirm Vercel security headers are active after deployment
 - Rotate admin passwords
 - Share the hidden staff route only with school staff
 - Restrict upload types and size

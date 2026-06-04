@@ -1,0 +1,21 @@
+{
+  "name": "BSB International School",
+  "short_name": "BSB School",
+  "description": "Public website and school ERP portal for BSB International School.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#0b625a",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/showcase/logo-transparent.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

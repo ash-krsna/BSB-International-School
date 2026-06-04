@@ -1,5 +1,4 @@
-const ADMIN_IDENTIFIER = "Akash_";
-const ADMIN_PASSWORD = "akashBhagwat";
+const { getFallbackConfig } = require("../_shared/adminAuth");
 
 module.exports = function handler(req, res) {
   if (req.method !== "POST") {
@@ -9,20 +8,27 @@ module.exports = function handler(req, res) {
   }
 
   const { identifier, password } = req.body || {};
-  if (identifier !== ADMIN_IDENTIFIER || password !== ADMIN_PASSWORD) {
+  const config = getFallbackConfig();
+
+  if (!config.enabled) {
+    res.status(503).json({ success: false, message: "Temporary serverless login is not configured. Use the deployed backend API." });
+    return;
+  }
+
+  if (identifier !== config.identifier || password !== config.password) {
     res.status(401).json({ success: false, message: "Invalid login credentials." });
     return;
   }
 
   res.status(200).json({
     success: true,
-    token: "vercel-admin-session",
+    token: config.token,
     user: {
       id: 1,
       fullName: "Akash Bhagwat",
       email: null,
       phone: null,
-      username: ADMIN_IDENTIFIER,
+      username: config.identifier,
       roles: ["super_admin"],
       modules: [
         "Admissions",

@@ -44,4 +44,36 @@ const env = {
   mysqlDumpBin: process.env.MYSQL_DUMP_BIN || "mysqldump"
 };
 
+function validateProductionConfig() {
+  if (env.nodeEnv !== "production") {
+    return;
+  }
+
+  const missing = [];
+  if (!process.env.JWT_SECRET || env.jwtSecret === "change-me") {
+    missing.push("JWT_SECRET");
+  }
+  if (!env.appOrigins.length) {
+    missing.push("APP_ORIGINS");
+  }
+  if (!process.env.MYSQL_HOST) {
+    missing.push("MYSQL_HOST");
+  }
+  if (!process.env.MYSQL_DATABASE) {
+    missing.push("MYSQL_DATABASE");
+  }
+  if (!process.env.MYSQL_USER) {
+    missing.push("MYSQL_USER");
+  }
+  if (!process.env.MYSQL_PASSWORD) {
+    missing.push("MYSQL_PASSWORD");
+  }
+
+  if (missing.length) {
+    throw new Error(`Missing required production environment variables: ${missing.join(", ")}`);
+  }
+}
+
+env.validateProductionConfig = validateProductionConfig;
+
 module.exports = env;

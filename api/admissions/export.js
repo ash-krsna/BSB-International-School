@@ -1,14 +1,7 @@
+const { requireAdmin } = require("../_shared/adminAuth");
+
 function getStore() {
   return globalThis.__bsbAdmissionStore || [];
-}
-
-function requireAdmin(req, res) {
-  const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
-  if (token !== "vercel-admin-session") {
-    res.status(401).json({ success: false, message: "Please login again." });
-    return false;
-  }
-  return true;
 }
 
 module.exports = function handler(req, res) {
