@@ -31,6 +31,8 @@ mysql -h MYSQL_HOST -P MYSQL_PORT -u MYSQL_USER -p MYSQL_DATABASE < database/sch
 mysql -h MYSQL_HOST -P MYSQL_PORT -u MYSQL_USER -p MYSQL_DATABASE < database/seed.sql
 ```
 
+Then run the migration files in `database/migrations` in date order. These add the newer admission register, transport, quiz, and student media tables used by the hosted website.
+
 The seed creates the current academic year and classes from Nursery to Class 5.
 
 ## 3. Deploy The API
@@ -43,6 +45,11 @@ Important values:
 APP_ORIGINS=https://bsb-international-school.vercel.app
 CONTACT_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com
 UPLOAD_BASE_URL=https://your-api-service-url
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_FOLDER=bsb-international-school
+DELETE_LOCAL_AFTER_CLOUD_UPLOAD=true
 ```
 
 ## 4. Connect Website To API
@@ -57,21 +64,32 @@ Redeploy the website.
 
 ## 5. Admission Storage
 
-Online submissions are saved into:
+Admission text data is saved in the MySQL cloud database:
 
 ```txt
 admission_applications
 student_documents
 ```
 
-Uploaded photos/documents are stored by the API under:
+Photos and document files are uploaded to Cloudinary in production. MySQL stores the returned file URL in:
 
 ```txt
-uploads/admissions
+admission_applications.photo_url
+student_documents.file_url
 ```
+
+If Cloudinary variables are empty, files fall back to local `apps/api/uploads/admissions`, which is only suitable for localhost testing because cloud host disk storage can be temporary.
 
 The admin dashboard can read admission entries from:
 
 ```txt
 GET /api/admissions
 ```
+
+The staff Excel register downloads from:
+
+```txt
+GET /api/admissions/export
+```
+
+That Excel contains the combined admission/student office data and Yes/No columns for photo and document submission status.

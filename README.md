@@ -52,6 +52,22 @@ docs/
 - Local office stack: [docker-compose.local.yml](D:\BSB\BSB International School WEB\docker-compose.local.yml)
 - Render backend blueprint: [render.yaml](D:\BSB\BSB International School WEB\render.yaml)
 
+## Admission Data Storage
+
+- Student/admission details save in MySQL table `admission_applications`
+- Uploaded document records save in MySQL table `student_documents`
+- Photo and document files save in Cloudinary for production
+- MySQL stores Cloudinary URLs in `photo_url` and `file_url` fields
+- The Vercel fallback API is only for emergency demos and must not be used for real admission records
+
+## Hosting Checklist
+
+1. Deploy `apps/api` to Render/Railway with MySQL and Cloudinary environment variables.
+2. Import `database/schema.sql`, `database/seed.sql`, and required files in `database/migrations`.
+3. Deploy the website to Vercel from the root config or `apps/web`.
+4. Set `VITE_API_BASE_URL=https://your-backend-domain/api` in Vercel.
+5. Confirm `/api/health`, `/admissions`, `/campus-connect`, and the Excel export work after deployment.
+
 ## Important Note
 
 This repository now contains the **new ERP monorepo** under `apps/`. Older prototype website files are still present in the root for reference, but the production-oriented ERP implementation lives inside the workspace apps and docs added here.
