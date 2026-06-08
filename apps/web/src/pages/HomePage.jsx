@@ -35,6 +35,23 @@ export default function HomePage() {
               <span>Photo-rich school updates</span>
               <span>Website-first parent services</span>
             </div>
+            <div className="hero-action-panel" aria-label="Fast school services">
+              <a href="/admissions">
+                <small>01</small>
+                <strong>Admission Desk</strong>
+                <span>Start enquiry and print-ready forms</span>
+              </a>
+              <a href="/portal">
+                <small>02</small>
+                <strong>Parent Portal</strong>
+                <span>Results, notices, and future student services</span>
+              </a>
+              <a href="/gallery">
+                <small>03</small>
+                <strong>Events Gallery</strong>
+                <span>Organized school memories</span>
+              </a>
+            </div>
             <div className="stat-strip" aria-label="School highlights">
               {schoolStats.map((stat) => (
                 <article key={stat.label}>
@@ -47,6 +64,10 @@ export default function HomePage() {
           <div className="hero-panel school-scene media-stage">
             <div className="scene-badge">Creating The Leaders</div>
             <img className="scene-campus hero-campus" src={campusMoments[0].src} alt={campusMoments[0].title} />
+            <div className="hero-media-caption">
+              <strong>Live School Desk</strong>
+              <span>Admissions, events, results, and parent communication in one place.</span>
+            </div>
             <div className="learning-stack" aria-hidden="true">
               <span className="stack-block block-a">ABC</span>
               <span className="stack-block block-b">123</span>
