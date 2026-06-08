@@ -23,6 +23,23 @@ function toMoney(value) {
   return Number.isFinite(amount) && amount > 0 ? amount : 0;
 }
 
+function createFormPayload(body, files = {}) {
+  const uploadedFiles = Object.entries(files).flatMap(([fieldName, items]) =>
+    (items || []).map((file) => ({
+      fieldName,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size
+    }))
+  );
+
+  return JSON.stringify({
+    fields: body,
+    uploadedFiles,
+    savedAt: new Date().toISOString()
+  });
+}
+
 async function runOptionalAdmissionNotification(work) {
   try {
     await work();
@@ -71,6 +88,7 @@ const listAdmissions = asyncHandler(async (req, res) => {
         aa.paid_fee AS paidFee,
         aa.remaining_fee AS remainingFee,
         aa.fee_notes AS feeNotes,
+        aa.form_payload AS formPayload,
         COUNT(sd.id) AS documentCount,
         GROUP_CONCAT(DISTINCT sd.document_type ORDER BY sd.document_type SEPARATOR ', ') AS documents,
         aa.status,
@@ -126,6 +144,7 @@ const createStaffAdmission = asyncHandler(async (req, res) => {
   const totalFeeAmount = toMoney(totalFee);
   const paidFeeAmount = Math.min(toMoney(paidFee), totalFeeAmount || toMoney(paidFee));
   const remainingFeeAmount = Math.max(totalFeeAmount - paidFeeAmount, 0);
+  const formPayload = createFormPayload(req.body, req.files);
 
   const result = await transaction(async (connection) => {
     const [classRows] = await connection.execute("SELECT name, display_order FROM classes WHERE id = ? LIMIT 1", [resolvedClassId]);
@@ -141,9 +160,9 @@ const createStaffAdmission = asyncHandler(async (req, res) => {
     const [insertResult] = await connection.execute(
       `
         INSERT INTO admission_applications
-          (academic_year_id, applying_class_id, assigned_student_id, student_first_name, student_middle_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, mother_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, total_fee, paid_fee, remaining_fee, fee_notes, photo_url, status, reviewed_by, reviewed_at)
+          (academic_year_id, applying_class_id, assigned_student_id, student_first_name, student_middle_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, mother_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, total_fee, paid_fee, remaining_fee, fee_notes, photo_url, form_payload, submitted_by, status, reviewed_by, reviewed_at)
         VALUES
-          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, NOW())
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, NOW())
       `,
       [
         resolvedAcademicYearId,
@@ -170,6 +189,8 @@ const createStaffAdmission = asyncHandler(async (req, res) => {
         remainingFeeAmount,
         feeNotes || null,
         photoUrl,
+        formPayload,
+        req.auth.userId,
         req.auth.userId
       ]
     );
@@ -258,6 +279,7 @@ const exportAdmissionRegister = asyncHandler(async (req, res) => {
         aa.paid_fee AS paid_fee,
         aa.remaining_fee AS remaining_fee,
         aa.fee_notes AS fee_notes,
+        aa.form_payload AS complete_form_payload,
         aa.status AS admission_status,
         CASE WHEN aa.photo_url IS NULL OR aa.photo_url = '' THEN 'No' ELSE 'Yes' END AS student_photo_given,
         CASE WHEN COALESCE(d.total_documents, 0) > 0 THEN 'Yes' ELSE 'No' END AS any_document_given,

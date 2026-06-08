@@ -140,6 +140,8 @@ CREATE TABLE admission_applications (
   remaining_fee DECIMAL(12,2) DEFAULT 0,
   fee_notes VARCHAR(255) NULL,
   photo_url VARCHAR(255) NULL,
+  form_payload JSON NULL,
+  submitted_by BIGINT NULL,
   status ENUM('submitted', 'under_review', 'approved', 'rejected') DEFAULT 'submitted',
   reviewed_by BIGINT NULL,
   reviewed_at DATETIME NULL,
@@ -147,6 +149,7 @@ CREATE TABLE admission_applications (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_admission_year FOREIGN KEY (academic_year_id) REFERENCES academic_years(id),
   CONSTRAINT fk_admission_class FOREIGN KEY (applying_class_id) REFERENCES classes(id),
+  CONSTRAINT fk_admission_submitter FOREIGN KEY (submitted_by) REFERENCES users(id) ON DELETE SET NULL,
   CONSTRAINT fk_admission_reviewer FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL
 );
 

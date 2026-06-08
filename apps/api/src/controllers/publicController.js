@@ -31,6 +31,23 @@ function normalizeYesNo(value) {
   return ["true", "yes", "1", "on"].includes(String(value || "").trim().toLowerCase());
 }
 
+function createFormPayload(body, files = {}) {
+  const uploadedFiles = Object.entries(files).flatMap(([fieldName, items]) =>
+    (items || []).map((file) => ({
+      fieldName,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size
+    }))
+  );
+
+  return JSON.stringify({
+    fields: body,
+    uploadedFiles,
+    savedAt: new Date().toISOString()
+  });
+}
+
 async function runOptionalNotification(work) {
   try {
     await work();
@@ -86,14 +103,15 @@ const submitAdmission = asyncHandler(async (req, res) => {
 
   const photoFile = req.files?.photo?.[0] || req.files?.photoCamera?.[0] || null;
   const photoUrl = photoFile ? await toPublicFileUrl(photoFile) : null;
+  const formPayload = createFormPayload(req.body, req.files);
 
   const admissionId = await transaction(async (connection) => {
     const [result] = await connection.execute(
       `
         INSERT INTO admission_applications
-          (academic_year_id, applying_class_id, assigned_student_id, student_first_name, student_middle_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, mother_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, total_fee, paid_fee, remaining_fee, fee_notes, photo_url)
+          (academic_year_id, applying_class_id, assigned_student_id, student_first_name, student_middle_name, student_last_name, student_gender, student_dob, aadhaar_no, parent_name, mother_name, parent_phone, parent_email, address, previous_school, scholarship_details, wants_bus_service, pickup_address, preferred_route, total_fee, paid_fee, remaining_fee, fee_notes, photo_url, form_payload)
         VALUES
-          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         resolvedAcademicYearId,
@@ -119,7 +137,8 @@ const submitAdmission = asyncHandler(async (req, res) => {
         0,
         0,
         "Pending confirmation",
-        photoUrl
+        photoUrl,
+        formPayload
       ]
     );
 
