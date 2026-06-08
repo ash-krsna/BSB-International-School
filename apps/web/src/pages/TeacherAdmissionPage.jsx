@@ -131,6 +131,15 @@ export default function TeacherAdmissionPage() {
               <p className="lede">
                 Teachers assigned to admission work can fill confirmed student admissions here. This is separate from the admin dashboard.
               </p>
+              {API_BASE_URL === "/api" ? (
+                <div className="card tone-warning teacher-route-note">
+                  <h3>Backend connection required</h3>
+                  <p>
+                    This admission desk must be connected to the deployed backend API so student data saves in MySQL and photos/documents save in Cloudinary.
+                    Set `VITE_API_BASE_URL` on Vercel to the backend URL before using this for real admissions.
+                  </p>
+                </div>
+              ) : null}
               <form className="card form-grid teacher-login-card" onSubmit={handleSubmit}>
                 <div className="full-span">
                   <label htmlFor="teacherIdentifier">Teacher Username</label>

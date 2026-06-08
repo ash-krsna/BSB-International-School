@@ -75,10 +75,17 @@ export default function StaffEntryPage() {
     setMessage("");
 
     const form = new FormData(event.currentTarget);
+    const identifier = String(form.get("identifier") || "").trim();
+
+    if (identifier === "Sarika_") {
+      setMessage("Sarika_ is a teacher admission login. Please open /teacher-admissions instead of the admin/staff area.");
+      setBusy(false);
+      return;
+    }
 
     try {
       const nextSession = await login({
-        identifier: form.get("identifier"),
+        identifier,
         password: form.get("password")
       });
 
@@ -134,6 +141,11 @@ export default function StaffEntryPage() {
                 This page is intentionally not shown in the public menu. Only staff who know the direct link and have valid
                 school credentials can sign in here.
               </p>
+              <div className="card tone-warning teacher-route-note">
+                <h3>Teacher admission work?</h3>
+                <p>Sarika Bankar and other teachers should use the separate teacher admission desk, not this admin/staff area.</p>
+                <a className="button secondary icon-admission" href="/teacher-admissions">Open Teacher Admission Desk</a>
+              </div>
               <form className="card form-grid" onSubmit={handleSubmit}>
                 <div className="full-span">
                   <label htmlFor="staffIdentifier">Staff Email / Phone / Username</label>
