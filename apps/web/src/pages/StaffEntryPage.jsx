@@ -350,7 +350,16 @@ export default function StaffEntryPage() {
                   </div>
                   <div>
                     <label htmlFor="staffPhoto">Student Photo</label>
-                    <input className="staff-file-input" id="staffPhoto" name="photo" type="file" accept="image/*" />
+                    <div className="file-choice-grid">
+                      <label className="file-choice" htmlFor="staffPhoto">
+                        Choose from device
+                        <input id="staffPhoto" type="file" name="photo" accept="image/*" />
+                      </label>
+                      <label className="file-choice" htmlFor="staffPhotoCamera">
+                        Click from camera
+                        <input id="staffPhotoCamera" type="file" name="photoCamera" accept="image/*" capture="environment" />
+                      </label>
+                    </div>
                   </div>
                   <div>
                     <label htmlFor="staffDocuments">Documents</label>
