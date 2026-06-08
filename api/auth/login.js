@@ -13,7 +13,7 @@ module.exports = function handler(req, res) {
   if (!config.enabled) {
     res.status(503).json({
       success: false,
-      message: "Backend API is not connected. Set VITE_API_BASE_URL to the deployed backend API. For temporary demos only, configure VERCEL_FALLBACK_ADMIN_IDENTIFIER, VERCEL_FALLBACK_ADMIN_PASSWORD, and VERCEL_FALLBACK_SESSION_TOKEN in Vercel."
+      message: "Backend API is not connected. Set VITE_API_BASE_URL to the deployed backend API so staff login and admissions save in MySQL."
     });
     return;
   }

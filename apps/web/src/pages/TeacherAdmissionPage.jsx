@@ -72,6 +72,12 @@ export default function TeacherAdmissionPage() {
     setBusy(true);
     setMessage("");
 
+    if (API_BASE_URL === "/api") {
+      setMessage("Backend API is not connected yet. Ask the admin to set VITE_API_BASE_URL on Vercel to the deployed backend API URL before using admissions.");
+      setBusy(false);
+      return;
+    }
+
     const form = new FormData(event.currentTarget);
 
     try {
