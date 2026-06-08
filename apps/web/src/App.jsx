@@ -13,6 +13,7 @@ const ResultsPage = lazy(() => import("./pages/ResultsPage"));
 const PortalPage = lazy(() => import("./pages/PortalPage"));
 const StaffEntryPage = lazy(() => import("./pages/StaffEntryPage"));
 const StudentMediaPage = lazy(() => import("./pages/StudentMediaPage"));
+const TeacherAdmissionPage = lazy(() => import("./pages/TeacherAdmissionPage"));
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/student-media" element={<StudentMediaPage />} />
         <Route path="/admin" element={<StaffEntryPage />} />
         <Route path="/campus-connect" element={<StaffEntryPage />} />
+        <Route path="/teacher-admissions" element={<TeacherAdmissionPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

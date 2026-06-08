@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /campus-connect
+Disallow: /teacher-admissions
 Disallow: /student-media
 
 Sitemap: https://bsb-international-school.vercel.app/sitemap.xml

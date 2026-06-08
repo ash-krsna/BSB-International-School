@@ -30,9 +30,9 @@ const portalOptions = [
   },
   {
     title: "Teachers Portal",
-    text: "Teachers will track attendance, student performance, tests conducted, activities completed, homework, and class remarks.",
-    action: "Teacher Tools",
-    href: "#teacher-portal",
+    text: "Teachers can use a separate admission desk now. Attendance, performance, activities, homework, and class remarks will continue to grow here.",
+    action: "Teacher Admission Desk",
+    href: "/teacher-admissions",
     icon: "icon-growth"
   }
 ];

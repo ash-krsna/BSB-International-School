@@ -3,9 +3,9 @@ import Shell from "../components/Shell";
 import { useAuth } from "../state/AuthContext";
 import { API_BASE_URL, apiRequest } from "../lib/api";
 
-const staffRoles = ["super_admin", "admin_staff", "principal", "accountant"];
+const teacherRoles = ["teacher"];
 
-export default function StaffEntryPage() {
+export default function TeacherAdmissionPage() {
   const { session, login, logout } = useAuth();
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -15,13 +15,14 @@ export default function StaffEntryPage() {
   const [officialBusy, setOfficialBusy] = useState(false);
   const [officialFeeDraft, setOfficialFeeDraft] = useState({ totalFee: "", paidFee: "" });
 
-  const isStaff = useMemo(
-    () => session?.user?.roles?.some((role) => staffRoles.includes(role)),
+  const isTeacher = useMemo(
+    () => session?.user?.roles?.some((role) => teacherRoles.includes(role)),
     [session]
   );
+  const hasOtherRole = Boolean(session && !isTeacher);
 
   async function loadAdmissions() {
-    if (!session?.token) {
+    if (!session?.token || !isTeacher) {
       return;
     }
 
@@ -38,11 +39,8 @@ export default function StaffEntryPage() {
   }
 
   useEffect(() => {
-    if (!isStaff || !session?.token) {
-      return;
-    }
     loadAdmissions();
-  }, [isStaff, session?.token]);
+  }, [isTeacher, session?.token]);
 
   async function downloadAdmissionRegister() {
     setRegisterMessage("");
@@ -82,10 +80,10 @@ export default function StaffEntryPage() {
         password: form.get("password")
       });
 
-      const allowed = nextSession.user.roles.some((role) => staffRoles.includes(role));
+      const allowed = nextSession.user.roles.some((role) => teacherRoles.includes(role));
       if (!allowed) {
         logout();
-        throw new Error("This hidden login is only for authorized school staff roles.");
+        throw new Error("This page is only for teachers assigned to admission work.");
       }
     } catch (error) {
       setMessage(error.message);
@@ -97,7 +95,7 @@ export default function StaffEntryPage() {
   async function handleOfficialAdmissionSubmit(event) {
     event.preventDefault();
     setOfficialBusy(true);
-    setOfficialMessage("Saving official admission...");
+    setOfficialMessage("Saving admission and preparing parent confirmation...");
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -113,7 +111,7 @@ export default function StaffEntryPage() {
 
       event.currentTarget.reset();
       setOfficialFeeDraft({ totalFee: "", paidFee: "" });
-      setOfficialMessage(`Official admission saved. Student ID: ${result.studentId}`);
+      setOfficialMessage(`Admission saved. Student ID: ${result.studentId}. Parent confirmation message queued.`);
       await loadAdmissions();
     } catch (error) {
       setOfficialMessage(error.message);
@@ -124,95 +122,63 @@ export default function StaffEntryPage() {
 
   return (
     <Shell>
-      <section className="page-section staff-access-page">
+      <section className="page-section teacher-admission-page">
         <div className="container narrow">
-          {!isStaff ? (
+          {!session ? (
             <>
-              <span className="eyebrow">Staff Access</span>
-              <h1>Hidden campus access for school staff</h1>
+              <span className="eyebrow">Teacher Admission Desk</span>
+              <h1>Teacher admission portal</h1>
               <p className="lede">
-                This page is intentionally not shown in the public menu. Only staff who know the direct link and have valid
-                school credentials can sign in here.
+                Teachers assigned to admission work can fill confirmed student admissions here. This is separate from the admin dashboard.
               </p>
-              <form className="card form-grid" onSubmit={handleSubmit}>
+              <form className="card form-grid teacher-login-card" onSubmit={handleSubmit}>
                 <div className="full-span">
-                  <label htmlFor="staffIdentifier">Staff Email / Phone / Username</label>
-                  <input id="staffIdentifier" name="identifier" required />
+                  <label htmlFor="teacherIdentifier">Teacher Username</label>
+                  <input id="teacherIdentifier" name="identifier" placeholder="Sarika_" required />
                 </div>
                 <div className="full-span">
-                  <label htmlFor="staffPassword">Password</label>
-                  <input id="staffPassword" name="password" type="password" required />
+                  <label htmlFor="teacherPassword">Password</label>
+                  <input id="teacherPassword" name="password" type="password" required />
                 </div>
                 <div className="full-span">
                   <button className="button primary icon-login" disabled={busy} type="submit">
-                    {busy ? "Checking access..." : "Enter Staff Area"}
+                    {busy ? "Checking teacher access..." : "Enter Admission Desk"}
                   </button>
-                  {message ? <p className="status-text">{message}</p> : null}
+                  {message ? <p className="status-text error-text">{message}</p> : null}
                 </div>
               </form>
             </>
+          ) : hasOtherRole ? (
+            <article className="card">
+              <span className="eyebrow">Teacher Only</span>
+              <h1>Use the correct portal</h1>
+              <p className="lede">This page is only for teacher admission work. Admins can use the admin portal to access every admission detail.</p>
+              <button className="button secondary icon-logout" onClick={logout} type="button">Logout</button>
+            </article>
           ) : (
             <>
               <div className="portal-head">
                 <div>
-                  <span className="eyebrow">Staff Verified</span>
+                  <span className="eyebrow">Teacher Verified</span>
                   <h1>{session.user.fullName}</h1>
-                  <p className="lede">Roles: {session.user.roles.join(", ")}</p>
+                  <p className="lede">Fill admissions carefully. Parent confirmation will be queued after saving.</p>
                 </div>
                 <button className="button secondary icon-logout" onClick={logout} type="button">Logout</button>
               </div>
-              <div className="feature-grid">
-                <article className="card">
-                  <h3>Admission Portal</h3>
-                  <p>Open the official admission workflow for confirmed students, document status, fees, student ID, and school records.</p>
-                  <a className="button primary icon-admission" href="#official-admission-form">Open Admission Form</a>
-                </article>
-                <article className="card" id="teacher-staff-portal">
-                  <h3>Teachers Portal</h3>
-                  <p>Prepare attendance, performance tracking, tests conducted, classroom activities, homework, and teacher remarks from one staff area.</p>
-                  <a className="button secondary icon-growth" href="/portal#teacher-portal">Open Teachers Portal</a>
-                </article>
-                <article className="card">
-                  <h3>Student Portal</h3>
-                  <p>Open the student and parent portal for future result lookup, attendance, fees, homework, notices, and media access.</p>
-                  <a className="button secondary icon-login" href="/portal#student-login">Open Student Portal</a>
-                </article>
-                <article className="card">
-                  <h3>Admission Enquiry Desk</h3>
-                  <p>Open the enquiry form, capture parent/student details, and keep the lead ready for follow-up confirmation.</p>
-                  <a className="button primary icon-admission" href="/admissions">Open Enquiry Form</a>
-                </article>
-                <article className="card">
-                  <h3>Combined Student Register</h3>
-                  <p>Download one office Excel sheet with student details, contact, fees, photo status, and document given/missing status.</p>
-                  <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Download Excel</button>
-                </article>
-                <article className="card">
-                  <h3>Allowed Modules</h3>
-                  <ul className="plain-list">
-                    {session.user.modules.map((module) => (
-                      <li key={module}>{module}</li>
-                    ))}
-                  </ul>
-                </article>
-                <article className="card">
-                  <h3>Student Media Sorting</h3>
-                  <p>Upload photos or videos and tag them by Student ID so parents and teachers can search media quickly.</p>
-                  <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
-                </article>
-              </div>
-              <article className="card admission-register-card official-admission-card" id="official-admission-form">
+
+              <article className="card admission-register-card official-admission-card" id="teacher-admission-form">
                 <div className="portal-head compact-head">
                   <div>
                     <span className="eyebrow">Official Admission</span>
-                    <h3>Staff Admission Form</h3>
-                    <p className="status-text">Use this after the parent confirms admission. This creates the assigned Student ID.</p>
+                    <h3>Teacher Admission Form</h3>
+                    <p className="status-text">Use this for confirmed admissions only. Data saves to the school database and Excel register.</p>
                   </div>
+                  <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Excel</button>
                 </div>
                 <div className="official-admission-strip">
-                  <span>Verified parent call</span>
                   <span>Student ID generated</span>
-                  <span>Fee register updated</span>
+                  <span>Database saved</span>
+                  <span>Parent message queued</span>
                 </div>
                 <form className="form-grid staff-admission-form" encType="multipart/form-data" onSubmit={handleOfficialAdmissionSubmit}>
                   <div className="full-span staff-form-section">
@@ -220,8 +186,8 @@ export default function StaffEntryPage() {
                     <small>Basic student details used for ID card, result login, and class records.</small>
                   </div>
                   <div>
-                    <label htmlFor="staffApplyingClass">Applying Class</label>
-                    <select id="staffApplyingClass" name="applyingClassName" defaultValue="Class 1">
+                    <label htmlFor="teacherApplyingClass">Applying Class</label>
+                    <select id="teacherApplyingClass" name="applyingClassName" defaultValue="Class 1">
                       <option value="Nursery">Nursery</option>
                       <option value="Junior KG">Junior KG</option>
                       <option value="Senior KG">Senior KG</option>
@@ -233,88 +199,88 @@ export default function StaffEntryPage() {
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="staffStudentFirstName">First Name</label>
-                    <input id="staffStudentFirstName" name="studentFirstName" required />
+                    <label htmlFor="teacherStudentFirstName">First Name</label>
+                    <input id="teacherStudentFirstName" name="studentFirstName" required />
                   </div>
                   <div>
-                    <label htmlFor="staffStudentMiddleName">Middle Name</label>
-                    <input id="staffStudentMiddleName" name="studentMiddleName" />
+                    <label htmlFor="teacherStudentMiddleName">Middle Name</label>
+                    <input id="teacherStudentMiddleName" name="studentMiddleName" />
                   </div>
                   <div>
-                    <label htmlFor="staffStudentLastName">Last Name</label>
-                    <input id="staffStudentLastName" name="studentLastName" required />
+                    <label htmlFor="teacherStudentLastName">Last Name</label>
+                    <input id="teacherStudentLastName" name="studentLastName" required />
                   </div>
                   <div>
-                    <label htmlFor="staffStudentGender">Gender</label>
-                    <select id="staffStudentGender" name="studentGender" defaultValue="male">
+                    <label htmlFor="teacherStudentGender">Gender</label>
+                    <select id="teacherStudentGender" name="studentGender" defaultValue="male">
                       <option value="male">Male</option>
                       <option value="female">Female</option>
                       <option value="other">Other</option>
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="staffStudentDob">Date of Birth</label>
-                    <input id="staffStudentDob" name="studentDob" type="date" required />
+                    <label htmlFor="teacherStudentDob">Date of Birth</label>
+                    <input id="teacherStudentDob" name="studentDob" type="date" required />
                   </div>
                   <div>
-                    <label htmlFor="staffAadhaarNo">Aadhaar Number</label>
-                    <input id="staffAadhaarNo" inputMode="numeric" name="aadhaarNo" />
+                    <label htmlFor="teacherAadhaarNo">Aadhaar Number</label>
+                    <input id="teacherAadhaarNo" inputMode="numeric" name="aadhaarNo" />
                   </div>
                   <div className="full-span staff-form-section">
                     <span>Parent & Contact</span>
                     <small>Mother's name will be used later for student result verification.</small>
                   </div>
                   <div>
-                    <label htmlFor="staffMotherName">Mother's Name</label>
-                    <input id="staffMotherName" name="motherName" required />
+                    <label htmlFor="teacherMotherName">Mother's Name</label>
+                    <input id="teacherMotherName" name="motherName" required />
                   </div>
                   <div>
-                    <label htmlFor="staffParentName">Parent / Guardian Name</label>
-                    <input id="staffParentName" name="parentName" required />
+                    <label htmlFor="teacherParentName">Parent / Guardian Name</label>
+                    <input id="teacherParentName" name="parentName" required />
                   </div>
                   <div>
-                    <label htmlFor="staffParentPhone">Contact Number</label>
-                    <input id="staffParentPhone" name="parentPhone" required />
+                    <label htmlFor="teacherParentPhone">Parent Mobile Number</label>
+                    <input id="teacherParentPhone" name="parentPhone" required />
                   </div>
                   <div>
-                    <label htmlFor="staffParentEmail">Email</label>
-                    <input id="staffParentEmail" name="parentEmail" type="email" />
+                    <label htmlFor="teacherParentEmail">Email</label>
+                    <input id="teacherParentEmail" name="parentEmail" type="email" />
                   </div>
                   <div className="full-span">
-                    <label htmlFor="staffAddress">Address</label>
-                    <textarea id="staffAddress" name="address" rows="3" />
+                    <label htmlFor="teacherAddress">Address</label>
+                    <textarea id="teacherAddress" name="address" rows="3" />
                   </div>
                   <div className="full-span staff-form-section">
                     <span>School & Transport</span>
                     <small>Previous school, scholarship, and bus service details for office follow-up.</small>
                   </div>
                   <div>
-                    <label htmlFor="staffPreviousSchool">Previous School</label>
-                    <input id="staffPreviousSchool" name="previousSchool" />
+                    <label htmlFor="teacherPreviousSchool">Previous School</label>
+                    <input id="teacherPreviousSchool" name="previousSchool" />
                   </div>
                   <div>
-                    <label htmlFor="staffScholarshipDetails">Scholarship Details</label>
-                    <input id="staffScholarshipDetails" name="scholarshipDetails" />
+                    <label htmlFor="teacherScholarshipDetails">Scholarship Details</label>
+                    <input id="teacherScholarshipDetails" name="scholarshipDetails" />
                   </div>
                   <div>
-                    <label htmlFor="staffBusService">School Bus Service</label>
-                    <select id="staffBusService" name="wantsBusService" defaultValue="false">
+                    <label htmlFor="teacherBusService">School Bus Service</label>
+                    <select id="teacherBusService" name="wantsBusService" defaultValue="false">
                       <option value="false">No</option>
                       <option value="true">Yes</option>
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="staffPickupAddress">Pickup Address</label>
-                    <input id="staffPickupAddress" name="pickupAddress" />
+                    <label htmlFor="teacherPickupAddress">Pickup Address</label>
+                    <input id="teacherPickupAddress" name="pickupAddress" />
                   </div>
                   <div className="full-span staff-form-section">
                     <span>Fees</span>
                     <small>Record the amount decided at admission and the amount received today.</small>
                   </div>
                   <div>
-                    <label htmlFor="staffTotalFee">Total Fee</label>
+                    <label htmlFor="teacherTotalFee">Total Fee</label>
                     <input
-                      id="staffTotalFee"
+                      id="teacherTotalFee"
                       inputMode="decimal"
                       name="totalFee"
                       onChange={(event) => setOfficialFeeDraft((current) => ({ ...current, totalFee: event.target.value }))}
@@ -322,9 +288,9 @@ export default function StaffEntryPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="staffPaidFee">Paid Fee</label>
+                    <label htmlFor="teacherPaidFee">Paid Fee</label>
                     <input
-                      id="staffPaidFee"
+                      id="teacherPaidFee"
                       inputMode="decimal"
                       name="paidFee"
                       onChange={(event) => setOfficialFeeDraft((current) => ({ ...current, paidFee: event.target.value }))}
@@ -332,12 +298,12 @@ export default function StaffEntryPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="staffRemainingFee">Remaining Fee</label>
-                    <input id="staffRemainingFee" readOnly value={Math.max((Number(officialFeeDraft.totalFee) || 0) - (Number(officialFeeDraft.paidFee) || 0), 0)} />
+                    <label htmlFor="teacherRemainingFee">Remaining Fee</label>
+                    <input id="teacherRemainingFee" readOnly value={Math.max((Number(officialFeeDraft.totalFee) || 0) - (Number(officialFeeDraft.paidFee) || 0), 0)} />
                   </div>
                   <div>
-                    <label htmlFor="staffFeeNotes">Fee Notes</label>
-                    <input id="staffFeeNotes" name="feeNotes" placeholder="Receipt, discount, installment note" />
+                    <label htmlFor="teacherFeeNotes">Fee Notes</label>
+                    <input id="teacherFeeNotes" name="feeNotes" placeholder="Receipt, discount, installment note" />
                   </div>
                   <div className="full-span fee-summary-strip">
                     <span>Total: Rs {Number(officialFeeDraft.totalFee) || 0}</span>
@@ -349,35 +315,36 @@ export default function StaffEntryPage() {
                     <small>Attach student photo and available documents before saving the official admission.</small>
                   </div>
                   <div>
-                    <label htmlFor="staffPhoto">Student Photo</label>
+                    <label htmlFor="teacherPhoto">Student Photo</label>
                     <div className="file-choice-grid">
-                      <label className="file-choice" htmlFor="staffPhoto">
+                      <label className="file-choice" htmlFor="teacherPhoto">
                         Choose from device
-                        <input id="staffPhoto" type="file" name="photo" accept="image/*" />
+                        <input id="teacherPhoto" type="file" name="photo" accept="image/*" />
                       </label>
-                      <label className="file-choice" htmlFor="staffPhotoCamera">
+                      <label className="file-choice" htmlFor="teacherPhotoCamera">
                         Click from camera
-                        <input id="staffPhotoCamera" type="file" name="photoCamera" accept="image/*" capture="environment" />
+                        <input id="teacherPhotoCamera" type="file" name="photoCamera" accept="image/*" capture="environment" />
                       </label>
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="staffDocuments">Documents</label>
-                    <input className="staff-file-input" id="staffDocuments" name="documents" type="file" multiple />
+                    <label htmlFor="teacherDocuments">Documents</label>
+                    <input className="staff-file-input" id="teacherDocuments" name="documents" type="file" multiple />
                   </div>
                   <div className="full-span official-submit-row">
                     <button className="button primary icon-admission" disabled={officialBusy} type="submit">
-                      {officialBusy ? "Saving..." : "Save Official Admission"}
+                      {officialBusy ? "Saving..." : "Save Admission"}
                     </button>
-                    {officialMessage ? <p className={`status-text ${officialMessage.includes("saved") ? "" : "error-text"}`}>{officialMessage}</p> : null}
+                    {officialMessage ? <p className={`status-text ${officialMessage.includes("saved") || officialMessage.includes("queued") ? "" : "error-text"}`}>{officialMessage}</p> : null}
                   </div>
                 </form>
               </article>
+
               <article className="card admission-register-card">
                 <div className="portal-head compact-head">
                   <div>
-                    <h3>Live Admission Enquiry Register</h3>
-                    <p className="status-text">Newest enquiry entries saved in the online database for office follow-up.</p>
+                    <h3>Recent Admissions</h3>
+                    <p className="status-text">Admissions saved by the school are visible here for checking and Excel export.</p>
                   </div>
                   <button className="button secondary icon-result" onClick={downloadAdmissionRegister} type="button">Excel</button>
                 </div>
@@ -385,15 +352,12 @@ export default function StaffEntryPage() {
                   <table className="data-table">
                     <thead>
                       <tr>
-                        <th>Enquiry ID</th>
+                        <th>Student ID</th>
                         <th>Name</th>
                         <th>Class</th>
                         <th>Mother</th>
                         <th>Contact</th>
                         <th>Documents</th>
-                        <th>Total Fee</th>
-                        <th>Paid</th>
-                        <th>Remaining</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -405,9 +369,6 @@ export default function StaffEntryPage() {
                           <td>{item.motherName || "-"}</td>
                           <td>{item.parentPhone}</td>
                           <td>{item.documents || "Pending"}</td>
-                          <td>{item.totalFee || 0}</td>
-                          <td>{item.paidFee || 0}</td>
-                          <td>{item.remainingFee || 0}</td>
                         </tr>
                       ))}
                     </tbody>

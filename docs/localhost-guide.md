@@ -14,6 +14,7 @@
 - Dev command: `npm run dev:web`
 - Uses `VITE_API_BASE_URL`
 - Hidden staff route: `http://localhost:5173/campus-connect`
+- Teacher admission route: `http://localhost:5173/teacher-admissions`
 
 ## Desktop ERP
 

@@ -64,7 +64,8 @@ docker compose -f docker-compose.local.yml up -d
 ## Staff And Admin Access
 
 - The public website does not show the admin link in the menu.
-- School staff can access the hidden staff page directly using `/campus-connect`.
-- Only users with staff roles like `super_admin`, `admin_staff`, `principal`, `teacher`, or `accountant` can stay logged in there.
+- School admins and office staff can access the hidden staff page directly using `/campus-connect`.
+- Teachers assigned to admission work use the separate teacher page `/teacher-admissions`.
+- Only users with admin/office roles like `super_admin`, `admin_staff`, `principal`, or `accountant` can stay logged in on `/campus-connect`.
 - The main operational admin workflow is still intended for the desktop ERP software.
 - Desktop ERP staff login uses the same cloud backend login as the website and parent/student portal.

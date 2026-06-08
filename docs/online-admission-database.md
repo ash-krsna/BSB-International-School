@@ -65,10 +65,10 @@ Redeploy the website.
 
 ## 4A. Teacher Admission Access
 
-Teachers can open the staff route and fill the official admission form after login:
+Teachers can open the separate teacher admission route and fill the official admission form after login:
 
 ```txt
-/campus-connect
+/teacher-admissions
 ```
 
 Sarika Bankar's teacher login is created by the seed/migration:
