@@ -23,6 +23,14 @@ function toMoney(value) {
   return Number.isFinite(amount) && amount > 0 ? amount : 0;
 }
 
+async function runOptionalAdmissionNotification(work) {
+  try {
+    await work();
+  } catch (error) {
+    console.warn("Optional official admission notification failed:", error.message);
+  }
+}
+
 async function resolveAdmissionSetup({ academicYearId, applyingClassId, applyingClassName }) {
   let resolvedAcademicYearId = academicYearId || null;
   if (!resolvedAcademicYearId) {
@@ -192,11 +200,31 @@ const createStaffAdmission = asyncHandler(async (req, res) => {
     return { applicationId, assignedStudentId };
   });
 
+  const admissionCode = `BSB-ADM-${new Date().getFullYear()}-${String(result.applicationId).padStart(4, "0")}`;
+  const studentFullName = [studentFirstName, studentMiddleName, studentLastName].filter(Boolean).join(" ");
+  const confirmationMessage = `Dear Parent, admission confirmed for ${studentFullName} at BSB International School. Student ID: ${result.assignedStudentId}. Please keep this ID for fees, results, and school records.`;
+
+  await runOptionalAdmissionNotification(async () => {
+    await sendSms({
+      phone: parentPhone,
+      message: confirmationMessage
+    });
+  });
+
+  if (env.adminNotificationWhatsapp) {
+    await runOptionalAdmissionNotification(async () => {
+      await sendWhatsApp({
+        to: env.adminNotificationWhatsapp,
+        message: `Official admission saved by staff. ${studentFullName} (${result.assignedStudentId})`
+      });
+    });
+  }
+
   res.status(201).json({
     success: true,
-    message: "Official admission saved.",
+    message: "Official admission saved and parent confirmation message queued.",
     admissionId: result.applicationId,
-    admissionCode: `BSB-ADM-${new Date().getFullYear()}-${String(result.applicationId).padStart(4, "0")}`,
+    admissionCode,
     studentId: result.assignedStudentId
   });
 });

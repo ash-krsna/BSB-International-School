@@ -2,7 +2,7 @@ const roleModules = {
   super_admin: ["dashboard", "students", "admissions", "fees", "transport", "results", "attendance", "content", "communications", "reports", "settings"],
   admin_staff: ["dashboard", "students", "admissions", "fees", "transport", "content", "communications", "reports"],
   principal: ["dashboard", "students", "transport", "results", "attendance", "content", "communications", "reports"],
-  teacher: ["dashboard", "results", "attendance", "homework", "notices"],
+  teacher: ["dashboard", "admissions", "results", "attendance", "homework", "notices", "reports"],
   accountant: ["dashboard", "fees", "transport", "reports"],
   driver: ["dashboard", "transport"],
   parent: ["dashboard", "attendance", "results", "fees", "homework", "notices"],

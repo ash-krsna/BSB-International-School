@@ -34,6 +34,7 @@ mysql -h MYSQL_HOST -P MYSQL_PORT -u MYSQL_USER -p MYSQL_DATABASE < database/see
 Then run the migration files in `database/migrations` in date order. These add the newer admission register, transport, quiz, and student media tables used by the hosted website.
 
 The seed creates the current academic year and classes from Nursery to Class 5.
+The migration `2026-06-08-teacher-admission-access.sql` creates the teacher admission login for Sarika Bankar.
 
 ## 3. Deploy The API
 
@@ -61,6 +62,25 @@ VITE_API_BASE_URL=https://your-api-service-url/api
 ```
 
 Redeploy the website.
+
+## 4A. Teacher Admission Access
+
+Teachers can open the staff route and fill the official admission form after login:
+
+```txt
+/campus-connect
+```
+
+Sarika Bankar's teacher login is created by the seed/migration:
+
+```txt
+Username: Sarika_
+Password: SarikaBankar
+```
+
+This login can save confirmed admissions, upload student photos/documents, and download the combined admission Excel register.
+
+Parent confirmation messages are sent through the backend notification service. Set `MSG91_AUTH_KEY` and `MSG91_TEMPLATE_ID` for SMS, or Twilio WhatsApp variables for WhatsApp. If keys are not configured, messages are safely logged as queued in `notification_logs`.
 
 ## 5. Admission Storage
 

@@ -119,11 +119,11 @@ router.post(
   studentMediaController.uploadStudentMedia
 );
 
-router.get("/admissions", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.listAdmissions);
+router.get("/admissions", authenticate, authorize("super_admin", "admin_staff", "principal", "teacher"), admissionsController.listAdmissions);
 router.post(
   "/admissions",
   authenticate,
-  authorize("super_admin", "admin_staff", "principal"),
+  authorize("super_admin", "admin_staff", "principal", "teacher"),
   (req, res, next) => {
     req.uploadFolder = "admissions";
     next();
@@ -140,8 +140,8 @@ router.post(
   ]),
   admissionsController.createStaffAdmission
 );
-router.get("/admissions/export", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.exportAdmissionRegister);
-router.patch("/admissions/:id/review", authenticate, authorize("super_admin", "admin_staff", "principal"), admissionsController.reviewAdmission);
+router.get("/admissions/export", authenticate, authorize("super_admin", "admin_staff", "principal", "teacher"), admissionsController.exportAdmissionRegister);
+router.patch("/admissions/:id/review", authenticate, authorize("super_admin", "admin_staff", "principal", "teacher"), admissionsController.reviewAdmission);
 
 router.get("/fees/ledger", authenticate, authorize("super_admin", "admin_staff", "accountant", "principal"), feesController.listFeeLedger);
 router.get("/fees/student/:studentId", authenticate, authorize("super_admin", "admin_staff", "accountant", "principal", "parent", "student"), feesController.getStudentFeeLedger);

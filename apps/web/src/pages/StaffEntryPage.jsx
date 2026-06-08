@@ -163,9 +163,9 @@ export default function StaffEntryPage() {
               </div>
               <div className="feature-grid">
                 <article className="card">
-                  <h3>Admin Portal</h3>
-                  <p>Access the full school office command area for admissions, fees, student records, documents, reports, and future connected modules.</p>
-                  <a className="button primary icon-admission" href="/admin">Open Admin Portal</a>
+                  <h3>Admission Portal</h3>
+                  <p>Open the official admission workflow for confirmed students, document status, fees, student ID, and school records.</p>
+                  <a className="button primary icon-admission" href="#official-admission-form">Open Admission Form</a>
                 </article>
                 <article className="card" id="teacher-staff-portal">
                   <h3>Teachers Portal</h3>
@@ -201,7 +201,7 @@ export default function StaffEntryPage() {
                   <a className="button secondary icon-gallery" href="/student-media">Open Student Media</a>
                 </article>
               </div>
-              <article className="card admission-register-card official-admission-card">
+              <article className="card admission-register-card official-admission-card" id="official-admission-form">
                 <div className="portal-head compact-head">
                   <div>
                     <span className="eyebrow">Official Admission</span>
