@@ -17,6 +17,10 @@
     "build:api": "npm --workspace apps/api run build",
     "build:web": "npm --workspace apps/web run build",
     "build:desktop": "npm --workspace apps/desktop run build",
-    "lint": "npm --workspace apps/api run lint && npm --workspace apps/web run lint && npm --workspace apps/desktop run lint"
+    "lint": "npm --workspace apps/api run lint && npm --workspace apps/web run lint && npm --workspace apps/desktop run lint",
+    "db:check": "npm --workspace apps/api run db:check",
+    "db:setup": "npm --workspace apps/api run db:setup",
+    "db:seed": "npm --workspace apps/api run db:seed",
+    "db:migrate": "npm --workspace apps/api run db:migrate"
   }
 }

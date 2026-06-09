@@ -24,14 +24,26 @@ MYSQL_PASSWORD
 
 ## 2. Import School Tables
 
-Run the schema first, then seed data:
+For a fresh empty MySQL cloud database, run this from the repository root after setting the backend environment variables:
 
 ```bash
-mysql -h MYSQL_HOST -P MYSQL_PORT -u MYSQL_USER -p MYSQL_DATABASE < database/schema.sql
-mysql -h MYSQL_HOST -P MYSQL_PORT -u MYSQL_USER -p MYSQL_DATABASE < database/seed.sql
+npm run db:setup
 ```
 
-Then run the migration files in `database/migrations` in date order. These add the newer admission register, transport, quiz, and student media tables used by the hosted website.
+This creates the full schema, seeds roles/classes/Akash/Sarika/quiz data, and marks included migrations as applied.
+
+For an existing database that already has tables, run:
+
+```bash
+npm run db:migrate
+npm run db:seed
+```
+
+Check the connection at any time:
+
+```bash
+npm run db:check
+```
 
 The seed creates the current academic year and classes from Nursery to Class 5.
 The migration `2026-06-08-teacher-admission-access.sql` creates the teacher admission login for Sarika Bankar.
@@ -113,3 +125,13 @@ GET /api/admissions/export
 ```
 
 That Excel contains the combined admission/student office data and Yes/No columns for photo and document submission status.
+
+## 6. Backend Health Check
+
+After deploying the API, open:
+
+```txt
+https://your-api-service-url/api/health
+```
+
+It should say the API is live and connected to MySQL. It also reports whether the admission, document, and user tables are ready, plus whether Cloudinary, SMS/WhatsApp, and email are configured.

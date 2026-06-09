@@ -23,7 +23,8 @@
 5. For website enquiries, set `CONTACT_RECEIVER_EMAIL=akash.gita.bhagwat@gmail.com`
 6. Configure SMTP values so the contact form can email the school office inbox
 7. Add your Vercel domain to `APP_ORIGINS`, for example `https://bsb-international-school.vercel.app`
-8. Import [schema.sql](D:\BSB\BSB International School WEB\database\schema.sql) for fresh installs or run [2026-05-19-erp-upgrade.sql](D:\BSB\BSB International School WEB\database\migrations\2026-05-19-erp-upgrade.sql) for upgrades
+8. Run `npm run db:setup` for a fresh MySQL database, or `npm run db:migrate && npm run db:seed` for an existing database
+9. Open `/api/health` and confirm it reports MySQL plus admission/document/user tables as ready
 
 ### Upload Storage
 

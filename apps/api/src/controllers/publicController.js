@@ -16,7 +16,46 @@ function escapeHtml(value) {
 }
 
 const health = asyncHandler(async (req, res) => {
-  res.json({ success: true, message: "BSB ERP API is live." });
+  const startedAt = Date.now();
+  const dbCheck = await query("SELECT DATABASE() AS databaseName, NOW() AS checkedAt");
+  const tableCheck = await query(
+    `
+      SELECT
+        SUM(TABLE_NAME = 'admission_applications') AS hasAdmissions,
+        SUM(TABLE_NAME = 'student_documents') AS hasDocuments,
+        SUM(TABLE_NAME = 'users') AS hasUsers
+      FROM information_schema.TABLES
+      WHERE TABLE_SCHEMA = DATABASE()
+    `
+  );
+
+  res.json({
+    success: true,
+    message: "BSB ERP API is live and connected to MySQL.",
+    data: {
+      service: "bsb-international-school-api",
+      environment: env.nodeEnv,
+      database: {
+        connected: true,
+        name: dbCheck[0]?.databaseName,
+        checkedAt: dbCheck[0]?.checkedAt,
+        tablesReady: {
+          admissions: Number(tableCheck[0]?.hasAdmissions || 0) > 0,
+          documents: Number(tableCheck[0]?.hasDocuments || 0) > 0,
+          users: Number(tableCheck[0]?.hasUsers || 0) > 0
+        }
+      },
+      uploads: {
+        cloudinaryConfigured: Boolean(env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret)
+      },
+      notifications: {
+        smsConfigured: Boolean(env.msg91AuthKey && env.msg91TemplateId),
+        whatsappConfigured: Boolean(env.twilioAccountSid && env.twilioAuthToken && env.twilioWhatsappFrom),
+        emailConfigured: Boolean(env.smtpHost && env.smtpUser && env.smtpPass)
+      },
+      responseMs: Date.now() - startedAt
+    }
+  });
 });
 
 function normalizeGender(value) {

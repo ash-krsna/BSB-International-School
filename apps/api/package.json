@@ -10,7 +10,11 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "build": "node -e \"console.log('API build step not required for Express runtime')\"",
-    "lint": "node -e \"console.log('Add ESLint if needed')\""
+    "lint": "node -e \"console.log('Add ESLint if needed')\"",
+    "db:check": "node src/scripts/db-admin.js check",
+    "db:setup": "node src/scripts/db-admin.js setup",
+    "db:seed": "node src/scripts/db-admin.js seed",
+    "db:migrate": "node src/scripts/db-admin.js migrate"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
