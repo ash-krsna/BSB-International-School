@@ -50,6 +50,8 @@ If these variables are empty, the API falls back to local `/uploads`, which is u
 
 Required production values include `APP_ORIGINS`, `MYSQL_HOST`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `JWT_SECRET`, Cloudinary variables for file uploads, and the SMTP/contact variables if contact emails should be sent.
 
+Optional MongoDB support can be enabled with `MONGODB_URI`. Keep MySQL as the primary database for official admissions, fees, attendance, and results. MongoDB is intended for flexible future modules such as activity logs, gallery metadata, notifications, and media feeds.
+
 Admission enquiries and staff admissions are saved through the API into MySQL. Contact and enquiry email notifications should use the SMTP/contact variables above.
 
 ### Temporary Vercel API Fallback

@@ -5,6 +5,7 @@ const { toPublicFileUrl } = require("../services/uploadService");
 const { notifyAdminEnquiry, sendSms, sendWhatsApp } = require("../services/notificationService");
 const { sendEmail } = require("../services/mailService");
 const env = require("../config/env");
+const { getMongoStatus } = require("../config/mongo");
 
 function escapeHtml(value) {
   return String(value)
@@ -48,6 +49,7 @@ const health = asyncHandler(async (req, res) => {
       uploads: {
         cloudinaryConfigured: Boolean(env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret)
       },
+      mongodb: getMongoStatus(),
       notifications: {
         smsConfigured: Boolean(env.msg91AuthKey && env.msg91TemplateId),
         whatsappConfigured: Boolean(env.twilioAccountSid && env.twilioAuthToken && env.twilioWhatsappFrom),

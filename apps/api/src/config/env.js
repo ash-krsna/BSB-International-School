@@ -20,6 +20,7 @@ const env = {
     user: process.env.MYSQL_USER || "root",
     password: process.env.MYSQL_PASSWORD || ""
   },
+  mongodbUri: process.env.MONGODB_URI || "",
   uploadBaseUrl: process.env.UPLOAD_BASE_URL || "http://localhost:4000",
   msg91AuthKey: process.env.MSG91_AUTH_KEY || "",
   msg91TemplateId: process.env.MSG91_TEMPLATE_ID || "",
