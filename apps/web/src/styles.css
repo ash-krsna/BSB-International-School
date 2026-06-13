@@ -604,6 +604,151 @@ li {
   color: var(--muted);
 }
 
+.leadership-section,
+.testimonial-section {
+  background:
+    radial-gradient(circle at 8% 18%, rgba(243, 185, 63, 0.16), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(242, 253, 249, 0.92));
+}
+
+.message-grid,
+.notice-event-grid,
+.facility-grid,
+.timeline-grid,
+.event-preview-grid,
+.testimonial-grid {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.message-grid,
+.testimonial-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.notice-event-grid {
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.message-card,
+.achievement-card,
+.testimonial-card,
+.compact-update-card,
+.facility-card,
+.timeline-card {
+  min-height: 100%;
+}
+
+.message-card strong,
+.testimonial-card strong {
+  display: block;
+  margin-top: 1rem;
+  color: var(--primary-deep);
+}
+
+.compact-update-card h3 {
+  font-size: 1.22rem;
+}
+
+.compact-update-card p,
+.message-card p,
+.testimonial-card p,
+.facility-card p,
+.timeline-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.achievement-section {
+  background:
+    linear-gradient(90deg, rgba(255, 224, 240, 0.48), rgba(255, 255, 255, 0) 42%),
+    linear-gradient(270deg, rgba(51, 163, 211, 0.12), rgba(255, 255, 255, 0) 50%);
+}
+
+.facilities-hero,
+.events-hero {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(243, 185, 63, 0.22), transparent 28%),
+    radial-gradient(circle at 86% 20%, rgba(51, 163, 211, 0.16), transparent 25%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(240, 253, 248, 0.96));
+}
+
+.facility-summary-card {
+  min-height: 20rem;
+  display: grid;
+  align-content: center;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 222, 0.92));
+}
+
+.facility-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.facility-card {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+}
+
+.event-stack-card {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.event-mini-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.event-mini-card small {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(243, 185, 63, 0.24);
+  color: var(--earth);
+  font-weight: 900;
+}
+
+.event-mini-card p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.timeline-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.timeline-card span {
+  display: inline-flex;
+  margin-bottom: 0.7rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  background: rgba(17, 120, 111, 0.1);
+  color: var(--primary-deep);
+  font-weight: 900;
+}
+
+.event-preview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.event-preview-grid .media-card {
+  padding: 0.75rem;
+}
+
+.event-preview-grid .media-card img,
+.event-preview-grid .media-card video {
+  height: 14rem;
+  margin-bottom: 0.75rem;
+}
+
 .gallery-grid-web {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
@@ -2123,7 +2268,11 @@ textarea:focus {
   .future-grid,
   .play-grid,
   .growth-grid,
-  .watch-grid {
+  .watch-grid,
+  .notice-event-grid,
+  .message-grid,
+  .timeline-grid,
+  .testimonial-grid {
     grid-template-columns: 1fr;
   }
 

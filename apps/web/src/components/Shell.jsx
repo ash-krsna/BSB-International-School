@@ -4,13 +4,14 @@ import { contactInfo } from "../content/schoolData";
 
 const navItems = [
   { to: "/admissions", label: "Admissions" },
+  { to: "/facilities", label: "Facilities" },
   { to: "/gallery", label: "Gallery" },
-  { to: "/contact", label: "Contact" },
+  { to: "/events", label: "Events" },
   { to: "/portal", label: "Portal" }
 ];
 
 const quickFooterLinks = navItems.filter((item) =>
-  ["/admissions", "/gallery", "/contact", "/portal"].includes(item.to)
+  ["/admissions", "/facilities", "/gallery", "/events", "/portal"].includes(item.to)
 );
 
 const serviceLinks = [
@@ -72,7 +73,7 @@ export default function Shell({ children }) {
             <p>A growing primary school focused on quality education, discipline, modern learning, and simple parent communication.</p>
             <div className="footer-cta-row">
               <Link to="/admissions" className="footer-cta primary icon-admission">Apply Now</Link>
-              <Link to="/gallery" className="footer-cta icon-gallery">View Events</Link>
+              <Link to="/events" className="footer-cta icon-gallery">View Events</Link>
             </div>
           </div>
 

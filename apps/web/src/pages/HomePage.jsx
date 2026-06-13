@@ -1,13 +1,18 @@
 import Shell from "../components/Shell";
 import {
   activityCards,
+  achievements,
   campusMoments,
   featureCards,
+  leadershipMessages,
   learningPillars,
   principalMessage,
+  publicNotices,
   quickHighlights,
   schoolStats,
   showcaseItems,
+  testimonials,
+  upcomingEvents,
   websiteServices
 } from "../content/schoolData";
 
@@ -89,8 +94,8 @@ export default function HomePage() {
       <section className="section command-section">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Website Control Center</span>
-            <h2>All important school work is now available from the website.</h2>
+            <span className="eyebrow">Parent Quick Desk</span>
+            <h2>All important school work is easy to reach.</h2>
             <p className="lede">
               Until future channels are hosted later, the website works as the main digital desk for parents, students,
               staff, and the school office.
@@ -104,6 +109,62 @@ export default function HomePage() {
                 <p>{service.description}</p>
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section leadership-section">
+        <div className="container">
+          <div className="section-heading centered-heading">
+            <span className="eyebrow">Leadership Messages</span>
+            <h2>Guidance from the people building the school.</h2>
+          </div>
+          <div className="message-grid">
+            {leadershipMessages.map((item) => (
+              <article className="card message-card" key={item.name}>
+                <span className="chip">{item.role}</span>
+                <h3>{item.title}</h3>
+                <p>{item.message}</p>
+                <strong>{item.name}</strong>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section notice-event-section">
+        <div className="container notice-event-grid">
+          <div>
+            <div className="section-heading">
+              <span className="eyebrow">Latest Notices</span>
+              <h2>Important updates for families.</h2>
+            </div>
+            <div className="stack-grid">
+              {publicNotices.slice(0, 3).map((notice) => (
+                <article className="card compact-update-card" key={notice.title}>
+                  <div className="notice-head">
+                    <h3>{notice.title}</h3>
+                    <span className="chip">{notice.audience}</span>
+                  </div>
+                  <p>{notice.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="section-heading">
+              <span className="eyebrow">Upcoming Events</span>
+              <h2>What is coming next.</h2>
+            </div>
+            <div className="stack-grid">
+              {upcomingEvents.slice(0, 3).map((event) => (
+                <article className="card compact-update-card" key={event.title}>
+                  <span className="chip">{event.date}</span>
+                  <h3>{event.title}</h3>
+                  <p>{event.description}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -167,6 +228,23 @@ export default function HomePage() {
               <article className="card playful-card" key={card.title}>
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section achievement-section">
+        <div className="container">
+          <div className="section-heading">
+            <span className="eyebrow">Achievements</span>
+            <h2>Visible progress in school systems and student experiences.</h2>
+          </div>
+          <div className="feature-grid">
+            {achievements.map((achievement) => (
+              <article className="card achievement-card" key={achievement.title}>
+                <h3>{achievement.title}</h3>
+                <p>{achievement.detail}</p>
               </article>
             ))}
           </div>
@@ -260,6 +338,23 @@ export default function HomePage() {
                   <span className="chip">{item.category}</span>
                   <h3>{item.title}</h3>
                 </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section testimonial-section">
+        <div className="container">
+          <div className="section-heading centered-heading">
+            <span className="eyebrow">Parent & Staff Voice</span>
+            <h2>What the school community values.</h2>
+          </div>
+          <div className="testimonial-grid">
+            {testimonials.map((testimonial) => (
+              <article className="card testimonial-card" key={testimonial.quote}>
+                <p>{testimonial.quote}</p>
+                <strong>{testimonial.name}</strong>
               </article>
             ))}
           </div>

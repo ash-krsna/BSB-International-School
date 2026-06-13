@@ -11,6 +11,23 @@ export const leadership = [
   }
 ];
 
+export const leadershipMessages = [
+  {
+    name: "Babusha Baburao Bankar",
+    role: "Chairman",
+    title: "Learning with values, confidence, and steady growth.",
+    message:
+      "Our aim is to build a school where children from nearby families can receive disciplined, caring, and modern education without losing personal attention."
+  },
+  {
+    name: "Santosh Bankar",
+    role: "Principal",
+    title: "Every child should feel guided, noticed, and encouraged.",
+    message:
+      "We focus on strong classroom habits, joyful activities, parent communication, and a clear academic path as the school grows class by class."
+  }
+];
+
 export const staffMembers = [
   { name: "Santosh Bankar", role: "Principal", image: "/showcase/1758431049617.jpg.jpeg" },
   { name: "Sarika Bankar", role: "Vice Principal" },
@@ -35,6 +52,111 @@ export const schoolStats = [
   { value: "9", label: "teaching and leadership staff" },
   { value: "100+", label: "real campus moments in the gallery" },
   { value: "4", label: "digital parent services connected" }
+];
+
+export const publicNotices = [
+  {
+    title: "Admissions open for the new academic year",
+    audience: "Parents",
+    date: "2026-06-01",
+    body: "Parents can submit an enquiry online or visit the school office for confirmed admission support."
+  },
+  {
+    title: "Teacher admission desk is active",
+    audience: "Staff",
+    date: "2026-06-08",
+    body: "Assigned teachers can use the secure teacher admission portal after the backend API is connected."
+  },
+  {
+    title: "Gallery and learning zone updated",
+    audience: "Students",
+    date: "2026-06-10",
+    body: "Parents and students can view school moments, event videos, quiz questions, and progress graphs online."
+  }
+];
+
+export const upcomingEvents = [
+  {
+    title: "Admission counselling week",
+    date: "June 2026",
+    type: "Admissions",
+    description: "Parents can meet the school office, understand documents, fees, transport, and class placement."
+  },
+  {
+    title: "Foundational learning activity day",
+    date: "July 2026",
+    type: "Learning",
+    description: "Class-wise reading, numbers, storytelling, and confidence-building activities for primary students."
+  },
+  {
+    title: "Monsoon health and safety session",
+    date: "July 2026",
+    type: "Safety",
+    description: "Simple hygiene, road safety, rainy season care, and good-habit awareness for young learners."
+  }
+];
+
+export const achievements = [
+  {
+    title: "Digital admission workflow",
+    detail: "Teacher and admin admission flows are ready to connect with cloud MySQL, documents, and Excel export."
+  },
+  {
+    title: "Organized event gallery",
+    detail: "School function photos and videos are grouped by event type so families can browse without repeated file labels."
+  },
+  {
+    title: "Student learning corner",
+    detail: "Class-wise quiz questions, scoreboard, growth graphs, and event videos are available in the learning zone."
+  }
+];
+
+export const testimonials = [
+  {
+    quote: "The school focuses on discipline and individual attention, which is very important for primary children.",
+    name: "Parent feedback"
+  },
+  {
+    quote: "Activities, events, and simple communication help students feel more confident in school.",
+    name: "School community"
+  },
+  {
+    quote: "The new digital admission and gallery system makes office work and parent updates easier.",
+    name: "Staff feedback"
+  }
+];
+
+export const facilities = [
+  {
+    title: "Primary Classrooms",
+    description: "Bright, teacher-guided classrooms designed for foundational reading, writing, numbers, and daily discipline.",
+    tag: "Learning"
+  },
+  {
+    title: "Activity & Event Space",
+    description: "Flexible space for annual functions, celebrations, storytelling, cultural activities, and student confidence building.",
+    tag: "Activities"
+  },
+  {
+    title: "Digital Admission Desk",
+    description: "Teacher-assisted online admission workflow with photo capture, documents, fees, student ID, and Excel register.",
+    tag: "Office"
+  },
+  {
+    title: "Parent Communication Desk",
+    description: "Website forms, notices, gallery, feedback, and future portal services keep families connected to school updates.",
+    tag: "Parents"
+  },
+  {
+    title: "Transport Readiness",
+    description: "Admission records can capture pickup address, bus requirement, preferred route, and parent contact details.",
+    tag: "Transport"
+  },
+  {
+    title: "Learning Zone",
+    description: "Quiz practice, scoreboards, growth graphs, and school event videos support child-friendly digital learning.",
+    tag: "Digital"
+  }
 ];
 
 export const growthData = [
